@@ -43,6 +43,8 @@ export function Board({ g, human, onExit, onRematch }: { g: Game; human: HumanCo
   const [selBlocker, setSelBlocker] = useState<number | null>(null);
   const [viewer, setViewer] = useState<{ title: string; pid: PlayerId; zone: 'graveyard' | 'exile' } | null>(null);
   const [showLog, setShowLog] = useState(true);
+  /** after the game ends: hide the result overlay to look at the final board */
+  const [viewBoard, setViewBoard] = useState(false);
   const [, force] = useState(0);
   const logRef = useRef<HTMLDivElement>(null);
 
@@ -561,7 +563,7 @@ export function Board({ g, human, onExit, onRematch }: { g: Game; human: HumanCo
 
       {req && <Modals g={g} req={req} respond={respond} onHover={setHover} />}
 
-      {g.winner !== undefined && (
+      {g.winner !== undefined && !viewBoard && (
         <div className="gameover">
           <div className="gameover-box">
             <h1>{g.winner === null ? 'Draw' : g.winner === me ? 'Victory' : 'Defeat'}</h1>
@@ -572,11 +574,32 @@ export function Board({ g, human, onExit, onRematch }: { g: Game; human: HumanCo
               <button className="btn primary" onClick={onRematch}>
                 Rematch
               </button>
+              <button className="btn secondary" onClick={() => setViewBoard(true)}>
+                View battlefield
+              </button>
               <button className="btn secondary" onClick={onExit}>
                 Change decks
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {g.winner !== undefined && viewBoard && (
+        <div className="gameover-bar">
+          <span className="gameover-bar-result">{g.winner === null ? 'Draw' : g.winner === me ? 'Victory' : 'Defeat'}</span>
+          <span className="gameover-bar-info">
+            Turn {g.turn} · {g.players[me].life} – {g.players[opp].life}
+          </span>
+          <button className="btn small secondary" onClick={() => setViewBoard(false)}>
+            Show result
+          </button>
+          <button className="btn small primary" onClick={onRematch}>
+            Rematch
+          </button>
+          <button className="btn small secondary" onClick={onExit}>
+            Change decks
+          </button>
         </div>
       )}
     </div>
