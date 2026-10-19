@@ -529,6 +529,7 @@ export class Game {
       this.stack.push(item);
       this.log(`${p.source.def.name} triggers: ${p.trigger.text}`, p.controller);
       this.pushFx({ type: 'trigger', card: p.source });
+      this.checkWard(item);
     }
     this.changed();
     await this.pace(0.6);
@@ -1391,6 +1392,7 @@ export class Game {
     this.pushFx({ type: 'cast', card: c, controller: pid, text: modes[mode].text });
     const how = method === 'normal' ? '' : method === 'alt' ? ` (${d.altCosts![altIndex ?? 0].label})` : ` (${method})`;
     this.log(`${this.players[pid].name} casts ${d.name}${how}${this.describeTargets(targets)}.`, pid);
+    this.checkWard(item);
     this.emit({ type: 'cast', card: c, controller: pid });
     this.changed();
     return true;
@@ -1531,8 +1533,40 @@ export class Game {
     }
     this.stack.push(item);
     this.log(`${this.players[pid].name} activates ${c.def.name}${this.describeTargets(targets)}.`, pid);
+    this.checkWard(item);
     this.changed();
     return true;
+  }
+
+  /**
+   * Ward: whenever a permanent with ward becomes the target of a spell or ability an opponent controls,
+   * counter that spell or ability unless its controller pays the ward cost.
+   */
+  checkWard(item: StackItem) {
+    for (const t of item.targets.flat()) {
+      if (t.kind !== 'card') continue;
+      const c = this.card(t.id);
+      if (!c || c.zone !== 'battlefield' || c.controller === item.controller || !this.hasKeyword(c, 'ward')) continue;
+      const mana = c.def.wardCost;
+      const life = c.def.wardLife;
+      const costText = mana ?? (life ? `${life} life` : '');
+      this.addTrigger(c, c.controller, `Ward — counter ${item.card.def.name} unless its controller pays ${costText}`, async () => {
+        if (!this.stack.includes(item)) return;
+        const payer = item.controller;
+        if (mana) {
+          const cost = parseCost(mana);
+          if (this.canPay(payer, cost) && (await this.yesNo(payer, `Pay ${mana} for ward (${c.def.name}), or ${item.card.def.name} is countered?`, 'ward', c))) {
+            if (await this.payMana(payer, cost)) return;
+          }
+        } else if (life) {
+          if (this.players[payer].life > life && (await this.yesNo(payer, `Pay ${life} life for ward (${c.def.name}), or ${item.card.def.name} is countered?`, 'ward', c))) {
+            this.loseLife(payer, life);
+            return;
+          }
+        }
+        this.counterItem(item);
+      });
+    }
   }
 
   makeCtx(item: StackItem): Ctx {

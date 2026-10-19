@@ -139,5 +139,40 @@ function check(name: string, ok: boolean, detail: string) {
   check('Pyroblast a targetable blue permanent', name === 'Pyroblast' && tgt?.kind === 'card' && tgt.id === monitor.id, `action ${name}`);
 }
 
+// 9–10. Ward {2}: an opponent's Lightning Bolt is countered unless they pay {2}.
+for (const mountains of [1, 3]) {
+  let targetId = 0;
+  const caster: Controller = {
+    async choose(g, r) {
+      if (r.type === 'targets') return [{ kind: 'card', id: targetId }];
+      if (r.type === 'yesno') return true; // pay ward when possible
+      return { type: 'pass' };
+    },
+  };
+  const deck = Array(40).fill(getDef('Mountain')!);
+  const g = new Game([deck, deck], [caster, idle], ['Caster', 'Warded'], 0, 1);
+  g.turn = 3;
+  g.step = 'main1';
+  const wardDef = { ...getDef('Slippery Bogle')!, name: 'Ward Tester', keywords: ['ward' as const], wardCost: '{2}' };
+  const warded = g.makeCard(wardDef, 1);
+  g.moveCard(warded, 'battlefield', { controller: 1 });
+  for (let i = 0; i < mountains; i++) g.moveCard(g.makeCard(getDef('Mountain')!, 0), 'battlefield', { controller: 0 });
+  const bolt = g.makeCard(getDef('Lightning Bolt')!, 0);
+  bolt.zone = 'hand';
+  g.players[0].hand.push(bolt);
+  targetId = warded.id;
+  g.pendingTriggers = [];
+  await g.castSpell(0, bolt, 'normal');
+  await g.stateCheck(); // ward trigger goes on the stack
+  while (g.stack.length) {
+    await g.resolveTop();
+    await g.stateCheck();
+  }
+  const countered = g.logs.some((l) => l.text === 'Lightning Bolt is countered.');
+  const died = warded.zone !== 'battlefield';
+  if (mountains === 1) check('ward counters when the caster cannot pay', countered && !died, `countered=${countered}, warded creature died=${died}`);
+  else check('ward lets the spell through when paid', !countered && died, `countered=${countered}, warded creature died=${died}`);
+}
+
 console.log(failures ? `${failures} failure(s)` : 'all passed');
 process.exit(failures ? 1 : 0);

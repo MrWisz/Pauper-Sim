@@ -35,6 +35,7 @@ const KEYWORDS: Keyword[] = [
   'defender',
   'menace',
   'hexproof',
+  'ward',
 ];
 
 const SUPERTYPES = ['Basic', 'Legendary', 'Snow', 'World', 'Token'];
@@ -90,6 +91,7 @@ function isGenericallySupported(oracle: string, keywords: Keyword[]) {
     if (/^This (land|creature|artifact) enters tapped\.$/.test(l)) return true;
     if (/^(Madness|Flashback|Cycling|Ninjutsu) \{[^ ]+$/.test(l)) return true;
     if (/^Affinity for artifacts$/.test(l)) return true;
+    if (/^Ward (\{[^}]+\})+$/.test(l) || /^Ward\s*—\s*Pay \d+ life\.?$/.test(l)) return true;
     const parts = l
       .toLowerCase()
       .split(/,\s*/)
@@ -129,6 +131,10 @@ export function buildDef(raw: RawCard): CardDef {
   const fb = oracle.match(/Flashback (\{[^ —]+\})/);
   if (fb) def.flashback = { mana: fb[1] };
   if (/Affinity for artifacts/.test(oracle)) def.affinity = true;
+  const ward = oracle.match(/^Ward ((?:\{[^}]+\})+)/m);
+  if (ward) def.wardCost = ward[1];
+  const wardLife = oracle.match(/^Ward\s*—\s*Pay (\d+) life/m);
+  if (wardLife) def.wardLife = +wardLife[1];
   if (/enters tapped\./.test(oracle) && !/unless/.test(oracle)) def.entersTapped = true;
 
   const activated: ActivatedDef[] = [];

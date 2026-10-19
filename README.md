@@ -22,6 +22,7 @@ Then open http://localhost:5173.
 - **End Turn** (orange button, always available on your turn) skips the rest of your turn; you are still asked about blocks and discards. On the opponent’s turn, **Pass Turn** passes until the turn ends but stops if they cast something. **Full control** stops at every priority.
 - **Animations:** turn banners, a spotlight for every spell cast, floating damage / life numbers, trigger flashes, attackers stepping forward and dying cards fading out. **Game speed** on the setup screen controls how long the game pauses so you can follow along.
 - Click a graveyard or exile pile to look inside and to cast flashback or plotted cards.
+- **Keyword icons** on the left edge of each permanent show its abilities (flying, reach, first/double strike, deathtouch, lifelink, trample, vigilance, haste, menace, hexproof, ward with its cost, indestructible, defender, protection…). Plain ring = printed on the card, green ring = from an Aura or Equipment, gold ring = until end of turn. Hover an icon for details and its source.
 - **Best of 3:** pick it on the setup screen. Between games you get a sideboarding screen (click a card to move a copy between main deck and sideboard; main deck must stay at 40+). The loser of each game chooses play or draw. The computer sideboards too, based on the cards it has seen from you (blasts against blue/red, artifact hate against Affinity, edicts against hexproof, and so on).
 
 ## Card support
@@ -30,7 +31,7 @@ Every card's behaviour has to be scripted. Fully supported right now:
 
 - **Selesnya Bogles**, **Rakdos Madness**, **Mono Red Madness**, **Grixis Affinity**, **Dimir Faeries**, all main decks and sideboards (lists from MTGGoldfish, October 2026).
 
-The engine supports Auras (attached on resolution, stacked behind their host, put into the graveyard when the host leaves), hexproof, protection from a color, hybrid mana and land Auras like Utopia Sprawl / Abundant Growth.
+The engine supports Auras (attached on resolution, stacked behind their host, put into the graveyard when the host leaves), hexproof, ward, protection from a color, hybrid mana and land Auras like Utopia Sprawl / Abundant Growth.
 
 Any other card is fetched from Scryfall when you import it. It works as a "vanilla" card: its type, P/T, keywords (flying, deathtouch, haste…), mana abilities, madness, flashback, affinity, cycling and ninjutsu all work, but the rest of its rules text does not. These cards get a red **!** badge, and the import screen lists them.
 

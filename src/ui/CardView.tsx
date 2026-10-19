@@ -1,5 +1,6 @@
 import type { Game } from '../engine/game';
 import type { CardDef, CardInstance } from '../engine/types';
+import { KeywordIcons } from './KeywordIcons';
 
 export function CardFace({ def, className = '' }: { def: CardDef; className?: string }) {
   if (def.image && !def.isToken) {
@@ -77,7 +78,7 @@ export function CardView({ g, card, size = 'field', highlight, onClick, onHover,
           ))}
         </div>
       )}
-      {card.tempKeywords.length > 0 && <div className="kw">{[...new Set(card.tempKeywords)].join(', ')}</div>}
+      {card.zone === 'battlefield' && <KeywordIcons g={g} card={card} />}
       {card.attacking && <div className="combat-badge atk">ATK</div>}
       {card.blocking !== null && <div className="combat-badge blk">BLK</div>}
       {badge && <div className="extra-badge">{badge}</div>}

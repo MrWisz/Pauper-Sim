@@ -34,7 +34,8 @@ export type Keyword =
   | 'double strike'
   | 'defender'
   | 'menace'
-  | 'hexproof';
+  | 'hexproof'
+  | 'ward';
 
 /** A reference to something that can be targeted. */
 export type Target =
@@ -201,6 +202,9 @@ export interface CardDef {
   triggers?: TriggerDef[];
   activated?: ActivatedDef[];
   affinity?: boolean;
+  /** Ward {N} (mana) or Ward—Pay N life */
+  wardCost?: string;
+  wardLife?: number;
   madness?: string;
   flashback?: { mana?: string; altLabel?: string; label?: string; canPay?: AltCost['canPay']; pay?: AltCost['pay'] };
   overload?: string;

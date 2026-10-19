@@ -1477,3 +1477,59 @@ textarea {
   text-align: center;
   padding: 12px;
 }
+
+/* ───────────── keyword icons on creatures ───────────── */
+.kw-strip {
+  position: absolute;
+  left: -9px;
+  top: 16px;
+  max-height: calc(100% - 26px);
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 2px;
+  z-index: 3;
+}
+.kw-chip {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #18212c;
+  border: 1.5px solid #7b8796;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  font-size: 11px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: help;
+}
+/* granted by an Aura or Equipment */
+.kw-chip.kw-granted {
+  border-color: #69f0ae;
+  box-shadow: 0 0 6px rgba(105, 240, 174, 0.8);
+}
+/* until end of turn (instants / sorceries) */
+.kw-chip.kw-temp {
+  border-color: #ffd54f;
+  box-shadow: 0 0 6px rgba(255, 213, 79, 0.85);
+}
+.kw-pro {
+  position: absolute;
+  right: -5px;
+  bottom: -4px;
+  font-size: 8px;
+  font-weight: 900;
+  background: #000;
+  color: #fff;
+  border-radius: 4px;
+  padding: 0 2px;
+}
+.card.tapped .kw-chip {
+  transform: rotate(-90deg);
+}
+.card-hand .kw-strip {
+  display: none;
+}
