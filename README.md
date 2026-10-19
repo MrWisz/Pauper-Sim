@@ -22,6 +22,7 @@ Then open http://localhost:5173.
 - **End Turn** (orange button, always available on your turn) skips the rest of your turn; you are still asked about blocks and discards. On the opponent’s turn, **Pass Turn** passes until the turn ends but stops if they cast something. **Full control** stops at every priority.
 - **Animations:** turn banners, a spotlight for every spell cast, floating damage / life numbers, trigger flashes, attackers stepping forward and dying cards fading out. **Game speed** on the setup screen controls how long the game pauses so you can follow along.
 - Click a graveyard or exile pile to look inside and to cast flashback or plotted cards.
+- **Best of 3:** pick it on the setup screen. Between games you get a sideboarding screen (click a card to move a copy between main deck and sideboard; main deck must stay at 40+). The loser of each game chooses play or draw. The computer sideboards too, based on the cards it has seen from you (blasts against blue/red, artifact hate against Affinity, edicts against hexproof, and so on).
 
 ## Card support
 
@@ -41,6 +42,7 @@ To script a new card, add an entry to `src/engine/cards/scripts.ts`, put its nam
 npx tsx scripts/sim.ts 40      # 40 headless AI-vs-AI games across the presets
 npx tsx scripts/one.ts "Dimir Faeries" "Mono Red Madness" 3   # print one full game log
 npx tsx scripts/combat-test.ts  # AI combat scenarios (chump to survive, lethal checks, crack-back)
+npx tsx scripts/sideboard-check.ts  # what the AI sideboards in sample matchups
 ```
 
 ## Layout

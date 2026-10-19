@@ -26,7 +26,30 @@ interface MenuItem {
   run: () => void;
 }
 
-export function Board({ g, human, onExit, onRematch }: { g: Game; human: HumanController; onExit: () => void; onRematch: () => void }) {
+/** Match context for the board: score and whether the match is decided. */
+export interface MatchView {
+  bo3: boolean;
+  game: number;
+  /** wins so far, including this game once it has ended */
+  wins: [number, number];
+  over: boolean;
+}
+
+export function Board({
+  g,
+  human,
+  match,
+  onExit,
+  onRematch,
+  onNextGame,
+}: {
+  g: Game;
+  human: HumanController;
+  match?: MatchView;
+  onExit: () => void;
+  onRematch: () => void;
+  onNextGame?: () => void;
+}) {
   useSyncExternalStore(
     (fn) => g.subscribe(fn),
     () => g.version,
@@ -207,6 +230,21 @@ export function Board({ g, human, onExit, onRematch }: { g: Game; human: HumanCo
     else if (human.req.type === 'targets' && human.req.cancellable) respond(null);
   };
 
+  // ───────── game over / match result ─────────
+  const resultText = g.winner === null ? 'Draw' : g.winner === me ? 'Victory' : 'Defeat';
+  let matchLine: string | null = null;
+  let next = { label: 'Rematch', run: onRematch };
+  if (match?.bo3) {
+    const [w0, w1] = match.wins;
+    if (match.over) {
+      matchLine = w0 === w1 ? `Match drawn ${w0}–${w1}` : `Match ${w0 > w1 ? 'won' : 'lost'} ${w0}–${w1}`;
+      next = { label: 'New match', run: onRematch };
+    } else {
+      matchLine = `Match score: You ${w0} – ${w1} Computer`;
+      next = { label: 'Sideboard & next game', run: onNextGame ?? onRematch };
+    }
+  }
+
   // ───────── main button ─────────
   let primary: { label: string; run: () => void } | null = null;
   let secondary: { label: string; run: () => void }[] = [];
@@ -360,6 +398,11 @@ export function Board({ g, human, onExit, onRematch }: { g: Game; human: HumanCo
           ))}
         </div>
         <div className="top-buttons">
+          {match?.bo3 && (
+            <span className="match-badge" title="Best of 3">
+              Game {match.game} · You {match.wins[0]} – {match.wins[1]} CPU
+            </span>
+          )}
           <label className="toggle" title="Stop at every priority, like Arena's full control">
             <input
               type="checkbox"
@@ -566,13 +609,14 @@ export function Board({ g, human, onExit, onRematch }: { g: Game; human: HumanCo
       {g.winner !== undefined && !viewBoard && (
         <div className="gameover">
           <div className="gameover-box">
-            <h1>{g.winner === null ? 'Draw' : g.winner === me ? 'Victory' : 'Defeat'}</h1>
+            <h1>{resultText}</h1>
             <p>
               Turn {g.turn} · {g.players[me].life} – {g.players[opp].life}
             </p>
+            {matchLine && <p className="gameover-match">{matchLine}</p>}
             <div className="btns">
-              <button className="btn primary" onClick={onRematch}>
-                Rematch
+              <button className="btn primary" onClick={next.run}>
+                {next.label}
               </button>
               <button className="btn secondary" onClick={() => setViewBoard(true)}>
                 View battlefield
@@ -587,15 +631,16 @@ export function Board({ g, human, onExit, onRematch }: { g: Game; human: HumanCo
 
       {g.winner !== undefined && viewBoard && (
         <div className="gameover-bar">
-          <span className="gameover-bar-result">{g.winner === null ? 'Draw' : g.winner === me ? 'Victory' : 'Defeat'}</span>
+          <span className="gameover-bar-result">{resultText}</span>
           <span className="gameover-bar-info">
             Turn {g.turn} · {g.players[me].life} – {g.players[opp].life}
+            {matchLine ? ` · ${matchLine}` : ''}
           </span>
           <button className="btn small secondary" onClick={() => setViewBoard(false)}>
             Show result
           </button>
-          <button className="btn small primary" onClick={onRematch}>
-            Rematch
+          <button className="btn small primary" onClick={next.run}>
+            {next.label}
           </button>
           <button className="btn small secondary" onClick={onExit}>
             Change decks

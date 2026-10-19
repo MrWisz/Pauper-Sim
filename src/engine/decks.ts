@@ -48,27 +48,34 @@ export function parseDeckList(text: string): ParsedDeck {
 
 export interface BuiltDeck {
   cards: CardDef[];
+  /** sideboard (used between games of a best-of-3) */
+  side: CardDef[];
   unimplemented: string[];
   notFound: string[];
 }
 
 export async function buildDeck(text: string): Promise<BuiltDeck> {
   const parsed = parseDeckList(text);
-  const names = parsed.main.map((e) => e.name);
+  const names = [...parsed.main, ...parsed.side].map((e) => e.name);
   let notFound: string[] = [];
   if (names.some((n) => !getDef(n))) notFound = await fetchMissing(names);
-  const cards: CardDef[] = [];
   const unimplemented = new Set<string>();
-  for (const e of parsed.main) {
-    const def = getDef(e.name);
-    if (!def) {
-      if (!notFound.includes(e.name)) notFound.push(e.name);
-      continue;
+  const resolve = (entries: DeckEntry[]) => {
+    const out: CardDef[] = [];
+    for (const e of entries) {
+      const def = getDef(e.name);
+      if (!def) {
+        if (!notFound.includes(e.name)) notFound.push(e.name);
+        continue;
+      }
+      if (!def.implemented) unimplemented.add(def.name);
+      for (let i = 0; i < e.count; i++) out.push(def);
     }
-    if (!def.implemented) unimplemented.add(def.name);
-    for (let i = 0; i < e.count; i++) cards.push(def);
-  }
-  return { cards, unimplemented: [...unimplemented], notFound };
+    return out;
+  };
+  const cards = resolve(parsed.main);
+  const side = resolve(parsed.side);
+  return { cards, side, unimplemented: [...unimplemented], notFound };
 }
 
 export const PRESETS: Record<string, string> = {
