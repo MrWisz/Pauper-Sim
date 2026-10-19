@@ -1,0 +1,155 @@
+## Voldaren Epicure :: {R} | Creature — Vampire | When this creature enters, it deals 1 damage to each opponent. Create a Blood token. (It's an artifact with "{1}, {T}, Discard a card, Sacrifice this token: Draw a card.") [1/1]
+## Kessig Flamebreather :: {1}{R} | Creature — Human Shaman | Whenever you cast a noncreature spell, this creature deals 1 damage to each opponent. [1/3]
+## Sneaky Snacker :: {U}{B} | Creature — Faerie Rogue | Flying 
+ When you draw your third card in a turn, return this card from your graveyard to the battlefield tapped. [2/1]
+## Guttersnipe :: {2}{R} | Creature — Goblin Shaman | Whenever you cast an instant or sorcery spell, this creature deals 2 damage to each opponent. [2/2]
+## Faithless Looting :: {R} | Sorcery | Draw two cards, then discard two cards. 
+ Flashback {2}{R} (You may cast this card from your graveyard for its flashback cost. Then exile it.)
+## Grab the Prize :: {1}{R} | Sorcery | As an additional cost to cast this spell, discard a card. 
+ Draw two cards. If the discarded card wasn't a land card, Grab the Prize deals 2 damage to each opponent.
+## Highway Robbery :: {1}{R} | Sorcery | You may discard a card or sacrifice a land. If you do, draw two cards. 
+ Plot {1}{R} (You may pay {1}{R} and exile this card from your hand. Cast it as a sorcery on a later turn without paying its mana cost. Plot only as a sorcery.)
+## Lava Dart :: {R} | Instant | Lava Dart deals 1 damage to any target. 
+ Flashback—Sacrifice a Mountain. (You may cast this card from your graveyard for its flashback cost. Then exile it.)
+## Lightning Bolt :: {R} | Instant | Lightning Bolt deals 3 damage to any target.
+## Fiery Temper :: {1}{R}{R} | Instant | Fiery Temper deals 3 damage to any target. 
+ Madness {R} (If you discard this card, discard it into exile. When you do, cast it for its madness cost or put it into your graveyard.)
+## Fireblast :: {4}{R}{R} | Instant | You may sacrifice two Mountains rather than pay this spell's mana cost. 
+ Fireblast deals 4 damage to any target.
+## Mountain ::  | Basic Land — Mountain | ({T}: Add {R}.)
+## End the Festivities :: {R} | Sorcery | End the Festivities deals 1 damage to each opponent and each creature and planeswalker they control.
+## Pyroblast :: {R} | Instant | Choose one — 
+ • Counter target spell if it's blue. 
+ • Destroy target permanent if it's blue.
+## Red Elemental Blast :: {R} | Instant | Choose one — 
+ • Counter target blue spell. 
+ • Destroy target blue permanent.
+## Relic of Progenitus :: {1} | Artifact | {T}: Target player exiles a card from their graveyard. 
+ {1}, Exile this artifact: Exile all graveyards. Draw a card.
+## Cast into the Fire :: {1}{R} | Instant | Choose one — 
+ • Cast into the Fire deals 1 damage to each of up to two target creatures. 
+ • Exile target artifact.
+## Searing Blaze :: {R}{R} | Instant | Searing Blaze deals 1 damage to target player or planeswalker and 1 damage to target creature that player or that planeswalker's controller controls. 
+ Landfall — If you had a land enter the battlefield under your control this turn, Searing Blaze deals 3 damage to that player or planeswalker and 3 damage to that creature instead.
+## Smash to Smithereens :: {1}{R} | Instant | Destroy target artifact. Smash to Smithereens deals 3 damage to that artifact's controller.
+## Alms of the Vein :: {2}{B} | Sorcery | Target opponent loses 3 life and you gain 3 life. 
+ Madness {B} (If you discard this card, discard it into exile. When you do, cast it for its madness cost or put it into your graveyard.)
+## Jagged Barrens ::  | Land — Desert | This land enters tapped. 
+ When this land enters, it deals 1 damage to target opponent. 
+ {T}: Add {B} or {R}.
+## Kitchen Imp :: {3}{B} | Creature — Imp | Flying, haste 
+ Madness {B} (If you discard this card, discard it into exile. When you do, cast it for its madness cost or put it into your graveyard.) [2/2]
+## Razortrap Gorge ::  | Land | This land enters tapped unless a player has 13 or less life. 
+ {T}: Add {B} or {R}.
+## Swamp ::  | Basic Land — Swamp | ({T}: Add {B}.)
+## Vampire's Kiss :: {1}{B} | Sorcery | Target player loses 2 life and you gain 2 life. Create two Blood tokens. (They're artifacts with "{1}, {T}, Discard a card, Sacrifice this token: Draw a card.")
+## Dark Withering :: {4}{B}{B} | Instant | Destroy target nonblack creature. 
+ Madness {B} (If you discard this card, discard it into exile. When you do, cast it for its madness cost or put it into your graveyard.)
+## Extract a Confession :: {1}{B} | Sorcery | As an additional cost to cast this spell, you may collect evidence 6. (Exile cards with total mana value 6 or greater from your graveyard.) 
+ Each opponent sacrifices a creature of their choice. If evidence was collected, instead each opponent sacrifices a creature with the greatest power among creatures they control.
+## Faerie Macabre :: {1}{B}{B} | Creature — Faerie Rogue | Flying 
+ Discard this card: Exile up to two target cards from graveyards. [2/2]
+## Nihil Spellbomb :: {1} | Artifact | {T}, Sacrifice this artifact: Exile target player's graveyard. 
+ When this artifact is put into a graveyard from the battlefield, you may pay {B}. If you do, draw a card.
+## Agony Warp :: {U}{B} | Instant | Target creature gets -3/-0 until end of turn. 
+ Target creature gets -0/-3 until end of turn.
+## Augur of Bolas :: {1}{U} | Creature — Merfolk Wizard | When this creature enters, look at the top three cards of your library. You may reveal an instant or sorcery card from among them and put it into your hand. Put the rest on the bottom of your library in any order. [1/3]
+## Baleful Strix :: {U}{B} | Artifact Creature — Bird | Flying, deathtouch 
+ When this creature enters, draw a card. [1/1]
+## Bojuka Bog ::  | Land | This land enters tapped. 
+ When this land enters, exile target player's graveyard. 
+ {T}: Add {B}.
+## Brainstorm :: {U} | Instant | Draw three cards, then put two cards from your hand on top of your library in any order.
+## Cast Down :: {1}{B} | Instant | Destroy target nonlegendary creature.
+## Counterspell :: {U}{U} | Instant | Counter target spell.
+## Dispel :: {U} | Instant | Counter target instant spell.
+## Faerie Seer :: {U} | Creature — Faerie Wizard | Flying 
+ When this creature enters, scry 2. (Look at the top two cards of your library, then put any number of them on the bottom and the rest on top in any order.) [1/1]
+## Ice Tunnel ::  | Snow Land — Island Swamp | ({T}: Add {U} or {B}.) 
+ This land enters tapped.
+## Island ::  | Basic Land — Island | ({T}: Add {U}.)
+## Lórien Revealed :: {3}{U}{U} | Sorcery | Draw three cards. 
+ Islandcycling {1} ({1}, Discard this card: Search your library for an Island card, reveal it, put it into your hand, then shuffle.)
+## Moon-Circuit Hacker :: {1}{U} | Enchantment Creature — Human Ninja | Ninjutsu {U} ({U}, Return an unblocked attacker you control to hand: Put this card onto the battlefield from your hand tapped and attacking.) 
+ Whenever this creature deals combat damage to a player, you may draw a card. If you do, discard a card unless this creature entered this turn. [2/1]
+## Mukotai Ambusher :: {3}{B} | Artifact Creature — Rat Ninja | Ninjutsu {1}{B} ({1}{B}, Return an unblocked attacker you control to hand: Put this card onto the battlefield from your hand tapped and attacking.) 
+ Lifelink [3/2]
+## Ninja of the Deep Hours :: {3}{U} | Creature — Human Ninja | Ninjutsu {1}{U} ({1}{U}, Return an unblocked attacker you control to hand: Put this card onto the battlefield from your hand tapped and attacking.) 
+ Whenever this creature deals combat damage to a player, you may draw a card. [2/2]
+## Seething Landscape ::  | Land | {T}: Add {C}. 
+ {T}, Sacrifice this land: Search your library for a basic Island, Swamp, or Mountain card, put it onto the battlefield tapped, then shuffle. 
+ Cycling {U}{B}{R} ({U}{B}{R}, Discard this card: Draw a card.)
+## Snuff Out :: {3}{B} | Instant | If you control a Swamp, you may pay 4 life rather than pay this spell's mana cost. 
+ Destroy target nonblack creature. It can't be regenerated.
+## Spellstutter Sprite :: {1}{U} | Creature — Faerie Wizard | Flash 
+ Flying 
+ When this creature enters, counter target spell with mana value X or less, where X is the number of Faeries you control. [1/1]
+## Suffocating Fumes :: {2}{B} | Instant | Creatures your opponents control get -1/-1 until end of turn. 
+ Cycling {2} ({2}, Discard this card: Draw a card.)
+## Thorn of the Black Rose :: {3}{B} | Creature — Human Assassin | Deathtouch 
+ When this creature enters, you become the monarch. [1/3]
+## Annul :: {U} | Instant | Counter target artifact or enchantment spell.
+## Arms of Hadar :: {3}{B} | Sorcery | Creatures target player controls get -2/-2 until end of turn.
+## Blue Elemental Blast :: {U} | Instant | Choose one — 
+ • Counter target red spell. 
+ • Destroy target red permanent.
+## Campfire :: {1} | Artifact | {1}, {T}: You gain 2 life. 
+ {2}, {T}, Exile this artifact: Put all commanders you own from the command zone and from your graveyard into your hand. Then shuffle your graveyard into your library.
+## Hydroblast :: {U} | Instant | Choose one — 
+ • Counter target spell if it's red. 
+ • Destroy target permanent if it's red.
+## Black Mage's Rod :: {1}{B} | Artifact — Equipment | Job select (When this Equipment enters, create a 1/1 colorless Hero creature token, then attach this to it.) 
+ Equipped creature gets +1/+0, has "Whenever you cast a noncreature spell, this creature deals 1 damage to each opponent," and is a Wizard in addition to its other types. 
+ Equip {3}
+## Blood Fountain :: {B} | Artifact | When this artifact enters, create a Blood token. (It's an artifact with "{1}, {T}, Discard a card, Sacrifice this token: Draw a card.") 
+ {3}{B}, {T}, Sacrifice this artifact: Return up to two target creature cards from your graveyard to your hand.
+## Cryogen Relic :: {1}{U} | Artifact | When this artifact enters or leaves the battlefield, draw a card. 
+ {1}{U}, Sacrifice this artifact: Put a stun counter on up to one target tapped creature. (If a permanent with a stun counter would become untapped, remove one from it instead.)
+## Cut Down :: {B} | Instant | Destroy target creature with total power and toughness 5 or less.
+## Drossforge Bridge ::  | Artifact Land | This land enters tapped. 
+ Indestructible 
+ {T}: Add {B} or {R}.
+## Fanatical Offering :: {1}{B} | Instant | As an additional cost to cast this spell, sacrifice an artifact or creature. 
+ Draw two cards and create a Map token. (It's an artifact with "{1}, {T}, Sacrifice this token: Target creature you control explores. Activate only as a sorcery.")
+## Galvanic Blast :: {R} | Instant | Galvanic Blast deals 2 damage to any target. 
+ Metalcraft — Galvanic Blast deals 4 damage instead if you control three or more artifacts.
+## Giant's Boulder :: {1} | Artifact | When this artifact enters, scry 2. (Look at the top two cards of your library, then put any number of them on the bottom and the rest on top in any order.) 
+ {1}, {T}: Add one mana of any color. 
+ {7}, {T}, Sacrifice this artifact: Destroy target permanent.
+## Great Furnace ::  | Artifact Land | {T}: Add {R}.
+## Ichor Wellspring :: {2} | Artifact | When this artifact enters or is put into a graveyard from the battlefield, draw a card.
+## Krark-Clan Shaman :: {R} | Creature — Goblin Shaman | Sacrifice an artifact: This creature deals 1 damage to each creature without flying. [1/1]
+## Makeshift Munitions :: {1}{R} | Enchantment | {1}, Sacrifice an artifact or creature: This enchantment deals 1 damage to any target.
+## Mistvault Bridge ::  | Artifact Land | This land enters tapped. 
+ Indestructible 
+ {T}: Add {U} or {B}.
+## Myr Enforcer :: {7} | Artifact Creature — Myr | Affinity for artifacts (This spell costs {1} less to cast for each artifact you control.) [4/4]
+## Reckoner's Bargain :: {1}{B} | Instant | As an additional cost to cast this spell, sacrifice an artifact or creature. 
+ You gain life equal to the sacrificed permanent's mana value. Draw two cards.
+## Refurbished Familiar :: {3}{B} | Artifact Creature — Zombie Rat | Affinity for artifacts (This spell costs {1} less to cast for each artifact you control.) 
+ Flying 
+ When this creature enters, each opponent discards a card. For each opponent who can't, you draw a card. [2/1]
+## Seat of the Synod ::  | Artifact Land | {T}: Add {U}.
+## Silverbluff Bridge ::  | Artifact Land | This land enters tapped. 
+ Indestructible 
+ {T}: Add {U} or {R}.
+## Thoughtcast :: {4}{U} | Sorcery | Affinity for artifacts (This spell costs {1} less to cast for each artifact you control.) 
+ Draw two cards.
+## Utrom Monitor :: {4}{U} | Artifact Creature — Utrom Scientist | Affinity for artifacts (This spell costs {1} less to cast for each artifact you control.) 
+ Flying (This creature can't be blocked except by creatures with flying or reach.) [3/3]
+## Vault of Whispers ::  | Artifact Land | {T}: Add {B}.
+## Envelop :: {U} | Instant | Counter target sorcery spell.
+## Hunter's Blowgun :: {1} | Artifact — Equipment | Equipped creature gets +1/+1. 
+ Equipped creature has deathtouch during your turn. Otherwise, it has reach. 
+ Equip {2} ({2}: Attach to target creature you control. Equip only as a sorcery.)
+## Vandalblast :: {R} | Sorcery | Destroy target artifact you don't control. 
+ Overload {4}{R} (You may cast this spell for its overload cost. If you do, change "target" in its text to "each.")
+## Toxin Analysis :: {B} | Instant | Target creature gains deathtouch and lifelink until end of turn. Investigate. (Create a Clue token. It's an artifact with "{2}, Sacrifice this token: Draw a card.")
+## Rakdos Carnarium ::  | Land | This land enters tapped. 
+ When this land enters, return a land you control to its owner's hand. 
+ {T}: Add {B}{R}.
+## Contaminated Aquifer ::  | Land — Island Swamp | ({T}: Add {U} or {B}.) 
+ This land enters tapped.
+## Dimir Aqueduct ::  | Land | This land enters tapped. 
+ When this land enters, return a land you control to its owner's hand. 
+ {T}: Add {U}{B}.

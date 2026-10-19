@@ -1,0 +1,1524 @@
+{
+ "Voldaren Epicure": {
+  "name": "Voldaren Epicure",
+  "manaCost": "{R}",
+  "cmc": 1,
+  "typeLine": "Creature — Vampire",
+  "oracle": "When this creature enters, it deals 1 damage to each opponent. Create a Blood token. (It's an artifact with \"{1}, {T}, Discard a card, Sacrifice this token: Draw a card.\")",
+  "colors": [
+   "R"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/e/8/e8fe855c-fe94-4de7-a033-9892a9d6ee0e.jpg?1783908106",
+  "art": "https://cards.scryfall.io/art_crop/front/e/8/e8fe855c-fe94-4de7-a033-9892a9d6ee0e.jpg?1783908106"
+ },
+ "Kessig Flamebreather": {
+  "name": "Kessig Flamebreather",
+  "manaCost": "{1}{R}",
+  "cmc": 2,
+  "typeLine": "Creature — Human Shaman",
+  "oracle": "Whenever you cast a noncreature spell, this creature deals 1 damage to each opponent.",
+  "colors": [
+   "R"
+  ],
+  "power": "1",
+  "toughness": "3",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/3/0/303ad78a-b02a-44dc-afe6-7f95781a5062.jpg?1783924832",
+  "art": "https://cards.scryfall.io/art_crop/front/3/0/303ad78a-b02a-44dc-afe6-7f95781a5062.jpg?1783924832"
+ },
+ "Sneaky Snacker": {
+  "name": "Sneaky Snacker",
+  "manaCost": "{U}{B}",
+  "cmc": 2,
+  "typeLine": "Creature — Faerie Rogue",
+  "oracle": "Flying\nWhen you draw your third card in a turn, return this card from your graveyard to the battlefield tapped.",
+  "colors": [
+   "B",
+   "U"
+  ],
+  "power": "2",
+  "toughness": "1",
+  "keywords": [
+   "Flying"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/0/e/0e3aedae-e4bb-48e3-9f8b-bea0430df306.jpg?1783911245",
+  "art": "https://cards.scryfall.io/art_crop/front/0/e/0e3aedae-e4bb-48e3-9f8b-bea0430df306.jpg?1783911245"
+ },
+ "Guttersnipe": {
+  "name": "Guttersnipe",
+  "manaCost": "{2}{R}",
+  "cmc": 3,
+  "typeLine": "Creature — Goblin Shaman",
+  "oracle": "Whenever you cast an instant or sorcery spell, this creature deals 2 damage to each opponent.",
+  "colors": [
+   "R"
+  ],
+  "power": "2",
+  "toughness": "2",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/f/6/f6bb1ffc-2251-4655-b8f9-4c8047dd5d5f.jpg?1785497556",
+  "art": "https://cards.scryfall.io/art_crop/front/f/6/f6bb1ffc-2251-4655-b8f9-4c8047dd5d5f.jpg?1785497556"
+ },
+ "Faithless Looting": {
+  "name": "Faithless Looting",
+  "manaCost": "{R}",
+  "cmc": 1,
+  "typeLine": "Sorcery",
+  "oracle": "Draw two cards, then discard two cards.\nFlashback {2}{R} (You may cast this card from your graveyard for its flashback cost. Then exile it.)",
+  "colors": [
+   "R"
+  ],
+  "keywords": [
+   "Flashback"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/f/c/fc019ffa-4461-4f3d-ab8d-e4d20e77ca0c.jpg?1783903774",
+  "art": "https://cards.scryfall.io/art_crop/front/f/c/fc019ffa-4461-4f3d-ab8d-e4d20e77ca0c.jpg?1783903774"
+ },
+ "Grab the Prize": {
+  "name": "Grab the Prize",
+  "manaCost": "{1}{R}",
+  "cmc": 2,
+  "typeLine": "Sorcery",
+  "oracle": "As an additional cost to cast this spell, discard a card.\nDraw two cards. If the discarded card wasn't a land card, Grab the Prize deals 2 damage to each opponent.",
+  "colors": [
+   "R"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/5/0/50895202-f1a1-4840-a11a-55b78b8b5929.jpg?1783909469",
+  "art": "https://cards.scryfall.io/art_crop/front/5/0/50895202-f1a1-4840-a11a-55b78b8b5929.jpg?1783909469"
+ },
+ "Highway Robbery": {
+  "name": "Highway Robbery",
+  "manaCost": "{1}{R}",
+  "cmc": 2,
+  "typeLine": "Sorcery",
+  "oracle": "You may discard a card or sacrifice a land. If you do, draw two cards.\nPlot {1}{R} (You may pay {1}{R} and exile this card from your hand. Cast it as a sorcery on a later turn without paying its mana cost. Plot only as a sorcery.)",
+  "colors": [
+   "R"
+  ],
+  "keywords": [
+   "Plot"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/3/1/31a88429-9204-4a23-a7a8-babbd6bab79f.jpg?1783911819",
+  "art": "https://cards.scryfall.io/art_crop/front/3/1/31a88429-9204-4a23-a7a8-babbd6bab79f.jpg?1783911819"
+ },
+ "Lava Dart": {
+  "name": "Lava Dart",
+  "manaCost": "{R}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Lava Dart deals 1 damage to any target.\nFlashback—Sacrifice a Mountain. (You may cast this card from your graveyard for its flashback cost. Then exile it.)",
+  "colors": [
+   "R"
+  ],
+  "keywords": [
+   "Flashback"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/b/1/b16dd041-451d-4914-8c46-aa315a90d802.jpg?1783933110",
+  "art": "https://cards.scryfall.io/art_crop/front/b/1/b16dd041-451d-4914-8c46-aa315a90d802.jpg?1783933110"
+ },
+ "Lightning Bolt": {
+  "name": "Lightning Bolt",
+  "manaCost": "{R}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Lightning Bolt deals 3 damage to any target.",
+  "colors": [
+   "R"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/7/6/7673784e-db4b-43a1-8d55-1bb9fc1e284f.jpg?1783903008",
+  "art": "https://cards.scryfall.io/art_crop/front/7/6/7673784e-db4b-43a1-8d55-1bb9fc1e284f.jpg?1783903008"
+ },
+ "Fiery Temper": {
+  "name": "Fiery Temper",
+  "manaCost": "{1}{R}{R}",
+  "cmc": 3,
+  "typeLine": "Instant",
+  "oracle": "Fiery Temper deals 3 damage to any target.\nMadness {R} (If you discard this card, discard it into exile. When you do, cast it for its madness cost or put it into your graveyard.)",
+  "colors": [
+   "R"
+  ],
+  "keywords": [
+   "Madness"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/1/d/1d3a3a1d-c393-4a57-8a0e-5907d1722331.jpg?1783908123",
+  "art": "https://cards.scryfall.io/art_crop/front/1/d/1d3a3a1d-c393-4a57-8a0e-5907d1722331.jpg?1783908123"
+ },
+ "Fireblast": {
+  "name": "Fireblast",
+  "manaCost": "{4}{R}{R}",
+  "cmc": 6,
+  "typeLine": "Instant",
+  "oracle": "You may sacrifice two Mountains rather than pay this spell's mana cost.\nFireblast deals 4 damage to any target.",
+  "colors": [
+   "R"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/a/0/a0ab67cc-b553-4451-9cda-0e5fe3303940.jpg?1783918463",
+  "art": "https://cards.scryfall.io/art_crop/front/a/0/a0ab67cc-b553-4451-9cda-0e5fe3303940.jpg?1783918463"
+ },
+ "Mountain": {
+  "name": "Mountain",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Basic Land — Mountain",
+  "oracle": "({T}: Add {R}.)",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/8/5/85177bd7-6c50-48da-b692-ae5fe7bd357c.jpg?1791578439",
+  "art": "https://cards.scryfall.io/art_crop/front/8/5/85177bd7-6c50-48da-b692-ae5fe7bd357c.jpg?1791578439"
+ },
+ "End the Festivities": {
+  "name": "End the Festivities",
+  "manaCost": "{R}",
+  "cmc": 1,
+  "typeLine": "Sorcery",
+  "oracle": "End the Festivities deals 1 damage to each opponent and each creature and planeswalker they control.",
+  "colors": [
+   "R"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/b/e/bec748e6-7245-4a71-aeee-cefed8346948.jpg?1783924837",
+  "art": "https://cards.scryfall.io/art_crop/front/b/e/bec748e6-7245-4a71-aeee-cefed8346948.jpg?1783924837"
+ },
+ "Pyroblast": {
+  "name": "Pyroblast",
+  "manaCost": "{R}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Choose one —\n• Counter target spell if it's blue.\n• Destroy target permanent if it's blue.",
+  "colors": [
+   "R"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/b/0/b029eb9a-dd7a-40c2-96c4-0063d9cc002c.jpg?1783937576",
+  "art": "https://cards.scryfall.io/art_crop/front/b/0/b029eb9a-dd7a-40c2-96c4-0063d9cc002c.jpg?1783937576"
+ },
+ "Red Elemental Blast": {
+  "name": "Red Elemental Blast",
+  "manaCost": "{R}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Choose one —\n• Counter target blue spell.\n• Destroy target blue permanent.",
+  "colors": [
+   "R"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/7/0/70a45e9b-699e-425a-9f3d-267274830d3e.jpg?1783935140",
+  "art": "https://cards.scryfall.io/art_crop/front/7/0/70a45e9b-699e-425a-9f3d-267274830d3e.jpg?1783935140"
+ },
+ "Relic of Progenitus": {
+  "name": "Relic of Progenitus",
+  "manaCost": "{1}",
+  "cmc": 1,
+  "typeLine": "Artifact",
+  "oracle": "{T}: Target player exiles a card from their graveyard.\n{1}, Exile this artifact: Exile all graveyards. Draw a card.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/4/3/436cd66c-0622-43cd-8748-af4d21a2db3f.jpg?1783937543",
+  "art": "https://cards.scryfall.io/art_crop/front/4/3/436cd66c-0622-43cd-8748-af4d21a2db3f.jpg?1783937543"
+ },
+ "Cast into the Fire": {
+  "name": "Cast into the Fire",
+  "manaCost": "{1}{R}",
+  "cmc": 2,
+  "typeLine": "Instant",
+  "oracle": "Choose one —\n• Cast into the Fire deals 1 damage to each of up to two target creatures.\n• Exile target artifact.",
+  "colors": [
+   "R"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/2/e/2ef878cb-27b6-47d8-ad11-bd20529b0e7e.jpg?1783916289",
+  "art": "https://cards.scryfall.io/art_crop/front/2/e/2ef878cb-27b6-47d8-ad11-bd20529b0e7e.jpg?1783916289"
+ },
+ "Searing Blaze": {
+  "name": "Searing Blaze",
+  "manaCost": "{R}{R}",
+  "cmc": 2,
+  "typeLine": "Instant",
+  "oracle": "Searing Blaze deals 1 damage to target player or planeswalker and 1 damage to target creature that player or that planeswalker's controller controls.\nLandfall — If you had a land enter the battlefield under your control this turn, Searing Blaze deals 3 damage to that player or planeswalker and 3 damage to that creature instead.",
+  "colors": [
+   "R"
+  ],
+  "keywords": [
+   "Landfall"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/f/6/f659d464-13dd-49e2-a842-098dcba49659.jpg?1783940758",
+  "art": "https://cards.scryfall.io/art_crop/front/f/6/f659d464-13dd-49e2-a842-098dcba49659.jpg?1783940758"
+ },
+ "Smash to Smithereens": {
+  "name": "Smash to Smithereens",
+  "manaCost": "{1}{R}",
+  "cmc": 2,
+  "typeLine": "Instant",
+  "oracle": "Destroy target artifact. Smash to Smithereens deals 3 damage to that artifact's controller.",
+  "colors": [
+   "R"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/6/5/655c489f-bffb-45a4-8e7c-2d1a35220197.jpg?1783938326",
+  "art": "https://cards.scryfall.io/art_crop/front/6/5/655c489f-bffb-45a4-8e7c-2d1a35220197.jpg?1783938326"
+ },
+ "Alms of the Vein": {
+  "name": "Alms of the Vein",
+  "manaCost": "{2}{B}",
+  "cmc": 3,
+  "typeLine": "Sorcery",
+  "oracle": "Target opponent loses 3 life and you gain 3 life.\nMadness {B} (If you discard this card, discard it into exile. When you do, cast it for its madness cost or put it into your graveyard.)",
+  "colors": [
+   "B"
+  ],
+  "keywords": [
+   "Madness"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/7/9/79b80948-a3cd-4962-8fce-d58f2db7e68e.jpg?1783937781",
+  "art": "https://cards.scryfall.io/art_crop/front/7/9/79b80948-a3cd-4962-8fce-d58f2db7e68e.jpg?1783937781"
+ },
+ "Jagged Barrens": {
+  "name": "Jagged Barrens",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land — Desert",
+  "oracle": "This land enters tapped.\nWhen this land enters, it deals 1 damage to target opponent.\n{T}: Add {B} or {R}.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/5/d/5d809f5b-d965-4cb1-a9f8-2048f8534373.jpg?1783911776",
+  "art": "https://cards.scryfall.io/art_crop/front/5/d/5d809f5b-d965-4cb1-a9f8-2048f8534373.jpg?1783911776"
+ },
+ "Kitchen Imp": {
+  "name": "Kitchen Imp",
+  "manaCost": "{3}{B}",
+  "cmc": 4,
+  "typeLine": "Creature — Imp",
+  "oracle": "Flying, haste\nMadness {B} (If you discard this card, discard it into exile. When you do, cast it for its madness cost or put it into your graveyard.)",
+  "colors": [
+   "B"
+  ],
+  "power": "2",
+  "toughness": "2",
+  "keywords": [
+   "Flying",
+   "Madness",
+   "Haste"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/8/3/836ae711-e62f-49ec-850e-d25f6fd2a4d4.jpg?1783926859",
+  "art": "https://cards.scryfall.io/art_crop/front/8/3/836ae711-e62f-49ec-850e-d25f6fd2a4d4.jpg?1783926859"
+ },
+ "Razortrap Gorge": {
+  "name": "Razortrap Gorge",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land",
+  "oracle": "This land enters tapped unless a player has 13 or less life.\n{T}: Add {B} or {R}.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/9/8/98d0d067-b52d-47ec-ba7b-8cfcd716c0e5.jpg?1783909427",
+  "art": "https://cards.scryfall.io/art_crop/front/9/8/98d0d067-b52d-47ec-ba7b-8cfcd716c0e5.jpg?1783909427"
+ },
+ "Swamp": {
+  "name": "Swamp",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Basic Land — Swamp",
+  "oracle": "({T}: Add {B}.)",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/b/2/b233b117-9369-45c1-80c5-cc857386b6be.jpg?1791578437",
+  "art": "https://cards.scryfall.io/art_crop/front/b/2/b233b117-9369-45c1-80c5-cc857386b6be.jpg?1791578437"
+ },
+ "Vampire's Kiss": {
+  "name": "Vampire's Kiss",
+  "manaCost": "{1}{B}",
+  "cmc": 2,
+  "typeLine": "Sorcery",
+  "oracle": "Target player loses 2 life and you gain 2 life. Create two Blood tokens. (They're artifacts with \"{1}, {T}, Discard a card, Sacrifice this token: Draw a card.\")",
+  "colors": [
+   "B"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/9/7/974bf8cc-4259-48cc-8e7f-1580bb010d3f.jpg?1783924846",
+  "art": "https://cards.scryfall.io/art_crop/front/9/7/974bf8cc-4259-48cc-8e7f-1580bb010d3f.jpg?1783924846"
+ },
+ "Dark Withering": {
+  "name": "Dark Withering",
+  "manaCost": "{4}{B}{B}",
+  "cmc": 6,
+  "typeLine": "Instant",
+  "oracle": "Destroy target nonblack creature.\nMadness {B} (If you discard this card, discard it into exile. When you do, cast it for its madness cost or put it into your graveyard.)",
+  "colors": [
+   "B"
+  ],
+  "keywords": [
+   "Madness"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/6/9/6996d612-28a5-4515-baba-9aad65bf4b28.jpg?1783918481",
+  "art": "https://cards.scryfall.io/art_crop/front/6/9/6996d612-28a5-4515-baba-9aad65bf4b28.jpg?1783918481"
+ },
+ "Extract a Confession": {
+  "name": "Extract a Confession",
+  "manaCost": "{1}{B}",
+  "cmc": 2,
+  "typeLine": "Sorcery",
+  "oracle": "As an additional cost to cast this spell, you may collect evidence 6. (Exile cards with total mana value 6 or greater from your graveyard.)\nEach opponent sacrifices a creature of their choice. If evidence was collected, instead each opponent sacrifices a creature with the greatest power among creatures they control.",
+  "colors": [
+   "B"
+  ],
+  "keywords": [
+   "Collect evidence"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/2/5/256c8b6e-4031-458b-8eb9-bbfe58405a0c.jpg?1783912899",
+  "art": "https://cards.scryfall.io/art_crop/front/2/5/256c8b6e-4031-458b-8eb9-bbfe58405a0c.jpg?1783912899"
+ },
+ "Faerie Macabre": {
+  "name": "Faerie Macabre",
+  "manaCost": "{1}{B}{B}",
+  "cmc": 3,
+  "typeLine": "Creature — Faerie Rogue",
+  "oracle": "Flying\nDiscard this card: Exile up to two target cards from graveyards.",
+  "colors": [
+   "B"
+  ],
+  "power": "2",
+  "toughness": "2",
+  "keywords": [
+   "Flying"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/6/2/62103ceb-b16d-48ea-af42-d3df88d1ee4c.jpg?1783938752",
+  "art": "https://cards.scryfall.io/art_crop/front/6/2/62103ceb-b16d-48ea-af42-d3df88d1ee4c.jpg?1783938752"
+ },
+ "Nihil Spellbomb": {
+  "name": "Nihil Spellbomb",
+  "manaCost": "{1}",
+  "cmc": 1,
+  "typeLine": "Artifact",
+  "oracle": "{T}, Sacrifice this artifact: Exile target player's graveyard.\nWhen this artifact is put into a graveyard from the battlefield, you may pay {B}. If you do, draw a card.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/e/5/e5892a23-efae-4731-9b8f-41c87960fe93.jpg?1783935110",
+  "art": "https://cards.scryfall.io/art_crop/front/e/5/e5892a23-efae-4731-9b8f-41c87960fe93.jpg?1783935110"
+ },
+ "Agony Warp": {
+  "name": "Agony Warp",
+  "manaCost": "{U}{B}",
+  "cmc": 2,
+  "typeLine": "Instant",
+  "oracle": "Target creature gets -3/-0 until end of turn.\nTarget creature gets -0/-3 until end of turn.",
+  "colors": [
+   "B",
+   "U"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/5/8/5890a23e-1da0-432b-8dc8-85b92dee9ba1.jpg?1783921857",
+  "art": "https://cards.scryfall.io/art_crop/front/5/8/5890a23e-1da0-432b-8dc8-85b92dee9ba1.jpg?1783921857"
+ },
+ "Augur of Bolas": {
+  "name": "Augur of Bolas",
+  "manaCost": "{1}{U}",
+  "cmc": 2,
+  "typeLine": "Creature — Merfolk Wizard",
+  "oracle": "When this creature enters, look at the top three cards of your library. You may reveal an instant or sorcery card from among them and put it into your hand. Put the rest on the bottom of your library in any order.",
+  "colors": [
+   "U"
+  ],
+  "power": "1",
+  "toughness": "3",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/d/1/d19fbfe6-69bb-452a-be3c-b9c625e23193.jpg?1783933469",
+  "art": "https://cards.scryfall.io/art_crop/front/d/1/d19fbfe6-69bb-452a-be3c-b9c625e23193.jpg?1783933469"
+ },
+ "Baleful Strix": {
+  "name": "Baleful Strix",
+  "manaCost": "{U}{B}",
+  "cmc": 2,
+  "typeLine": "Artifact Creature — Bird",
+  "oracle": "Flying, deathtouch\nWhen this creature enters, draw a card.",
+  "colors": [
+   "B",
+   "U"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [
+   "Deathtouch",
+   "Flying"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/b/e/be8439e6-f779-49f0-806a-b04995697a6a.jpg?1783911902",
+  "art": "https://cards.scryfall.io/art_crop/front/b/e/be8439e6-f779-49f0-806a-b04995697a6a.jpg?1783911902"
+ },
+ "Bojuka Bog": {
+  "name": "Bojuka Bog",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land",
+  "oracle": "This land enters tapped.\nWhen this land enters, exile target player's graveyard.\n{T}: Add {B}.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/5/5/55b5b094-9d2d-4d96-b90c-78fecdae725a.jpg?1783903734",
+  "art": "https://cards.scryfall.io/art_crop/front/5/5/55b5b094-9d2d-4d96-b90c-78fecdae725a.jpg?1783903734"
+ },
+ "Brainstorm": {
+  "name": "Brainstorm",
+  "manaCost": "{U}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Draw three cards, then put two cards from your hand on top of your library in any order.",
+  "colors": [
+   "U"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/e/c/ec7d6864-7b6b-4f74-8474-9b9ec96b1d33.jpg?1789599806",
+  "art": "https://cards.scryfall.io/art_crop/front/e/c/ec7d6864-7b6b-4f74-8474-9b9ec96b1d33.jpg?1789599806"
+ },
+ "Cast Down": {
+  "name": "Cast Down",
+  "manaCost": "{1}{B}",
+  "cmc": 2,
+  "typeLine": "Instant",
+  "oracle": "Destroy target nonlegendary creature.",
+  "colors": [
+   "B"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/a/b/aba79021-39af-4e74-beb5-f2f508c865b2.jpg?1783922764",
+  "art": "https://cards.scryfall.io/art_crop/front/a/b/aba79021-39af-4e74-beb5-f2f508c865b2.jpg?1783922764"
+ },
+ "Counterspell": {
+  "name": "Counterspell",
+  "manaCost": "{U}{U}",
+  "cmc": 2,
+  "typeLine": "Instant",
+  "oracle": "Counter target spell.",
+  "colors": [
+   "U"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/4/f/4f616706-ec97-4923-bb1e-11a69fbaa1f8.jpg?1783909630",
+  "art": "https://cards.scryfall.io/art_crop/front/4/f/4f616706-ec97-4923-bb1e-11a69fbaa1f8.jpg?1783909630"
+ },
+ "Dispel": {
+  "name": "Dispel",
+  "manaCost": "{U}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Counter target instant spell.",
+  "colors": [
+   "U"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/b/c/bceab6b3-6b64-4964-a501-ce806a6c13ad.jpg?1783938209",
+  "art": "https://cards.scryfall.io/art_crop/front/b/c/bceab6b3-6b64-4964-a501-ce806a6c13ad.jpg?1783938209"
+ },
+ "Faerie Seer": {
+  "name": "Faerie Seer",
+  "manaCost": "{U}",
+  "cmc": 1,
+  "typeLine": "Creature — Faerie Wizard",
+  "oracle": "Flying\nWhen this creature enters, scry 2. (Look at the top two cards of your library, then put any number of them on the bottom and the rest on top in any order.)",
+  "colors": [
+   "U"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [
+   "Scry",
+   "Flying"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/d/1/d1fcfeb4-1818-4e08-be4c-27b8a9dc12e6.jpg?1783933144",
+  "art": "https://cards.scryfall.io/art_crop/front/d/1/d1fcfeb4-1818-4e08-be4c-27b8a9dc12e6.jpg?1783933144"
+ },
+ "Ice Tunnel": {
+  "name": "Ice Tunnel",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Snow Land — Island Swamp",
+  "oracle": "({T}: Add {U} or {B}.)\nThis land enters tapped.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/8/c/8cff3ef0-4dfb-472e-aa1e-77613dd0f6d8.jpg?1783928174",
+  "art": "https://cards.scryfall.io/art_crop/front/8/c/8cff3ef0-4dfb-472e-aa1e-77613dd0f6d8.jpg?1783928174"
+ },
+ "Island": {
+  "name": "Island",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Basic Land — Island",
+  "oracle": "({T}: Add {U}.)",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/1/3/1335d293-3dd2-4f13-bd2c-22181f4528ee.jpg?1791578424",
+  "art": "https://cards.scryfall.io/art_crop/front/1/3/1335d293-3dd2-4f13-bd2c-22181f4528ee.jpg?1791578424"
+ },
+ "Lórien Revealed": {
+  "name": "Lórien Revealed",
+  "manaCost": "{3}{U}{U}",
+  "cmc": 5,
+  "typeLine": "Sorcery",
+  "oracle": "Draw three cards.\nIslandcycling {1} ({1}, Discard this card: Search your library for an Island card, reveal it, put it into your hand, then shuffle.)",
+  "colors": [
+   "U"
+  ],
+  "keywords": [
+   "Islandcycling",
+   "Landcycling",
+   "Typecycling",
+   "Cycling"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/2/0/209204c7-aae5-4768-91b8-89c8c4d4a97f.jpg?1785497454",
+  "art": "https://cards.scryfall.io/art_crop/front/2/0/209204c7-aae5-4768-91b8-89c8c4d4a97f.jpg?1785497454"
+ },
+ "Moon-Circuit Hacker": {
+  "name": "Moon-Circuit Hacker",
+  "manaCost": "{1}{U}",
+  "cmc": 2,
+  "typeLine": "Enchantment Creature — Human Ninja",
+  "oracle": "Ninjutsu {U} ({U}, Return an unblocked attacker you control to hand: Put this card onto the battlefield from your hand tapped and attacking.)\nWhenever this creature deals combat damage to a player, you may draw a card. If you do, discard a card unless this creature entered this turn.",
+  "colors": [
+   "U"
+  ],
+  "power": "2",
+  "toughness": "1",
+  "keywords": [
+   "Ninjutsu"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/c/6/c6e466d1-943d-41e6-a47d-c9d951ca4262.jpg?1790210418",
+  "art": "https://cards.scryfall.io/art_crop/front/c/6/c6e466d1-943d-41e6-a47d-c9d951ca4262.jpg?1790210418"
+ },
+ "Mukotai Ambusher": {
+  "name": "Mukotai Ambusher",
+  "manaCost": "{3}{B}",
+  "cmc": 4,
+  "typeLine": "Artifact Creature — Rat Ninja",
+  "oracle": "Ninjutsu {1}{B} ({1}{B}, Return an unblocked attacker you control to hand: Put this card onto the battlefield from your hand tapped and attacking.)\nLifelink",
+  "colors": [
+   "B"
+  ],
+  "power": "3",
+  "toughness": "2",
+  "keywords": [
+   "Lifelink",
+   "Ninjutsu"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/0/a/0adf3293-c1e0-447c-8231-26fa9476a262.jpg?1783923879",
+  "art": "https://cards.scryfall.io/art_crop/front/0/a/0adf3293-c1e0-447c-8231-26fa9476a262.jpg?1783923879"
+ },
+ "Ninja of the Deep Hours": {
+  "name": "Ninja of the Deep Hours",
+  "manaCost": "{3}{U}",
+  "cmc": 4,
+  "typeLine": "Creature — Human Ninja",
+  "oracle": "Ninjutsu {1}{U} ({1}{U}, Return an unblocked attacker you control to hand: Put this card onto the battlefield from your hand tapped and attacking.)\nWhenever this creature deals combat damage to a player, you may draw a card.",
+  "colors": [
+   "U"
+  ],
+  "power": "2",
+  "toughness": "2",
+  "keywords": [
+   "Ninjutsu"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/5/f/5fea7980-55e1-47c1-ab18-a89c976b55fc.jpg?1783934309",
+  "art": "https://cards.scryfall.io/art_crop/front/5/f/5fea7980-55e1-47c1-ab18-a89c976b55fc.jpg?1783934309"
+ },
+ "Seething Landscape": {
+  "name": "Seething Landscape",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land",
+  "oracle": "{T}: Add {C}.\n{T}, Sacrifice this land: Search your library for a basic Island, Swamp, or Mountain card, put it onto the battlefield tapped, then shuffle.\nCycling {U}{B}{R} ({U}{B}{R}, Discard this card: Draw a card.)",
+  "colors": [],
+  "keywords": [
+   "Cycling"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/6/6/661fc907-7003-45c6-820c-9616e9a71c30.jpg?1783911238",
+  "art": "https://cards.scryfall.io/art_crop/front/6/6/661fc907-7003-45c6-820c-9616e9a71c30.jpg?1783911238"
+ },
+ "Snuff Out": {
+  "name": "Snuff Out",
+  "manaCost": "{3}{B}",
+  "cmc": 4,
+  "typeLine": "Instant",
+  "oracle": "If you control a Swamp, you may pay 4 life rather than pay this spell's mana cost.\nDestroy target nonblack creature. It can't be regenerated.",
+  "colors": [
+   "B"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/7/5/75bbe89f-09af-494e-b58e-271f64bde4b5.jpg?1783938751",
+  "art": "https://cards.scryfall.io/art_crop/front/7/5/75bbe89f-09af-494e-b58e-271f64bde4b5.jpg?1783938751"
+ },
+ "Spellstutter Sprite": {
+  "name": "Spellstutter Sprite",
+  "manaCost": "{1}{U}",
+  "cmc": 2,
+  "typeLine": "Creature — Faerie Wizard",
+  "oracle": "Flash\nFlying\nWhen this creature enters, counter target spell with mana value X or less, where X is the number of Faeries you control.",
+  "colors": [
+   "U"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [
+   "Flying",
+   "Flash"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/3/8/3899605d-2203-4ab6-9ff5-69490382eea4.jpg?1783939994",
+  "art": "https://cards.scryfall.io/art_crop/front/3/8/3899605d-2203-4ab6-9ff5-69490382eea4.jpg?1783939994"
+ },
+ "Suffocating Fumes": {
+  "name": "Suffocating Fumes",
+  "manaCost": "{2}{B}",
+  "cmc": 3,
+  "typeLine": "Instant",
+  "oracle": "Creatures your opponents control get -1/-1 until end of turn.\nCycling {2} ({2}, Discard this card: Draw a card.)",
+  "colors": [
+   "B"
+  ],
+  "keywords": [
+   "Cycling"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/6/6/66b562e4-35df-4aee-848d-ceb4204bbe58.jpg?1783931057",
+  "art": "https://cards.scryfall.io/art_crop/front/6/6/66b562e4-35df-4aee-848d-ceb4204bbe58.jpg?1783931057"
+ },
+ "Thorn of the Black Rose": {
+  "name": "Thorn of the Black Rose",
+  "manaCost": "{3}{B}",
+  "cmc": 4,
+  "typeLine": "Creature — Human Assassin",
+  "oracle": "Deathtouch\nWhen this creature enters, you become the monarch.",
+  "colors": [
+   "B"
+  ],
+  "power": "1",
+  "toughness": "3",
+  "keywords": [
+   "Deathtouch"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/b/4/b4b266e2-1cad-40df-bc0e-3e1464b299b3.jpg?1783915664",
+  "art": "https://cards.scryfall.io/art_crop/front/b/4/b4b266e2-1cad-40df-bc0e-3e1464b299b3.jpg?1783915664"
+ },
+ "Annul": {
+  "name": "Annul",
+  "manaCost": "{U}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Counter target artifact or enchantment spell.",
+  "colors": [
+   "U"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/4/f/4feeebea-aa55-4599-ab5a-4e41a54d0dfd.jpg?1783905985",
+  "art": "https://cards.scryfall.io/art_crop/front/4/f/4feeebea-aa55-4599-ab5a-4e41a54d0dfd.jpg?1783905985"
+ },
+ "Arms of Hadar": {
+  "name": "Arms of Hadar",
+  "manaCost": "{3}{B}",
+  "cmc": 4,
+  "typeLine": "Sorcery",
+  "oracle": "Creatures target player controls get -2/-2 until end of turn.",
+  "colors": [
+   "B"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/d/b/db1fd431-8f6d-4ca5-bc0c-53881c500da1.jpg?1783922768",
+  "art": "https://cards.scryfall.io/art_crop/front/d/b/db1fd431-8f6d-4ca5-bc0c-53881c500da1.jpg?1783922768"
+ },
+ "Blue Elemental Blast": {
+  "name": "Blue Elemental Blast",
+  "manaCost": "{U}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Choose one —\n• Counter target red spell.\n• Destroy target red permanent.",
+  "colors": [
+   "U"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/2/f/2f51f88f-f662-4572-a371-9a77718ed079.jpg?1783935184",
+  "art": "https://cards.scryfall.io/art_crop/front/2/f/2f51f88f-f662-4572-a371-9a77718ed079.jpg?1783935184"
+ },
+ "Campfire": {
+  "name": "Campfire",
+  "manaCost": "{1}",
+  "cmc": 1,
+  "typeLine": "Artifact",
+  "oracle": "{1}, {T}: You gain 2 life.\n{2}, {T}, Exile this artifact: Put all commanders you own from the command zone and from your graveyard into your hand. Then shuffle your graveyard into your library.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/3/4/34b64d10-c012-4370-b475-755c4025a348.jpg?1783915603",
+  "art": "https://cards.scryfall.io/art_crop/front/3/4/34b64d10-c012-4370-b475-755c4025a348.jpg?1783915603"
+ },
+ "Hydroblast": {
+  "name": "Hydroblast",
+  "manaCost": "{U}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Choose one —\n• Counter target spell if it's red.\n• Destroy target permanent if it's red.",
+  "colors": [
+   "U"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/4/c/4c9c9b16-5567-4473-95e6-622292f77336.jpg?1783937613",
+  "art": "https://cards.scryfall.io/art_crop/front/4/c/4c9c9b16-5567-4473-95e6-622292f77336.jpg?1783937613"
+ },
+ "Black Mage's Rod": {
+  "name": "Black Mage's Rod",
+  "manaCost": "{1}{B}",
+  "cmc": 2,
+  "typeLine": "Artifact — Equipment",
+  "oracle": "Job select (When this Equipment enters, create a 1/1 colorless Hero creature token, then attach this to it.)\nEquipped creature gets +1/+0, has \"Whenever you cast a noncreature spell, this creature deals 1 damage to each opponent,\" and is a Wizard in addition to its other types.\nEquip {3}",
+  "colors": [
+   "B"
+  ],
+  "keywords": [
+   "Job select",
+   "Equip"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/3/5/35e8f140-055f-4fc7-a765-fb030d828214.jpg?1783906622",
+  "art": "https://cards.scryfall.io/art_crop/front/3/5/35e8f140-055f-4fc7-a765-fb030d828214.jpg?1783906622"
+ },
+ "Blood Fountain": {
+  "name": "Blood Fountain",
+  "manaCost": "{B}",
+  "cmc": 1,
+  "typeLine": "Artifact",
+  "oracle": "When this artifact enters, create a Blood token. (It's an artifact with \"{1}, {T}, Discard a card, Sacrifice this token: Draw a card.\")\n{3}{B}, {T}, Sacrifice this artifact: Return up to two target creature cards from your graveyard to your hand.",
+  "colors": [
+   "B"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/d/d/dd03651e-ada0-41dc-8722-0eba476943e3.jpg?1783924872",
+  "art": "https://cards.scryfall.io/art_crop/front/d/d/dd03651e-ada0-41dc-8722-0eba476943e3.jpg?1783924872"
+ },
+ "Cryogen Relic": {
+  "name": "Cryogen Relic",
+  "manaCost": "{1}{U}",
+  "cmc": 2,
+  "typeLine": "Artifact",
+  "oracle": "When this artifact enters or leaves the battlefield, draw a card.\n{1}{U}, Sacrifice this artifact: Put a stun counter on up to one target tapped creature. (If a permanent with a stun counter would become untapped, remove one from it instead.)",
+  "colors": [
+   "U"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/7/b/7bfb33b6-e2bf-498f-8c58-ae21a840cf75.jpg?1783905984",
+  "art": "https://cards.scryfall.io/art_crop/front/7/b/7bfb33b6-e2bf-498f-8c58-ae21a840cf75.jpg?1783905984"
+ },
+ "Cut Down": {
+  "name": "Cut Down",
+  "manaCost": "{B}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Destroy target creature with total power and toughness 5 or less.",
+  "colors": [
+   "B"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/7/5/753db072-5d6a-4f37-8f7d-255572ecd3bd.jpg?1783921335",
+  "art": "https://cards.scryfall.io/art_crop/front/7/5/753db072-5d6a-4f37-8f7d-255572ecd3bd.jpg?1783921335"
+ },
+ "Drossforge Bridge": {
+  "name": "Drossforge Bridge",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Artifact Land",
+  "oracle": "This land enters tapped.\nIndestructible\n{T}: Add {B} or {R}.",
+  "colors": [],
+  "keywords": [
+   "Indestructible"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/5/b/5b46b8d8-723a-4752-b97d-29ef83bd294c.jpg?1783926796",
+  "art": "https://cards.scryfall.io/art_crop/front/5/b/5b46b8d8-723a-4752-b97d-29ef83bd294c.jpg?1783926796"
+ },
+ "Fanatical Offering": {
+  "name": "Fanatical Offering",
+  "manaCost": "{1}{B}",
+  "cmc": 2,
+  "typeLine": "Instant",
+  "oracle": "As an additional cost to cast this spell, sacrifice an artifact or creature.\nDraw two cards and create a Map token. (It's an artifact with \"{1}, {T}, Sacrifice this token: Target creature you control explores. Activate only as a sorcery.\")",
+  "colors": [
+   "B"
+  ],
+  "keywords": [
+   "Explore"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/d/8/d896dd52-b134-4b55-ab91-ccb05ecc50f4.jpg?1783913778",
+  "art": "https://cards.scryfall.io/art_crop/front/d/8/d896dd52-b134-4b55-ab91-ccb05ecc50f4.jpg?1783913778"
+ },
+ "Galvanic Blast": {
+  "name": "Galvanic Blast",
+  "manaCost": "{R}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Galvanic Blast deals 2 damage to any target.\nMetalcraft — Galvanic Blast deals 4 damage instead if you control three or more artifacts.",
+  "colors": [
+   "R"
+  ],
+  "keywords": [
+   "Metalcraft"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/0/c/0cf8cb1e-314a-4894-82df-f9812825f52e.jpg?1783930164",
+  "art": "https://cards.scryfall.io/art_crop/front/0/c/0cf8cb1e-314a-4894-82df-f9812825f52e.jpg?1783930164"
+ },
+ "Giant's Boulder": {
+  "name": "Giant's Boulder",
+  "manaCost": "{1}",
+  "cmc": 1,
+  "typeLine": "Artifact",
+  "oracle": "When this artifact enters, scry 2. (Look at the top two cards of your library, then put any number of them on the bottom and the rest on top in any order.)\n{1}, {T}: Add one mana of any color.\n{7}, {T}, Sacrifice this artifact: Destroy target permanent.",
+  "colors": [],
+  "keywords": [
+   "Scry"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/c/e/ce254758-c928-4b43-a952-13fac1845668.jpg?1785497186",
+  "art": "https://cards.scryfall.io/art_crop/front/c/e/ce254758-c928-4b43-a952-13fac1845668.jpg?1785497186"
+ },
+ "Great Furnace": {
+  "name": "Great Furnace",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Artifact Land",
+  "oracle": "{T}: Add {R}.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/7/4/74c5bb44-d72c-4c1a-a38f-86b4a8f49ae1.jpg?1783906013",
+  "art": "https://cards.scryfall.io/art_crop/front/7/4/74c5bb44-d72c-4c1a-a38f-86b4a8f49ae1.jpg?1783906013"
+ },
+ "Ichor Wellspring": {
+  "name": "Ichor Wellspring",
+  "manaCost": "{2}",
+  "cmc": 2,
+  "typeLine": "Artifact",
+  "oracle": "When this artifact enters or is put into a graveyard from the battlefield, draw a card.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/1/c/1ccdb407-ac8f-4736-89d3-ab0d086096ea.jpg?1783927513",
+  "art": "https://cards.scryfall.io/art_crop/front/1/c/1ccdb407-ac8f-4736-89d3-ab0d086096ea.jpg?1783927513"
+ },
+ "Krark-Clan Shaman": {
+  "name": "Krark-Clan Shaman",
+  "manaCost": "{R}",
+  "cmc": 1,
+  "typeLine": "Creature — Goblin Shaman",
+  "oracle": "Sacrifice an artifact: This creature deals 1 damage to each creature without flying.",
+  "colors": [
+   "R"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/9/7/975f9ea8-af2c-456f-acd0-ffa9ea0d98c1.jpg?1783944539",
+  "art": "https://cards.scryfall.io/art_crop/front/9/7/975f9ea8-af2c-456f-acd0-ffa9ea0d98c1.jpg?1783944539"
+ },
+ "Makeshift Munitions": {
+  "name": "Makeshift Munitions",
+  "manaCost": "{1}{R}",
+  "cmc": 2,
+  "typeLine": "Enchantment",
+  "oracle": "{1}, Sacrifice an artifact or creature: This enchantment deals 1 damage to any target.",
+  "colors": [
+   "R"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/6/0/60715b6d-b223-431a-85d8-27d7c05469b2.jpg?1783915648",
+  "art": "https://cards.scryfall.io/art_crop/front/6/0/60715b6d-b223-431a-85d8-27d7c05469b2.jpg?1783915648"
+ },
+ "Mistvault Bridge": {
+  "name": "Mistvault Bridge",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Artifact Land",
+  "oracle": "This land enters tapped.\nIndestructible\n{T}: Add {U} or {B}.",
+  "colors": [],
+  "keywords": [
+   "Indestructible"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/9/f/9f36a6e2-3e51-4a30-a225-10cfe6650b9d.jpg?1783926795",
+  "art": "https://cards.scryfall.io/art_crop/front/9/f/9f36a6e2-3e51-4a30-a225-10cfe6650b9d.jpg?1783926795"
+ },
+ "Myr Enforcer": {
+  "name": "Myr Enforcer",
+  "manaCost": "{7}",
+  "cmc": 7,
+  "typeLine": "Artifact Creature — Myr",
+  "oracle": "Affinity for artifacts (This spell costs {1} less to cast for each artifact you control.)",
+  "colors": [],
+  "power": "4",
+  "toughness": "4",
+  "keywords": [
+   "Affinity"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/d/f/dff51ae7-4b68-4770-915b-fb6bcf9ca1ed.jpg?1783938381",
+  "art": "https://cards.scryfall.io/art_crop/front/d/f/dff51ae7-4b68-4770-915b-fb6bcf9ca1ed.jpg?1783938381"
+ },
+ "Reckoner's Bargain": {
+  "name": "Reckoner's Bargain",
+  "manaCost": "{1}{B}",
+  "cmc": 2,
+  "typeLine": "Instant",
+  "oracle": "As an additional cost to cast this spell, sacrifice an artifact or creature.\nYou gain life equal to the sacrificed permanent's mana value. Draw two cards.",
+  "colors": [
+   "B"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/6/3/6338942d-d650-4571-8ec6-4d658792c53e.jpg?1783923877",
+  "art": "https://cards.scryfall.io/art_crop/front/6/3/6338942d-d650-4571-8ec6-4d658792c53e.jpg?1783923877"
+ },
+ "Refurbished Familiar": {
+  "name": "Refurbished Familiar",
+  "manaCost": "{3}{B}",
+  "cmc": 4,
+  "typeLine": "Artifact Creature — Zombie Rat",
+  "oracle": "Affinity for artifacts (This spell costs {1} less to cast for each artifact you control.)\nFlying\nWhen this creature enters, each opponent discards a card. For each opponent who can't, you draw a card.",
+  "colors": [
+   "B"
+  ],
+  "power": "2",
+  "toughness": "1",
+  "keywords": [
+   "Flying",
+   "Affinity"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/b/3/b338e078-629c-4cac-bd1d-e1f0a132728d.jpg?1783911277",
+  "art": "https://cards.scryfall.io/art_crop/front/b/3/b338e078-629c-4cac-bd1d-e1f0a132728d.jpg?1783911277"
+ },
+ "Seat of the Synod": {
+  "name": "Seat of the Synod",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Artifact Land",
+  "oracle": "{T}: Add {U}.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/5/7/57a194b3-2899-4dee-977a-c77df0b94dfe.jpg?1783906005",
+  "art": "https://cards.scryfall.io/art_crop/front/5/7/57a194b3-2899-4dee-977a-c77df0b94dfe.jpg?1783906005"
+ },
+ "Silverbluff Bridge": {
+  "name": "Silverbluff Bridge",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Artifact Land",
+  "oracle": "This land enters tapped.\nIndestructible\n{T}: Add {U} or {R}.",
+  "colors": [],
+  "keywords": [
+   "Indestructible"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/8/f/8f14540a-479f-4a3c-8e5b-f482caf48451.jpg?1783906005",
+  "art": "https://cards.scryfall.io/art_crop/front/8/f/8f14540a-479f-4a3c-8e5b-f482caf48451.jpg?1783906005"
+ },
+ "Thoughtcast": {
+  "name": "Thoughtcast",
+  "manaCost": "{4}{U}",
+  "cmc": 5,
+  "typeLine": "Sorcery",
+  "oracle": "Affinity for artifacts (This spell costs {1} less to cast for each artifact you control.)\nDraw two cards.",
+  "colors": [
+   "U"
+  ],
+  "keywords": [
+   "Affinity"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/4/6/466a0be8-31b9-4ea0-9a96-b09a76f4ec69.jpg?1783917163",
+  "art": "https://cards.scryfall.io/art_crop/front/4/6/466a0be8-31b9-4ea0-9a96-b09a76f4ec69.jpg?1783917163"
+ },
+ "Utrom Monitor": {
+  "name": "Utrom Monitor",
+  "manaCost": "{4}{U}",
+  "cmc": 5,
+  "typeLine": "Artifact Creature — Utrom Scientist",
+  "oracle": "Affinity for artifacts (This spell costs {1} less to cast for each artifact you control.)\nFlying (This creature can't be blocked except by creatures with flying or reach.)",
+  "colors": [
+   "U"
+  ],
+  "power": "3",
+  "toughness": "3",
+  "keywords": [
+   "Flying",
+   "Affinity"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/8/c/8ce6647c-343a-45e8-9b6e-0292ae01ec81.jpg?1783904138",
+  "art": "https://cards.scryfall.io/art_crop/front/8/c/8ce6647c-343a-45e8-9b6e-0292ae01ec81.jpg?1783904138"
+ },
+ "Vault of Whispers": {
+  "name": "Vault of Whispers",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Artifact Land",
+  "oracle": "{T}: Add {B}.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/e/8/e85e4098-f872-4aa4-a71a-208b6090be28.jpg?1783909555",
+  "art": "https://cards.scryfall.io/art_crop/front/e/8/e85e4098-f872-4aa4-a71a-208b6090be28.jpg?1783909555"
+ },
+ "Envelop": {
+  "name": "Envelop",
+  "manaCost": "{U}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Counter target sorcery spell.",
+  "colors": [
+   "U"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/e/7/e7ed250e-12d0-4ebc-9410-5711e71c6d1f.jpg?1783945129",
+  "art": "https://cards.scryfall.io/art_crop/front/e/7/e7ed250e-12d0-4ebc-9410-5711e71c6d1f.jpg?1783945129"
+ },
+ "Hunter's Blowgun": {
+  "name": "Hunter's Blowgun",
+  "manaCost": "{1}",
+  "cmc": 1,
+  "typeLine": "Artifact — Equipment",
+  "oracle": "Equipped creature gets +1/+1.\nEquipped creature has deathtouch during your turn. Otherwise, it has reach.\nEquip {2} ({2}: Attach to target creature you control. Equip only as a sorcery.)",
+  "colors": [],
+  "keywords": [
+   "Equip"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/3/3/3348abe7-6aa3-47f7-8203-a15f75007e33.jpg?1783913724",
+  "art": "https://cards.scryfall.io/art_crop/front/3/3/3348abe7-6aa3-47f7-8203-a15f75007e33.jpg?1783913724"
+ },
+ "Vandalblast": {
+  "name": "Vandalblast",
+  "manaCost": "{R}",
+  "cmc": 1,
+  "typeLine": "Sorcery",
+  "oracle": "Destroy target artifact you don't control.\nOverload {4}{R} (You may cast this spell for its overload cost. If you do, change \"target\" in its text to \"each.\")",
+  "colors": [
+   "R"
+  ],
+  "keywords": [
+   "Overload"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/7/1/71067239-d46f-4201-a91c-6aa4c41fa8b1.jpg?1783903232",
+  "art": "https://cards.scryfall.io/art_crop/front/7/1/71067239-d46f-4201-a91c-6aa4c41fa8b1.jpg?1783903232"
+ },
+ "Toxin Analysis": {
+  "name": "Toxin Analysis",
+  "manaCost": "{B}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Target creature gains deathtouch and lifelink until end of turn. Investigate. (Create a Clue token. It's an artifact with \"{2}, Sacrifice this token: Draw a card.\")",
+  "colors": [
+   "B"
+  ],
+  "keywords": [
+   "Investigate"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/0/e/0eda1aff-c1f4-4171-a800-605396cc8168.jpg?1783912889",
+  "art": "https://cards.scryfall.io/art_crop/front/0/e/0eda1aff-c1f4-4171-a800-605396cc8168.jpg?1783912889"
+ },
+ "Rakdos Carnarium": {
+  "name": "Rakdos Carnarium",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land",
+  "oracle": "This land enters tapped.\nWhen this land enters, return a land you control to its owner's hand.\n{T}: Add {B}{R}.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/2/0/20c799a9-ab94-46e6-9111-00505e071c41.jpg?1783904522",
+  "art": "https://cards.scryfall.io/art_crop/front/2/0/20c799a9-ab94-46e6-9111-00505e071c41.jpg?1783904522"
+ },
+ "Contaminated Aquifer": {
+  "name": "Contaminated Aquifer",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land — Island Swamp",
+  "oracle": "({T}: Add {U} or {B}.)\nThis land enters tapped.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/9/f/9fad6994-1280-4a8e-a2f5-34b4ed6ef6f5.jpg?1783906991",
+  "art": "https://cards.scryfall.io/art_crop/front/9/f/9fad6994-1280-4a8e-a2f5-34b4ed6ef6f5.jpg?1783906991"
+ },
+ "Dimir Aqueduct": {
+  "name": "Dimir Aqueduct",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land",
+  "oracle": "This land enters tapped.\nWhen this land enters, return a land you control to its owner's hand.\n{T}: Add {U}{B}.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/8/4/84bf9d60-64b8-4209-acfe-e07eefc6bf1f.jpg?1783909578",
+  "art": "https://cards.scryfall.io/art_crop/front/8/4/84bf9d60-64b8-4209-acfe-e07eefc6bf1f.jpg?1783909578"
+ },
+ "Abundant Growth": {
+  "name": "Abundant Growth",
+  "manaCost": "{G}",
+  "cmc": 1,
+  "typeLine": "Enchantment — Aura",
+  "oracle": "Enchant land\nWhen this Aura enters, draw a card.\nEnchanted land has \"{T}: Add one mana of any color.\"",
+  "colors": [
+   "G"
+  ],
+  "keywords": [
+   "Enchant"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/8/8/88b8b051-3f05-4cc1-9506-732faa25553a.jpg?1783904552",
+  "art": "https://cards.scryfall.io/art_crop/front/8/8/88b8b051-3f05-4cc1-9506-732faa25553a.jpg?1783904552"
+ },
+ "Ancestral Mask": {
+  "name": "Ancestral Mask",
+  "manaCost": "{2}{G}",
+  "cmc": 3,
+  "typeLine": "Enchantment — Aura",
+  "oracle": "Enchant creature\nEnchanted creature gets +2/+2 for each other enchantment on the battlefield.",
+  "colors": [
+   "G"
+  ],
+  "keywords": [
+   "Enchant"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/c/7/c7a19fc5-20f3-48d2-8c12-e012d3b302e7.jpg?1783937570",
+  "art": "https://cards.scryfall.io/art_crop/front/c/7/c7a19fc5-20f3-48d2-8c12-e012d3b302e7.jpg?1783937570"
+ },
+ "Angelic Gift": {
+  "name": "Angelic Gift",
+  "manaCost": "{1}{W}",
+  "cmc": 2,
+  "typeLine": "Enchantment — Aura",
+  "oracle": "Enchant creature\nWhen this Aura enters, draw a card.\nEnchanted creature has flying.",
+  "colors": [
+   "W"
+  ],
+  "keywords": [
+   "Enchant"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/5/a/5a2122c0-5fb4-4767-b969-c61bd959d604.jpg?1783926232",
+  "art": "https://cards.scryfall.io/art_crop/front/5/a/5a2122c0-5fb4-4767-b969-c61bd959d604.jpg?1783926232"
+ },
+ "Armadillo Cloak": {
+  "name": "Armadillo Cloak",
+  "manaCost": "{1}{G}{W}",
+  "cmc": 3,
+  "typeLine": "Enchantment — Aura",
+  "oracle": "Enchant creature\nEnchanted creature gets +2/+2 and has trample.\nWhenever enchanted creature deals damage, you gain that much life.",
+  "colors": [
+   "G",
+   "W"
+  ],
+  "keywords": [
+   "Enchant"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/f/a/fa232c65-dbb4-4414-bd95-b3bbd321c653.jpg?1783937556",
+  "art": "https://cards.scryfall.io/art_crop/front/f/a/fa232c65-dbb4-4414-bd95-b3bbd321c653.jpg?1783937556"
+ },
+ "Ash Barrens": {
+  "name": "Ash Barrens",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land",
+  "oracle": "{T}: Add {C}.\nBasic landcycling {1} ({1}, Discard this card: Search your library for a basic land card, reveal it, put it into your hand, then shuffle.)",
+  "colors": [],
+  "keywords": [
+   "Landcycling",
+   "Basic landcycling",
+   "Typecycling",
+   "Cycling"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/e/8/e8510205-4baa-4f1c-bf64-5d931e2ddf48.jpg?1783904155",
+  "art": "https://cards.scryfall.io/art_crop/front/e/8/e8510205-4baa-4f1c-bf64-5d931e2ddf48.jpg?1783904155"
+ },
+ "Benevolent Blessing": {
+  "name": "Benevolent Blessing",
+  "manaCost": "{1}{W}",
+  "cmc": 2,
+  "typeLine": "Enchantment — Aura",
+  "oracle": "Flash\nEnchant creature\nAs this Aura enters, choose a color.\nEnchanted creature has protection from the chosen color. This effect doesn't remove Auras and Equipment you control that are already attached to it.",
+  "colors": [
+   "W"
+  ],
+  "keywords": [
+   "Enchant",
+   "Flash"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/0/d/0d5c2401-da2c-46f9-b850-f37edcbb85cd.jpg?1783928890",
+  "art": "https://cards.scryfall.io/art_crop/front/0/d/0d5c2401-da2c-46f9-b850-f37edcbb85cd.jpg?1783928890"
+ },
+ "Bushwhack": {
+  "name": "Bushwhack",
+  "manaCost": "{G}",
+  "cmc": 1,
+  "typeLine": "Sorcery",
+  "oracle": "Choose one —\n• Search your library for a basic land card, reveal it, put it into your hand, then shuffle.\n• Target creature you control fights target creature you don't control. (Each deals damage equal to its power to the other.)",
+  "colors": [
+   "G"
+  ],
+  "keywords": [
+   "Fight"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/0/3/03ebdb36-55e0-49dd-a514-785fbeb4ae19.jpg?1783909061",
+  "art": "https://cards.scryfall.io/art_crop/front/0/3/03ebdb36-55e0-49dd-a514-785fbeb4ae19.jpg?1783909061"
+ },
+ "Cartouche of Solidarity": {
+  "name": "Cartouche of Solidarity",
+  "manaCost": "{W}",
+  "cmc": 1,
+  "typeLine": "Enchantment — Aura Cartouche",
+  "oracle": "Enchant creature you control\nWhen this Aura enters, create a 1/1 white Warrior creature token with vigilance.\nEnchanted creature gets +1/+1 and has first strike. (It deals combat damage before creatures without first strike.)",
+  "colors": [
+   "W"
+  ],
+  "keywords": [
+   "Enchant"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/9/0/90eaf94e-85a7-4958-aa58-8e2fe44db58d.jpg?1783936543",
+  "art": "https://cards.scryfall.io/art_crop/front/9/0/90eaf94e-85a7-4958-aa58-8e2fe44db58d.jpg?1783936543"
+ },
+ "Ethereal Armor": {
+  "name": "Ethereal Armor",
+  "manaCost": "{W}",
+  "cmc": 1,
+  "typeLine": "Enchantment — Aura",
+  "oracle": "Enchant creature\nEnchanted creature gets +1/+1 for each enchantment you control and has first strike.",
+  "colors": [
+   "W"
+  ],
+  "keywords": [
+   "Enchant"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/f/d/fd0e8a82-0201-483e-a976-5f29764b35a4.jpg?1783909513",
+  "art": "https://cards.scryfall.io/art_crop/front/f/d/fd0e8a82-0201-483e-a976-5f29764b35a4.jpg?1783909513"
+ },
+ "Forest": {
+  "name": "Forest",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Basic Land — Forest",
+  "oracle": "({T}: Add {G}.)",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/2/e/2e781bfd-f8cb-4d20-b977-4359f3a21311.jpg?1791578317",
+  "art": "https://cards.scryfall.io/art_crop/front/2/e/2e781bfd-f8cb-4d20-b977-4359f3a21311.jpg?1791578317"
+ },
+ "Gladecover Scout": {
+  "name": "Gladecover Scout",
+  "manaCost": "{G}",
+  "cmc": 1,
+  "typeLine": "Creature — Elf Scout",
+  "oracle": "Hexproof (This creature can't be the target of spells or abilities your opponents control.)",
+  "colors": [
+   "G"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [
+   "Hexproof"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/e/1/e112d77d-f019-4709-b31a-b02952df0e35.jpg?1783939904",
+  "art": "https://cards.scryfall.io/art_crop/front/e/1/e112d77d-f019-4709-b31a-b02952df0e35.jpg?1783939904"
+ },
+ "Heliod's Pilgrim": {
+  "name": "Heliod's Pilgrim",
+  "manaCost": "{2}{W}",
+  "cmc": 3,
+  "typeLine": "Creature — Human Cleric",
+  "oracle": "When this creature enters, you may search your library for an Aura card, reveal it, put it into your hand, then shuffle.",
+  "colors": [
+   "W"
+  ],
+  "power": "1",
+  "toughness": "2",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/c/a/cafce2f5-f4f4-465b-96dc-bcdd29d4e4bb.jpg?1783931596",
+  "art": "https://cards.scryfall.io/art_crop/front/c/a/cafce2f5-f4f4-465b-96dc-bcdd29d4e4bb.jpg?1783931596"
+ },
+ "Malevolent Rumble": {
+  "name": "Malevolent Rumble",
+  "manaCost": "{1}{G}",
+  "cmc": 2,
+  "typeLine": "Sorcery",
+  "oracle": "Reveal the top four cards of your library. You may put a permanent card from among them into your hand. Put the rest into your graveyard. Create a 0/1 colorless Eldrazi Spawn creature token with \"Sacrifice this token: Add {C}.\"",
+  "colors": [
+   "G"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/a/1/a178cfe8-f9fa-4255-88d0-54a0bed079f5.jpg?1783911259",
+  "art": "https://cards.scryfall.io/art_crop/front/a/1/a178cfe8-f9fa-4255-88d0-54a0bed079f5.jpg?1783911259"
+ },
+ "Plains": {
+  "name": "Plains",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Basic Land — Plains",
+  "oracle": "({T}: Add {W}.)",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/0/9/09ac862f-0a51-44dd-b86f-9412b8218b13.jpg?1791578423",
+  "art": "https://cards.scryfall.io/art_crop/front/0/9/09ac862f-0a51-44dd-b86f-9412b8218b13.jpg?1791578423"
+ },
+ "Rancor": {
+  "name": "Rancor",
+  "manaCost": "{G}",
+  "cmc": 1,
+  "typeLine": "Enchantment — Aura",
+  "oracle": "Enchant creature\nEnchanted creature gets +2/+0 and has trample.\nWhen this Aura is put into a graveyard from the battlefield, return it to its owner's hand.",
+  "colors": [
+   "G"
+  ],
+  "keywords": [
+   "Enchant"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/8/6/86d6b411-4a31-4bfc-8dd6-e19f553bb29b.jpg?1783921864",
+  "art": "https://cards.scryfall.io/art_crop/front/8/6/86d6b411-4a31-4bfc-8dd6-e19f553bb29b.jpg?1783921864"
+ },
+ "Sheltering Landscape": {
+  "name": "Sheltering Landscape",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land",
+  "oracle": "{T}: Add {C}.\n{T}, Sacrifice this land: Search your library for a basic Mountain, Forest, or Plains card, put it onto the battlefield tapped, then shuffle.\nCycling {R}{G}{W} ({R}{G}{W}, Discard this card: Draw a card.)",
+  "colors": [],
+  "keywords": [
+   "Cycling"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/0/f/0fe070f4-8877-4280-b8fd-869f3ac34ab6.jpg?1783911238",
+  "art": "https://cards.scryfall.io/art_crop/front/0/f/0fe070f4-8877-4280-b8fd-869f3ac34ab6.jpg?1783911238"
+ },
+ "Silhana Ledgewalker": {
+  "name": "Silhana Ledgewalker",
+  "manaCost": "{1}{G}",
+  "cmc": 2,
+  "typeLine": "Creature — Elf Rogue",
+  "oracle": "Hexproof (This creature can't be the target of spells or abilities your opponents control.)\nThis creature can't be blocked except by creatures with flying.",
+  "colors": [
+   "G"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [
+   "Hexproof"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/2/1/21a2d11e-48b7-4e9a-a574-838cc26c2b17.jpg?1783911906",
+  "art": "https://cards.scryfall.io/art_crop/front/2/1/21a2d11e-48b7-4e9a-a574-838cc26c2b17.jpg?1783911906"
+ },
+ "Slippery Bogle": {
+  "name": "Slippery Bogle",
+  "manaCost": "{G/U}",
+  "cmc": 1,
+  "typeLine": "Creature — Beast",
+  "oracle": "Hexproof (This creature can't be the target of spells or abilities your opponents control.)",
+  "colors": [
+   "G",
+   "U"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [
+   "Hexproof"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/c/4/c4e4bbea-7e3f-4de0-bb01-dfd67f21c254.jpg?1783933766",
+  "art": "https://cards.scryfall.io/art_crop/front/c/4/c4e4bbea-7e3f-4de0-bb01-dfd67f21c254.jpg?1783933766"
+ },
+ "Spirit Link": {
+  "name": "Spirit Link",
+  "manaCost": "{W}",
+  "cmc": 1,
+  "typeLine": "Enchantment — Aura",
+  "oracle": "Enchant creature (Target a creature as you cast this. This card enters attached to that creature.)\nWhenever enchanted creature deals damage, you gain that much life.",
+  "colors": [
+   "W"
+  ],
+  "keywords": [
+   "Enchant"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/f/c/fc046a97-4699-438d-8da4-022560a18564.jpg?1783918507",
+  "art": "https://cards.scryfall.io/art_crop/front/f/c/fc046a97-4699-438d-8da4-022560a18564.jpg?1783918507"
+ },
+ "Utopia Sprawl": {
+  "name": "Utopia Sprawl",
+  "manaCost": "{G}",
+  "cmc": 1,
+  "typeLine": "Enchantment — Aura",
+  "oracle": "Enchant Forest\nAs this Aura enters, choose a color.\nWhenever enchanted Forest is tapped for mana, its controller adds an additional one mana of the chosen color.",
+  "colors": [
+   "G"
+  ],
+  "keywords": [
+   "Enchant"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/5/e/5ea568df-04a1-4012-98ec-ba75e189e0ca.jpg?1783913297",
+  "art": "https://cards.scryfall.io/art_crop/front/5/e/5ea568df-04a1-4012-98ec-ba75e189e0ca.jpg?1783913297"
+ },
+ "Call Damage Control": {
+  "name": "Call Damage Control",
+  "manaCost": "{1}{G}",
+  "cmc": 2,
+  "typeLine": "Sorcery",
+  "oracle": "Choose up to two. Return those cards from your graveyard to your hand.\n• Target artifact card.\n• Target creature card.\n• Target enchantment card.\n• Target land card.",
+  "colors": [
+   "G"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/d/e/de1ed886-c33b-4cfd-8442-944cec654a8b.jpg?1783902921",
+  "art": "https://cards.scryfall.io/art_crop/front/d/e/de1ed886-c33b-4cfd-8442-944cec654a8b.jpg?1783902921"
+ },
+ "Flaring Pain": {
+  "name": "Flaring Pain",
+  "manaCost": "{1}{R}",
+  "cmc": 2,
+  "typeLine": "Instant",
+  "oracle": "Damage can't be prevented this turn.\nFlashback {R} (You may cast this card from your graveyard for its flashback cost. Then exile it.)",
+  "colors": [
+   "R"
+  ],
+  "keywords": [
+   "Flashback"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/e/e/eeb5c96a-1d16-459d-9968-ced9a8f1c520.jpg?1783945118",
+  "art": "https://cards.scryfall.io/art_crop/front/e/e/eeb5c96a-1d16-459d-9968-ced9a8f1c520.jpg?1783945118"
+ },
+ "Ram Through": {
+  "name": "Ram Through",
+  "manaCost": "{1}{G}",
+  "cmc": 2,
+  "typeLine": "Instant",
+  "oracle": "Target creature you control deals damage equal to its power to target creature you don't control. If the creature you control has trample, excess damage is dealt to that creature's controller instead.",
+  "colors": [
+   "G"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/4/4/44063a90-e4cf-4bcd-a128-792de15371a7.jpg?1783915623",
+  "art": "https://cards.scryfall.io/art_crop/front/4/4/44063a90-e4cf-4bcd-a128-792de15371a7.jpg?1783915623"
+ },
+ "Scattershot Archer": {
+  "name": "Scattershot Archer",
+  "manaCost": "{G}",
+  "cmc": 1,
+  "typeLine": "Creature — Elf Archer",
+  "oracle": "{T}: This creature deals 1 damage to each creature with flying.",
+  "colors": [
+   "G"
+  ],
+  "power": "1",
+  "toughness": "2",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/d/7/d74d6cdb-a087-4b3d-bf25-509200ed6d93.jpg?1783942473",
+  "art": "https://cards.scryfall.io/art_crop/front/d/7/d74d6cdb-a087-4b3d-bf25-509200ed6d93.jpg?1783942473"
+ },
+ "Sentinel's Eyes": {
+  "name": "Sentinel's Eyes",
+  "manaCost": "{W}",
+  "cmc": 1,
+  "typeLine": "Enchantment — Aura",
+  "oracle": "Enchant creature\nEnchanted creature gets +1/+1 and has vigilance.\nEscape—{W}, Exile two other cards from your graveyard. (You may cast this card from your graveyard for its escape cost.)",
+  "colors": [
+   "W"
+  ],
+  "keywords": [
+   "Enchant",
+   "Escape"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/9/f/9f50278a-06fc-4b11-a1d2-d28cd213ff8f.jpg?1783903801",
+  "art": "https://cards.scryfall.io/art_crop/front/9/f/9f50278a-06fc-4b11-a1d2-d28cd213ff8f.jpg?1783903801"
+ },
+ "Thraben Charm": {
+  "name": "Thraben Charm",
+  "manaCost": "{1}{W}",
+  "cmc": 2,
+  "typeLine": "Instant",
+  "oracle": "Choose one —\n• Thraben Charm deals damage equal to twice the number of creatures you control to target creature.\n• Destroy target enchantment.\n• Exile any number of target players' graveyards.",
+  "colors": [
+   "W"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/d/d/dd28a646-f38f-4cdf-948c-969cd979e5e6.jpg?1783911295",
+  "art": "https://cards.scryfall.io/art_crop/front/d/d/dd28a646-f38f-4cdf-948c-969cd979e5e6.jpg?1783911295"
+ }
+}
