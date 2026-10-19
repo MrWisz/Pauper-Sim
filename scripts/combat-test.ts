@@ -109,5 +109,35 @@ function check(name: string, ok: boolean, detail: string) {
   check('alpha strike for the win', attacks.length === 2, `attacks with ${attacks.length}`);
 }
 
+// 7. Pyroblast vs Bogles: the only blue permanent is a hexproof Slippery Bogle wearing (white) Ethereal Armor.
+//    The AI must not fire Pyroblast at the Armor (it would do nothing).
+{
+  const { g, ai, put, hand } = setup(20);
+  const bogle = put(0, 'Slippery Bogle');
+  const armor = g.makeCard(getDef('Ethereal Armor')!, 0);
+  g.moveCard(armor, 'battlefield', { controller: 0, attachTo: bogle });
+  put(1, 'Great Furnace');
+  hand(1, 'Pyroblast');
+  g.active = 1;
+  g.step = 'main1';
+  const act = ai.decidePriority(g);
+  const name = act.type === 'cast' ? g.card(act.cardId)!.def.name : act.type;
+  check('no Pyroblast into hexproof Bogles', name !== 'Pyroblast', `action ${name}`);
+}
+
+// 8. ...but it still blasts a blue permanent it can target.
+{
+  const { g, ai, put, hand } = setup(20);
+  const monitor = put(0, 'Utrom Monitor'); // blue artifact creature, no hexproof
+  put(1, 'Great Furnace');
+  hand(1, 'Pyroblast');
+  g.active = 1;
+  g.step = 'main1';
+  const act = ai.decidePriority(g);
+  const name = act.type === 'cast' ? g.card(act.cardId)!.def.name : act.type;
+  const tgt = ai.intent?.targets?.[0];
+  check('Pyroblast a targetable blue permanent', name === 'Pyroblast' && tgt?.kind === 'card' && tgt.id === monitor.id, `action ${name}`);
+}
+
 console.log(failures ? `${failures} failure(s)` : 'all passed');
 process.exit(failures ? 1 : 0);

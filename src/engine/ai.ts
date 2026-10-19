@@ -45,7 +45,7 @@ export class AIController implements Controller {
       case 'bottom':
         return this.bottomCards(g, req.cards, req.count);
       case 'targets':
-        return this.pickTargets(g, req.spec, req.candidates, req.source);
+        return this.pickTargets(g, req.spec, req.candidates, req.source, req.cancellable);
       case 'mode':
         return this.pickMode(g, req.source, req.options);
       case 'cards':
@@ -388,7 +388,8 @@ export class AIController implements Controller {
           }
           case 'blast': {
             const color = c.def.name.includes('Pyro') || c.def.name.includes('Red') ? 'U' : 'R';
-            const t = g.permanents(opp).filter((x) => x.def.colors.includes(color as any) && !g.isLand(x));
+            // only permanents of the right color that we can actually target (hexproof Slippery Bogle is blue!)
+            const t = g.permanents(opp).filter((x) => x.def.colors.includes(color as any) && !g.isLand(x) && g.canBeTargetedBy(x, me, c));
             if (t.length) {
               t.sort((x, y) => this.value(g, y) - this.value(g, x));
               if (this.value(g, t[0]) >= 3) consider(a, 10 + this.value(g, t[0]), { cardId: c.id, mode: 1, targets: [{ kind: 'card', id: t[0].id }] });
@@ -749,7 +750,7 @@ export class AIController implements Controller {
     return i < 0 ? null : i;
   }
 
-  pickTargets(g: Game, spec: TargetSpec, cands: Target[], src: CardInstance): Target[] {
+  pickTargets(g: Game, spec: TargetSpec, cands: Target[], src: CardInstance, cancellable = false): Target[] | null {
     const me = this.me;
     const opp = this.opp(g);
     const min = spec.min ?? 1;
@@ -758,6 +759,8 @@ export class AIController implements Controller {
     if (this.intent?.cardId === src.id && this.intent.targets) {
       const t = this.intent.targets.shift();
       if (t && keys.has(targetKey(t))) return [t];
+      // the target we planned for isn't legal: back out rather than waste the card on something else
+      if (t && cancellable) return null;
     }
     if (g.isAura(src)) {
       const host = this.auraHost(g, src);
@@ -778,6 +781,12 @@ export class AIController implements Controller {
         else if (src.def.name === 'Cryogen Relic' || harmful) s = mine ? -v : v;
         else if (spec.prompt.includes('you control')) s = mine ? v : -v;
         else s = mine ? -v : v;
+      }
+      // blasts only do anything to cards of their color
+      if (src.def.ai?.kind === 'blast' && t.kind !== 'player') {
+        const blastColor = src.def.name.includes('Pyro') || src.def.name.includes('Red') ? 'U' : 'R';
+        const target = t.kind === 'stack' ? g.stack.find((x) => x.id === t.id)?.card : g.card(t.id);
+        if (!target?.def.colors.includes(blastColor as any)) s = -100;
       }
       return { t, s };
     });
