@@ -116,9 +116,41 @@ export function Modals({
       );
     case 'cards': {
       const ok = sel.length >= req.min && sel.length <= req.max;
+      // when the choices come from several zones (e.g. Highway Robbery: hand or battlefield), show them in labelled groups
+      const ZONE_ORDER = ['hand', 'battlefield', 'graveyard', 'exile', 'library'] as const;
+      const ZONE_LABEL: Record<string, string> = {
+        hand: 'In your hand',
+        battlefield: 'On the battlefield',
+        graveyard: 'In your graveyard',
+        exile: 'In exile',
+        library: 'In your library',
+      };
+      const zones = ZONE_ORDER.filter((z) => req.cards.some((c) => c.zone === z));
+      const picked = sel.length === 1 ? req.cards.find((c) => c.id === sel[0]) : undefined;
+      // with mixed zones, say what will happen to the picked card
+      const verb =
+        zones.length > 1 && picked && req.purpose === 'discard'
+          ? picked.zone === 'hand'
+            ? `Discard ${picked.def.name}`
+            : `Sacrifice ${picked.def.name}`
+          : null;
       return shell(
         req.prompt,
-        cardGrid(req.cards, req.max),
+        zones.length > 1 ? (
+          <div className="scry-areas">
+            {zones.map((z) => (
+              <div key={z} className="scry-area">
+                <div className="scry-label">{ZONE_LABEL[z]}</div>
+                {cardGrid(
+                  req.cards.filter((c) => c.zone === z),
+                  req.max,
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          cardGrid(req.cards, req.max)
+        ),
         <>
           {req.cancellable && (
             <button className="btn secondary" onClick={() => respond(null)}>
@@ -131,7 +163,7 @@ export function Modals({
             </button>
           )}
           <button className="btn primary" disabled={!ok} onClick={() => respond(sel)}>
-            Confirm{req.max > 1 ? ` (${sel.length}/${req.max})` : ''}
+            {verb ?? `Confirm${req.max > 1 ? ` (${sel.length}/${req.max})` : ''}`}
           </button>
         </>,
         req.source ? `Source: ${req.source.def.name}` : undefined,

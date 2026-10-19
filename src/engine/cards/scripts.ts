@@ -224,7 +224,7 @@ export const scripts: Record<string, Script> = {
       resolve: async (c) => {
         const g = c.g;
         const opts = [...g.players[c.me].hand, ...g.lands(c.me)];
-        const pick = await g.chooseCards(c.me, opts, 0, 1, 'You may discard a card or sacrifice a land to draw two cards', 'discard', c.src);
+        const pick = await g.chooseCards(c.me, opts, 0, 1, 'Highway Robbery: discard a card from your hand OR sacrifice a land you control to draw two cards (or skip)', 'discard', c.src);
         if (!pick.length) return;
         if (pick[0].zone === 'hand') g.discardCards(c.me, pick);
         else g.sacrifice(pick[0]);
