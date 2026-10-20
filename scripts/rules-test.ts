@@ -73,6 +73,21 @@ function setup(opts: { target?: () => number; yes?: boolean } = {}) {
   check('transformed card reverts when it leaves', delver.def.name === 'Delver of Secrets' && delver.zone === 'hand', `${delver.def.name} in ${delver.zone}`);
 }
 
+// The human player's Delver: answering Yes reveals and transforms, No keeps it as is
+for (const answer of [true, false]) {
+  const { g, put, resolveAll } = setup({ yes: answer });
+  const delver = put(0, 'Delver of Secrets');
+  const top = g.makeCard(getDef('Ponder')!, 0);
+  top.zone = 'library';
+  g.players[0].library.unshift(top);
+  g.pendingTriggers = [];
+  g.active = 0;
+  g.emit({ type: 'step', step: 'upkeep', active: 0 });
+  await resolveAll();
+  const flipped = delver.def.name === 'Insectile Aberration';
+  check(`your Delver, answering ${answer ? 'Yes' : 'No'}`, flipped === answer, delver.def.name);
+}
+
 // Delver stays a 1/1 non-flier when the top card is a land
 {
   const { g, put, resolveAll } = setup();

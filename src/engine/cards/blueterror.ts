@@ -41,8 +41,9 @@ export const blueTerrorScripts: Record<string, Script> = {
           const top = g.players[c.me].library[0];
           if (!top || c.src.zone !== 'battlefield' || c.src.frontDef) return;
           if (isInstantOrSorcery(top)) {
-            const pick = await g.chooseCards(c.me, [top], 0, 1, `Delver of Secrets: reveal ${top.def.name} to transform?`, 'reveal', c.src);
-            if (pick.length) {
+            // a plain yes/no (showing the card): a "pick up to one card" dialog was easy to confirm with nothing selected
+            const reveal = await g.yesNo(c.me, `Delver of Secrets: reveal ${top.def.name} and transform Delver?`, 'delverReveal', top);
+            if (reveal) {
               g.log(`${g.players[c.me].name} reveals ${top.def.name}.`, c.me);
               g.transform(c.src);
             }
