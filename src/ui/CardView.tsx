@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import type { Game } from '../engine/game';
 import type { CardDef, CardInstance } from '../engine/types';
 import { KeywordIcons } from './KeywordIcons';
@@ -32,10 +33,25 @@ interface Props {
   highlight?: 'playable' | 'target' | 'selected' | 'attacking' | 'blocking' | null;
   onClick?: (c: CardInstance, e: React.MouseEvent) => void;
   onHover?: (c: CardInstance | null) => void;
+  /** long-press (touch screens): show the card big without acting on it */
+  onInspect?: (c: CardInstance) => void;
   badge?: string;
 }
 
-export function CardView({ g, card, size = 'field', highlight, onClick, onHover, badge }: Props) {
+export function CardView({ g, card, size = 'field', highlight, onClick, onHover, onInspect, badge }: Props) {
+  const press = useRef<{ timer: number; fired: boolean } | null>(null);
+  const startPress = (e: React.PointerEvent) => {
+    if (!onInspect || e.pointerType === 'mouse') return;
+    const p = { timer: 0, fired: false };
+    p.timer = window.setTimeout(() => {
+      p.fired = true;
+      onInspect(card);
+    }, 450);
+    press.current = p;
+  };
+  const endPress = () => {
+    if (press.current) window.clearTimeout(press.current.timer);
+  };
   const isCreature = g.isCreature(card) && card.zone === 'battlefield';
   const p = isCreature ? g.power(card) : 0;
   const t = isCreature ? g.toughness(card) : 0;
@@ -50,10 +66,22 @@ export function CardView({ g, card, size = 'field', highlight, onClick, onHover,
       }`}
       onClick={(e) => {
         e.stopPropagation();
+        // a long-press already showed the card; don't also act on it
+        if (press.current?.fired) {
+          press.current = null;
+          return;
+        }
         onClick?.(card, e);
       }}
       onMouseEnter={() => onHover?.(card)}
       onMouseLeave={() => onHover?.(null)}
+      onPointerDown={startPress}
+      onPointerUp={endPress}
+      onPointerLeave={endPress}
+      onPointerCancel={endPress}
+      onContextMenu={(e) => {
+        if (onInspect) e.preventDefault();
+      }}
       data-card-id={card.id}
     >
       <CardFace def={card.def} />

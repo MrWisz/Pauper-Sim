@@ -65,7 +65,12 @@ export function Board({
   const [blocks, setBlocks] = useState<Record<number, number>>({});
   const [selBlocker, setSelBlocker] = useState<number | null>(null);
   const [viewer, setViewer] = useState<{ title: string; pid: PlayerId; zone: 'graveyard' | 'exile' } | null>(null);
-  const [showLog, setShowLog] = useState(true);
+  /** touch screens have no hover: tap shows a card sheet, long-press zooms */
+  const isTouch = useMemo(() => window.matchMedia('(hover: none)').matches, []);
+  const narrow = useMemo(() => window.matchMedia('(max-width: 760px), (max-height: 520px)').matches, []);
+  const [showLog, setShowLog] = useState(!narrow);
+  const [topOpen, setTopOpen] = useState(false);
+  const [inspect, setInspect] = useState<{ card: CardInstance; items: MenuItem[] } | null>(null);
   /** after the game ends: hide the result overlay to look at the final board */
   const [viewBoard, setViewBoard] = useState(false);
   const [, force] = useState(0);
@@ -75,6 +80,7 @@ export function Board({
   useEffect(() => {
     setPicked([]);
     setMenu(null);
+    setInspect(null);
     setSelBlocker(null);
     setBlocks({});
     if (req?.type === 'attackers') setAttackSel(new Set());
@@ -82,7 +88,7 @@ export function Board({
 
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
-  }, [g.logs.length]);
+  }, [g.logs.length, showLog]);
 
   const respond = (v: any) => {
     setMenu(null);
@@ -220,6 +226,34 @@ export function Board({
     }
   };
 
+  /** what you could do with a card right now (same options as the desktop click menu) */
+  const itemsFor = (c: CardInstance): MenuItem[] => {
+    if (req?.type !== 'priority') return [];
+    if (c.zone === 'battlefield' && c.controller === me) return [...actionItems(c), ...manaItems(c)];
+    if (c.owner === me && (c.zone === 'hand' || c.zone === 'graveyard' || c.zone === 'exile')) return actionItems(c);
+    return [];
+  };
+  /** big view of a card; on touch screens it also lists the card's actions */
+  const openInspect = (c: CardInstance, withActions: boolean) => {
+    const items = withActions ? itemsFor(c) : [];
+    setInspect({
+      card: c,
+      items: items.map((it) => ({
+        label: it.label,
+        run: () => {
+          setInspect(null);
+          it.run();
+        },
+      })),
+    });
+  };
+  const inspectOnly = (c: CardInstance) => openInspect(c, false);
+  /** touch: while you have priority (or are waiting), tapping a card opens its sheet instead of acting right away */
+  const handleCardClick = (c: CardInstance, e: React.MouseEvent) => {
+    if (isTouch && (!req || req.type === 'priority')) return openInspect(c, true);
+    onCardClick(c, e);
+  };
+
   // ───────── end turn (available any time during your turn) ─────────
   const endTurn = () => {
     human.passTurn = g.turn;
@@ -310,14 +344,14 @@ export function Board({
     <div className={`row ${cls}`}>
       {cards.map((c) => {
         const atts = g.attachments(c);
-        const view = <CardView key={c.id} g={g} card={c} highlight={highlightFor(c)} onClick={onCardClick} onHover={setHover} badge={blockBadge(c)} />;
+        const view = <CardView key={c.id} g={g} card={c} highlight={highlightFor(c)} onClick={handleCardClick} onHover={setHover} onInspect={inspectOnly} badge={blockBadge(c)} />;
         if (!atts.length) return view;
         // Auras / Equipment peek out above the permanent they are attached to
         return (
           <div key={c.id} className="attach-group" style={{ paddingTop: atts.length * 18 }}>
             {atts.map((a, i) => (
               <div key={a.id} className="attached" style={{ top: i * 18 }}>
-                <CardView g={g} card={a} highlight={highlightFor(a)} onClick={onCardClick} onHover={setHover} />
+                <CardView g={g} card={a} highlight={highlightFor(a)} onClick={handleCardClick} onHover={setHover} onInspect={inspectOnly} />
               </div>
             ))}
             <div className="attach-host">{view}</div>
@@ -403,7 +437,11 @@ export function Board({
               Game {match.game} · You {match.wins[0]} – {match.wins[1]} CPU
             </span>
           )}
-          <label className="toggle" title="Stop at every priority, like Arena's full control">
+          <button className="tb-toggle" onClick={() => setTopOpen((o) => !o)} aria-label="Menu">
+            ☰
+          </button>
+          <div className={`tb-items ${topOpen ? 'open' : ''}`} onClick={() => setTopOpen(false)}>
+          <label className="toggle" title="Stop at every priority, like Arena's full control" onClick={(e) => e.stopPropagation()}>
             <input
               type="checkbox"
               checked={human.fullControl}
@@ -426,6 +464,7 @@ export function Board({
             Concede
           </button>
           <button onClick={onExit}>Exit</button>
+          </div>
         </div>
       </div>
 
@@ -488,7 +527,7 @@ export function Board({
 
         {/* Log */}
         {showLog && (
-          <div className="log" ref={logRef}>
+          <div className="log" ref={logRef} onClick={() => narrow && setShowLog(false)} title={narrow ? 'Tap to close' : undefined}>
             {g.logs.slice(-150).map((l) => (
               <div key={l.id} className={`log-line ${l.player === me ? 'mine' : l.player === opp ? 'theirs' : 'sys'}`}>
                 {l.text}
@@ -509,7 +548,7 @@ export function Board({
                 // squeeze big hands so they always fit on screen
                 margin: `0 ${arr.length > 7 ? Math.max(-48, -14 - (arr.length - 7) * 5) : -14}px`,
               }}>
-              <CardView g={g} card={c} size="hand" highlight={highlightFor(c)} onClick={onCardClick} onHover={setHover} />
+              <CardView g={g} card={c} size="hand" highlight={highlightFor(c)} onClick={handleCardClick} onHover={setHover} onInspect={inspectOnly} />
             </div>
           ))}
         </div>
@@ -573,9 +612,10 @@ export function Board({
           onClose={() => setViewer(null)}
           highlightFor={highlightFor}
           onCardClick={(c, e) => {
-            onCardClick(c, e);
+            handleCardClick(c, e);
           }}
           onHover={setHover}
+          onInspect={inspectOnly}
         />
       )}
 
@@ -585,8 +625,9 @@ export function Board({
           title={`${req.source.def.name}: ${req.spec.prompt}`}
           cards={req.candidates.map((t) => g.card((t as any).id)!).filter(Boolean)}
           highlightFor={highlightFor}
-          onCardClick={(c, e) => onCardClick(c, e)}
+          onCardClick={(c, e) => handleCardClick(c, e)}
           onHover={setHover}
+          onInspect={inspectOnly}
           footer={
             <>
               {picked.length >= (req.spec.min ?? 1) && (req.spec.max ?? 1) > 1 && (
@@ -604,7 +645,28 @@ export function Board({
         />
       )}
 
-      {req && <Modals g={g} req={req} respond={respond} onHover={setHover} />}
+      {req && <Modals g={g} req={req} respond={respond} onHover={setHover} onInspect={inspectOnly} />}
+
+      {inspect && (
+        <div className="inspect-backdrop" onClick={() => setInspect(null)}>
+          <div className="inspect-sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="inspect-card">
+              <CardFace def={inspect.card.def} />
+            </div>
+            {!inspect.card.def.implemented && <div className="preview-warn">Not scripted: only type, P/T, keywords and mana abilities work.</div>}
+            <div className="inspect-actions">
+              {inspect.items.map((it) => (
+                <button key={it.label} className="btn primary" onClick={it.run}>
+                  {it.label}
+                </button>
+              ))}
+              <button className="btn secondary" onClick={() => setInspect(null)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {g.winner !== undefined && !viewBoard && (
         <div className="gameover">
@@ -658,6 +720,7 @@ function ZoneViewer({
   onClose,
   highlightFor,
   onCardClick,
+  onInspect,
   onHover,
   footer,
 }: {
@@ -667,6 +730,7 @@ function ZoneViewer({
   onClose?: () => void;
   highlightFor: (c: CardInstance) => any;
   onCardClick: (c: CardInstance, e: React.MouseEvent) => void;
+  onInspect?: (c: CardInstance) => void;
   onHover: (c: CardInstance | null) => void;
   footer?: React.ReactNode;
 }) {
@@ -677,7 +741,7 @@ function ZoneViewer({
         <div className="modal-cards">
           {cards.length === 0 && <div className="empty">Empty</div>}
           {cards.map((c) => (
-            <CardView key={c.id} g={g} card={c} size="hand" highlight={highlightFor(c)} onClick={onCardClick} onHover={onHover} />
+            <CardView key={c.id} g={g} card={c} size="hand" highlight={highlightFor(c)} onClick={onCardClick} onHover={onHover} onInspect={onInspect} />
           ))}
         </div>
         <div className="btns">

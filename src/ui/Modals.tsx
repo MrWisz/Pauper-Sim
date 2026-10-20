@@ -10,11 +10,13 @@ export function Modals({
   req,
   respond,
   onHover,
+  onInspect,
 }: {
   g: Game;
   req: ChoiceRequest;
   respond: (v: any) => void;
   onHover: (c: CardInstance | null) => void;
+  onInspect?: (c: CardInstance) => void;
 }) {
   const [sel, setSel] = useState<number[]>([]);
   const [bottom, setBottom] = useState<Set<number>>(new Set());
@@ -63,6 +65,7 @@ export function Modals({
           highlight={sel.includes(c.id) ? 'selected' : null}
           onClick={() => toggle(c.id, max)}
           onHover={onHover}
+          onInspect={onInspect}
           badge={badge?.(c) ?? (sel.includes(c.id) && max > 1 ? `#${sel.indexOf(c.id) + 1}` : undefined)}
         />
       ))}
@@ -76,7 +79,8 @@ export function Modals({
         req.mulligans ? `Mulligan ${req.mulligans}: keep this hand?` : 'Opening hand',
         <div className="modal-cards">
           {req.hand.map((c) => (
-            <CardView key={c.id} g={g} card={c} size="hand" onHover={onHover} />
+            <CardView key={c.id} g={g} card={c} size="hand" onHover={onHover}
+          onInspect={onInspect} />
           ))}
         </div>,
         <>
@@ -174,7 +178,8 @@ export function Modals({
         req.prompt,
         req.source ? (
           <div className="modal-cards">
-            <CardView g={g} card={req.source} size="hand" onHover={onHover} />
+            <CardView g={g} card={req.source} size="hand" onHover={onHover}
+          onInspect={onInspect} />
           </div>
         ) : null,
         <>
@@ -228,6 +233,7 @@ export function Modals({
               card={c}
               size="hand"
               onHover={onHover}
+          onInspect={onInspect}
               highlight={isTop ? 'selected' : null}
               badge={isTop ? (i === 0 ? 'Next draw' : `Draw #${i + 1}`) : group.length > 1 ? `Bottom #${i + 1}` : 'Bottom'}
             />

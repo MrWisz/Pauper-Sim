@@ -25,6 +25,10 @@ Then open http://localhost:5173.
 - **Keyword icons** on the left edge of each permanent show its abilities (flying, reach, first/double strike, deathtouch, lifelink, trample, vigilance, haste, menace, hexproof, ward with its cost, indestructible, defender, protection…). Plain ring = printed on the card, green ring = from an Aura or Equipment, gold ring = until end of turn. Hover an icon for details and its source.
 - **Best of 3:** pick it on the setup screen. Between games you get a sideboarding screen (click a card to move a copy between main deck and sideboard; main deck must stay at 40+). The loser of each game chooses play or draw. The computer sideboards too, based on the cards it has seen from you (blasts against blue/red, artifact hate against Affinity, edicts against hexproof, and so on).
 
+## On phones and tablets
+
+The layout adapts to small screens in portrait and landscape. With no mouse to hover, **tap a card** to see it big along with its actions (Cast, Play, Tap for mana…), and **long-press** to zoom a card while targeting, attacking or blocking. The top-right **☰** menu holds Full control, the game log, Concede and Exit.
+
 ## Card support
 
 Every card's behaviour has to be scripted. Fully supported right now:

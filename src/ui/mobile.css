@@ -1,0 +1,551 @@
+/* Touch + small-screen layout. Loaded after styles.css so these rules win. */
+
+/* ───────────── card inspect sheet (touch: tap a card) ───────────── */
+.inspect-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+.inspect-sheet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-height: 100%;
+  width: min(340px, 100%);
+}
+.inspect-card {
+  width: min(300px, 82vw, calc((100vh - 170px) / 1.395));
+  flex: none;
+}
+.inspect-card .card-img,
+.inspect-card .card-text-face {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 488 / 680;
+  border-radius: 14px;
+  font-size: 14px;
+  filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.8));
+}
+.inspect-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+.inspect-actions .btn {
+  width: 100%;
+  padding: 11px 14px;
+}
+
+/* the menu toggle only exists on small screens */
+.tb-toggle {
+  display: none;
+}
+.tb-items {
+  display: contents;
+}
+
+/* touch screens: no hover zoom (tap / long-press instead) and no sticky hover lift in the hand */
+@media (hover: none) {
+  .preview {
+    display: none;
+  }
+  .hand-slot:hover {
+    transform: inherit !important;
+    z-index: inherit !important;
+  }
+}
+
+/* ───────────── phones & small tablets ───────────── */
+@media (max-width: 760px), (max-height: 520px) {
+  :root {
+    --field-w: 50px;
+    --field-h: 70px;
+    --hand-w: 70px;
+    --hand-h: 98px;
+  }
+  html,
+  body {
+    touch-action: manipulation;
+  }
+  .board {
+    grid-template-rows: 52px minmax(0, 1fr) auto;
+  }
+
+  /* top bar */
+  .opp-top {
+    gap: 6px;
+    padding: 4px 6px;
+  }
+  .avatar {
+    width: 42px;
+    height: 42px;
+    border-width: 2px;
+  }
+  .life {
+    font-size: 17px;
+  }
+  .pname {
+    display: none;
+  }
+  .crown {
+    top: -10px;
+    font-size: 14px;
+  }
+  .player-panel {
+    gap: 5px;
+  }
+  .piles {
+    gap: 3px;
+  }
+  .pile {
+    width: 28px;
+    height: 40px;
+  }
+  .pile-count {
+    font-size: 9px;
+    padding: 0 2px;
+  }
+  .pile-empty {
+    font-size: 0;
+  }
+  .card-back.small {
+    width: 24px;
+    height: 34px;
+  }
+  .opp-hand {
+    min-width: 0;
+    overflow: hidden;
+  }
+  .opp-hand .card-back {
+    margin: 0 -8px;
+  }
+  .top-buttons {
+    position: relative;
+    gap: 4px;
+  }
+  .match-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+  .tb-toggle {
+    display: block;
+    font-size: 18px;
+    line-height: 1;
+    padding: 6px 10px !important;
+  }
+  .tb-items {
+    display: none;
+  }
+  .tb-items.open {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 60;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 8px;
+    min-width: 170px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  }
+  .tb-items.open > * {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  /* battlefield */
+  .battlefield {
+    padding: 0 6px;
+  }
+  .row {
+    gap: 4px;
+    min-height: calc(var(--field-h) * 0.5);
+  }
+  .opp-side .row.lands,
+  .my-side .row.lands {
+    --field-w: 40px;
+    --field-h: 56px;
+  }
+  .phases {
+    padding: 2px 4px;
+    font-size: 10px;
+  }
+  .phase:not(.current) {
+    display: none;
+  }
+  .turn-ind {
+    padding: 1px 6px;
+  }
+  .pt {
+    font-size: 10px;
+    padding: 0 4px;
+    right: -3px;
+    bottom: -3px;
+    border-width: 1px;
+  }
+  .dmg {
+    font-size: 10px;
+  }
+  .sick,
+  .counters,
+  .extra-badge {
+    font-size: 8px;
+  }
+  .combat-badge {
+    font-size: 8px;
+    top: -6px;
+  }
+  .badge-unimpl {
+    width: 14px;
+    height: 14px;
+    font-size: 9px;
+  }
+  .kw-strip {
+    left: -6px;
+    top: 10px;
+    gap: 1px;
+  }
+  .kw-chip {
+    width: 14px;
+    height: 14px;
+    font-size: 8px;
+    border-width: 1px;
+  }
+  .kw-pro {
+    font-size: 6px;
+  }
+  .card-text-face {
+    padding: 3px;
+    font-size: 7px;
+    border-width: 1px;
+  }
+  .ctf-name {
+    font-size: 8px;
+  }
+  .ctf-type,
+  .ctf-oracle {
+    display: none;
+  }
+  .ctf-pt {
+    font-size: 9px;
+  }
+  .stack-panel {
+    right: 6px;
+    top: 4px;
+    width: min(230px, 62vw);
+    max-height: 42%;
+    padding: 6px;
+    z-index: 20;
+  }
+  .stack-item {
+    gap: 6px;
+    padding: 4px;
+    font-size: 11px;
+  }
+  .stack-art {
+    width: 32px;
+    height: 45px;
+  }
+  /* the log becomes a drawer opened from the ☰ menu */
+  .log {
+    display: block;
+    position: fixed;
+    left: 8px;
+    right: 8px;
+    top: 58px;
+    bottom: auto;
+    width: auto;
+    height: 40vh;
+    z-index: 45;
+    font-size: 11px;
+    background: rgba(8, 12, 17, 0.96);
+  }
+
+  /* bottom: [avatar + piles] [prompt + buttons] / [hand] */
+  .me-bottom {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 2px 8px;
+    padding: 4px 6px 6px;
+  }
+  .me-bottom .player-panel {
+    grid-row: 1;
+    grid-column: 1;
+  }
+  .controls {
+    grid-row: 1;
+    grid-column: 2;
+    width: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    padding-bottom: 0;
+  }
+  .prompt {
+    font-size: 11px;
+    padding: 3px 6px;
+    min-height: 0;
+    max-width: 100%;
+    flex: 1 1 120px;
+    text-align: left;
+  }
+  .controls .btns {
+    gap: 4px;
+    flex-wrap: nowrap;
+  }
+  .controls .btn {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+  .controls .btn.primary {
+    min-width: 0;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  .pool {
+    gap: 3px;
+  }
+  .mana {
+    padding: 1px 5px;
+    font-size: 11px;
+  }
+  .hand {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    height: calc(var(--hand-h) + 8px);
+    padding: 0 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    justify-content: safe center;
+    align-items: flex-end;
+  }
+  .hand-slot {
+    margin: 0 -14px !important;
+    transform: none !important;
+  }
+  .hand-slot:first-child {
+    margin-left: 0 !important;
+  }
+  .end-turn-btn {
+    bottom: calc(var(--hand-h) + 62px);
+    right: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  /* dialogs */
+  .modal {
+    min-width: 0;
+    padding: 10px 12px;
+    border-radius: 12px;
+    max-width: calc(100vw - 16px);
+    max-height: calc(100vh - 16px);
+  }
+  .modal-title {
+    font-size: 13px;
+  }
+  .modal-cards {
+    gap: 6px;
+    padding: 6px 0 10px;
+  }
+  .mode-list {
+    min-width: 0;
+  }
+  .modal-min {
+    bottom: calc(var(--hand-h) + 60px);
+  }
+  .scry-btns .btn.small {
+    padding: 3px 6px;
+  }
+
+  /* game over */
+  .gameover-box {
+    padding: 18px 16px;
+    margin: 0 12px;
+  }
+  .gameover-box h1 {
+    font-size: 30px;
+  }
+  .gameover-box .btns {
+    flex-direction: column;
+  }
+  .gameover-bar {
+    top: 6px;
+    width: calc(100vw - 12px);
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 6px 8px;
+    border-radius: 14px;
+    gap: 6px;
+  }
+
+  /* animations */
+  .fx-banner {
+    font-size: 30px;
+    padding: 10px 0;
+  }
+  .fx-banner.theirs {
+    font-size: 22px;
+  }
+  .fx-spotlight,
+  .fx-spotlight.mine,
+  .fx-spotlight.theirs {
+    width: 150px;
+    left: calc(50% - 75px);
+  }
+  .fx-spotlight .card-img,
+  .fx-spotlight .card-text-face {
+    width: 150px;
+    height: 209px;
+  }
+  .fx-spot-caption {
+    font-size: 11px;
+  }
+  .fx-float {
+    font-size: 24px;
+  }
+  .fx-info {
+    font-size: 16px;
+  }
+  .fx-combat {
+    font-size: 13px;
+    padding: 5px 12px;
+    white-space: nowrap;
+  }
+
+  /* setup + sideboarding screens */
+  .setup {
+    padding: 14px 12px 32px;
+  }
+  .setup h1 {
+    font-size: 24px;
+  }
+  textarea {
+    height: 200px;
+  }
+  .setup-opts {
+    gap: 10px;
+  }
+  .setup-opts label {
+    flex: 1 1 140px;
+  }
+  .setup-opts .btn.big {
+    width: 100%;
+  }
+  .warn-toast,
+  .error-toast {
+    width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
+  }
+  .sideboard-screen {
+    padding: 12px 10px 20px;
+  }
+  .sb-header h1 {
+    font-size: 20px;
+  }
+  .sb-list {
+    max-height: 38vh;
+  }
+  .sb-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .sb-footer .btns .btn {
+    flex: 1;
+  }
+}
+
+/* tall phones (portrait): there's room for bigger battlefield cards */
+@media (max-width: 760px) and (min-height: 700px) {
+  :root {
+    --field-w: 60px;
+    --field-h: 84px;
+    --hand-w: 74px;
+    --hand-h: 103px;
+  }
+  .opp-side .row.lands,
+  .my-side .row.lands {
+    --field-w: 46px;
+    --field-h: 64px;
+  }
+}
+
+/* phones in landscape: very little height */
+@media (max-height: 520px) {
+  :root {
+    --field-w: 50px;
+    --field-h: 70px;
+    --hand-w: 52px;
+    --hand-h: 72px;
+  }
+  .board {
+    grid-template-rows: 46px minmax(0, 1fr) auto;
+  }
+  .opp-side .row.lands,
+  .my-side .row.lands {
+    --field-w: 38px;
+    --field-h: 53px;
+  }
+  /* wide but short: each player's lands and creatures sit side by side instead of stacked */
+  .side {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  }
+  .side .row {
+    flex: 0 1 auto;
+    max-width: 55%;
+    flex-wrap: wrap;
+  }
+  .midline {
+    padding: 1px 0;
+  }
+  .prompt {
+    flex: none;
+  }
+  .me-bottom {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+  .hand {
+    grid-row: 1;
+    grid-column: 2;
+  }
+  .controls {
+    grid-row: 1;
+    grid-column: 3;
+    flex-direction: column;
+    align-items: flex-end;
+    max-width: 210px;
+  }
+  /* move End Turn up under the top bar so it never covers the prompt */
+  .end-turn-btn {
+    top: 52px;
+    bottom: auto;
+  }
+  .inspect-sheet {
+    flex-direction: row;
+    width: auto;
+    max-width: 100%;
+  }
+  .inspect-card {
+    width: calc((100vh - 40px) / 1.395);
+  }
+  .inspect-actions {
+    width: 200px;
+  }
+}
