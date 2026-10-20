@@ -1,3 +1,4 @@
+import { venture } from './undercity';
 import { emptyPool, parseCost, solvePayment, costMV, type Cost, type ManaSource, COLORS } from './mana';
 import type {
   Action,
@@ -96,6 +97,9 @@ export class Game {
   tick = 0;
   turnStartTick: [number, number] = [0, 0];
   monarch: PlayerId | null = null;
+  /** who has the initiative (Undercity), and the room each player is in */
+  initiative: PlayerId | null = null;
+  dungeonRoom: [string | null, string | null] = [null, null];
   winner: PlayerId | null | undefined = undefined;
   logs: LogEntry[] = [];
   version = 0;
@@ -113,6 +117,7 @@ export class Game {
   private nextId = 1;
   private listeners = new Set<() => void>();
   private monarchSource: CardInstance;
+  initiativeSource: CardInstance;
   rng: () => number;
 
   constructor(
@@ -149,6 +154,23 @@ export class Game {
       this.shuffle(pid);
     }
     this.active = firstPlayer;
+    this.initiativeSource = this.makeCard(
+      {
+        name: 'The Initiative',
+        manaCost: '',
+        cmc: 0,
+        typeLine: 'Designation',
+        types: [],
+        subtypes: [],
+        supertypes: [],
+        colors: [],
+        oracle:
+          'Whenever one or more creatures a player controls deal combat damage to you, that player takes the initiative. Whenever you take the initiative and at the beginning of your upkeep, venture into Undercity.',
+        keywords: [],
+        implemented: true,
+      },
+      0,
+    );
     this.monarchSource = this.makeCard(
       {
         name: 'The Monarch',
@@ -259,6 +281,8 @@ export class Game {
   // ───────────────────────────── queries ─────────────────────────────
 
   is(card: CardInstance, type: string) {
+    // a bestowed creature is an Aura while it's attached
+    if (type === 'Creature' && card.bestowed) return false;
     return card.def.types.includes(type);
   }
   isCreature(c: CardInstance) {
@@ -275,6 +299,8 @@ export class Game {
   }
   hasSubtype(c: CardInstance, s: string) {
     if (c.def.subtypes.includes(s)) return true;
+    // Changeling: every creature type (but not land/artifact/enchantment subtypes)
+    if (c.def.changeling && !NON_CREATURE_SUBTYPES.has(s)) return true;
     for (const e of this.attachments(c)) if (e.def.grant?.subtypes?.includes(s)) return true;
     return false;
   }
@@ -293,6 +319,7 @@ export class Game {
   }
   hasKeyword(c: CardInstance, k: Keyword): boolean {
     if (c.def.keywords.includes(k) || c.tempKeywords.includes(k)) return true;
+    if (c.nextTurnKeywords?.includes(k)) return true;
     for (const e of this.attachments(c)) if (e.def.grant?.keywords?.(this, c, e).includes(k)) return true;
     return false;
   }
@@ -305,7 +332,7 @@ export class Game {
     return typeof v === 'number' ? v : v(this, host, self);
   }
   isAura(c: CardInstance) {
-    return c.def.subtypes.includes('Aura');
+    return !!c.bestowed || c.def.subtypes.includes('Aura');
   }
   /** colors this permanent has protection from */
   protections(c: CardInstance): string[] {
@@ -326,7 +353,7 @@ export class Game {
   }
   /** whether an Aura could legally be attached to this permanent */
   canEnchant(aura: CardInstance, host: CardInstance, controller: PlayerId) {
-    switch (aura.def.enchant) {
+    switch (aura.def.enchant ?? (aura.def.bestow ? 'creature' : undefined)) {
       case 'creature':
         return this.isCreature(host);
       case 'creatureYouControl':
@@ -408,6 +435,11 @@ export class Game {
         c.def = c.frontDef;
         c.frontDef = undefined;
       }
+      c.castInfo = undefined;
+      c.bestowed = false;
+      c.nextTurnKeywords = undefined;
+      c.goadedBy = undefined;
+      c.lastActivated = undefined;
       // things attached to it fall off; it falls off what it is attached to
       for (const e of this.attachments(c)) if (!this.isAura(e)) e.attachedTo = null;
       c.attachedTo = null;
@@ -570,8 +602,15 @@ export class Game {
       if (this.isAura(e)) {
         const host = e.attachedTo !== null ? this.card(e.attachedTo) : undefined;
         if (!host || host.zone !== 'battlefield' || !this.canEnchant(e, host, e.controller)) {
-          this.log(`${e.def.name} is put into the graveyard (nothing to enchant).`, e.controller);
-          this.moveCard(e, 'graveyard');
+          if (e.bestowed) {
+            // bestow: it stops being an Aura and stays on the battlefield as a creature
+            e.bestowed = false;
+            e.attachedTo = null;
+            this.log(`${e.def.name} is no longer attached and becomes a creature again.`, e.controller);
+          } else {
+            this.log(`${e.def.name} is put into the graveyard (nothing to enchant).`, e.controller);
+            this.moveCard(e, 'graveyard');
+          }
           changed = true;
         }
       } else if (e.attachedTo !== null) {
@@ -637,6 +676,10 @@ export class Game {
     this.turn++;
     const ap = this.active;
     this.turnStartTick[ap] = ++this.tick;
+    for (const c of this.battlefield) {
+      if (c.controller === ap && c.nextTurnKeywords) c.nextTurnKeywords = undefined;
+      if (c.goadedBy === ap) c.goadedBy = undefined;
+    }
     for (const p of this.players) {
       p.landsPlayedThisTurn = 0;
       p.drawsThisTurn = 0;
@@ -664,6 +707,9 @@ export class Game {
 
     this.step = 'upkeep';
     this.emit({ type: 'step', step: 'upkeep', active: ap });
+    if (this.initiative === ap) {
+      this.addTrigger(this.initiativeSource, ap, 'The initiative: venture into Undercity', async () => venture(this, ap, this.initiativeSource));
+    }
     await this.priorityStep();
 
     this.step = 'draw';
@@ -779,6 +825,12 @@ export class Game {
     let ids: number[] = [];
     if (cands.length) ids = await this.ask<number[]>(ap, { type: 'attackers', player: ap, candidates: cands });
     const attackers = ids.map((id) => this.card(id)!).filter((c) => c && cands.includes(c));
+    for (const c of cands) {
+      if (c.goadedBy !== undefined && !attackers.includes(c)) {
+        attackers.push(c);
+        this.log(`${c.def.name} is goaded and must attack.`, ap);
+      }
+    }
     if (!attackers.length) {
       this.step = 'endCombat';
       this.changed();
@@ -902,6 +954,11 @@ export class Game {
     for (const h of playerHits.values()) {
       this.emit({ type: 'combatDamagePlayer', source: h.src, player: h.player, amount: h.n });
       if (this.monarch === h.player) this.becomeMonarch(h.src.controller);
+      if (this.initiative === h.player && h.src.controller !== h.player) {
+        const taker = h.src.controller;
+        this.initiative = taker; // only once per combat even if several creatures connect
+        this.addTrigger(this.initiativeSource, taker, 'Take the initiative', async () => this.takeInitiative(taker));
+      }
     }
     this.changed();
   }
@@ -916,7 +973,7 @@ export class Game {
       const abilities = c.def.activated ?? [];
       for (let i = 0; i < abilities.length; i++) {
         const a = abilities[i];
-        if (!a.produces || a.cost.mana || !a.cost.tap || a.cost.sacSelf) continue;
+        if (!isManaAbility(a) || a.cost.mana || !a.cost.tap || a.cost.sacSelf) continue;
         out.push({ id: c.id, options: this.produceOptions(c, i) });
         break;
       }
@@ -927,8 +984,8 @@ export class Game {
   /** Mana a mana ability makes, including bonuses from Auras like Utopia Sprawl / Abundant Growth. */
   produceOptions(c: CardInstance, index: number): ManaColor[][] {
     const a = c.def.activated?.[index];
-    if (!a?.produces) return [];
-    let opts = a.produces.map((o) => [...o]);
+    if (!a || !isManaAbility(a)) return [];
+    let opts = (a.producesFn ? a.producesFn(this, c) : a.produces!).map((o) => [...o]);
     const plainTap = a.cost.tap && !a.cost.mana && !a.cost.sacSelf;
     if (plainTap && this.isLand(c)) {
       for (const e of this.attachments(c)) {
@@ -993,13 +1050,13 @@ export class Game {
   manaAbilities(pid: PlayerId, card: CardInstance) {
     return (card.def.activated ?? [])
       .map((a, i) => ({ a, i }))
-      .filter((x) => x.a.produces && this.canActivate(pid, card, x.i));
+      .filter((x) => isManaAbility(x.a) && this.canActivate(pid, card, x.i));
   }
 
   /** Manually tap a permanent for mana (clicking a land). Synchronous: it never asks questions. */
   manualMana(pid: PlayerId, card: CardInstance, index: number, option: number): boolean {
     const a = card.def.activated?.[index];
-    if (!a?.produces || !this.canActivate(pid, card, index)) return false;
+    if (!a || !isManaAbility(a) || !this.canActivate(pid, card, index)) return false;
     if (a.cost.mana) {
       const exclude = a.cost.tap ? new Set([card.id]) : undefined;
       const sol = solvePayment(parseCost(a.cost.mana), this.players[pid].pool, this.manaSources(pid, exclude));
@@ -1016,7 +1073,7 @@ export class Game {
 
   // ───────────────────────────── costs ─────────────────────────────
 
-  spellCost(pid: PlayerId, card: CardInstance, method: CastInfo['method'], altIndex?: number): Cost {
+  spellCost(pid: PlayerId, card: CardInstance, method: CastInfo['method'], altIndex?: number, x = 0): Cost {
     const d = card.def;
     let cost: Cost;
     switch (method) {
@@ -1035,6 +1092,12 @@ export class Game {
       case 'plot':
         cost = parseCost('');
         break;
+      case 'bestow':
+        cost = parseCost(d.bestow);
+        break;
+      case 'omen':
+        cost = parseCost(d.omen?.manaCost);
+        break;
       default:
         cost = parseCost(d.manaCost);
     }
@@ -1044,6 +1107,8 @@ export class Game {
     if (d.costReduction && (method === 'normal' || method === 'madness')) {
       cost.generic = Math.max(0, cost.generic - d.costReduction(this, card, pid));
     }
+    // {X}: the chosen value is paid as generic mana
+    if (cost.x) cost.generic += cost.x * x;
     return cost;
   }
 
@@ -1077,6 +1142,8 @@ export class Game {
   }
 
   modesFor(c: CardInstance, method: CastInfo['method']): SpellMode[] {
+    if (method === 'bestow') return [{ text: `${c.def.name} (bestow)`, targets: [BESTOW_TARGET], resolve: async () => {} }];
+    if (method === 'omen' && c.def.omen) return [{ text: c.def.omen.name, resolve: c.def.omen.resolve }];
     const s = c.def.spell;
     if (s?.modes) return s.modes;
     return [{ text: '', targets: s?.targets, resolve: s?.resolve ?? (async () => {}) }];
@@ -1098,9 +1165,12 @@ export class Game {
     if (this.isLand(c)) return false;
     if (!ignoreTiming && !this.timingOk(pid, c, method)) return false;
     const d = c.def;
-    if (method === 'normal' || method === 'alt' || method === 'overload') {
+    if (method === 'normal' || method === 'alt' || method === 'overload' || method === 'bestow' || method === 'omen') {
       if (c.zone !== 'hand' || c.owner !== pid) return false;
     }
+    if (method === 'bestow' && !d.bestow) return false;
+    if (method === 'omen' && !d.omen) return false;
+    if (d.castCondition && !d.castCondition(this, c, pid)) return false;
     if (method === 'flashback' && (c.zone !== 'graveyard' || !d.flashback || c.owner !== pid)) return false;
     if (method === 'plot' && (c.zone !== 'exile' || c.plottedTurn === null || c.plottedTurn >= this.turn || c.owner !== pid))
       return false;
@@ -1135,6 +1205,9 @@ export class Game {
       });
       if (d.overload && this.canCast(pid, c, 'overload', undefined, ignoreTiming))
         out.push({ method: 'overload', label: `Overload (${d.overload})` });
+      if (d.bestow && this.canCast(pid, c, 'bestow', undefined, ignoreTiming)) out.push({ method: 'bestow', label: `Bestow ${d.bestow}` });
+      if (d.omen && this.canCast(pid, c, 'omen', undefined, ignoreTiming))
+        out.push({ method: 'omen', label: `Cast ${d.omen.name} ${d.omen.manaCost}` });
     } else if (c.zone === 'graveyard') {
       if (this.canCast(pid, c, 'flashback', undefined, ignoreTiming))
         out.push({ method: 'flashback', label: d.flashback?.label ?? `Flashback ${d.flashback?.mana ?? d.flashback?.altLabel ?? ''}` });
@@ -1156,8 +1229,10 @@ export class Game {
     if (zone === 'battlefield' ? c.controller !== pid : c.owner !== pid) return false;
     if (a.sorcery && !this.canSorcery(pid)) return false;
     if (a.canActivate && !a.canActivate(this, c, pid)) return false;
+    if (a.oncePerTurn && c.lastActivated?.[index] === this.turn) return false;
     const cost = a.cost;
     const exclude = new Set<number>();
+    if (cost.returnPermanent && !this.permanents(pid).some((x) => cost.returnPermanent!.filter(this, x))) return false;
     if (cost.tap) {
       if (c.tapped) return false;
       if (this.isCreature(c) && this.isSick(c)) return false;
@@ -1193,7 +1268,7 @@ export class Game {
     const withAbilities = [...this.permanents(pid), ...p.hand, ...p.graveyard];
     for (const c of withAbilities) {
       (c.def.activated ?? []).forEach((a, i) => {
-        if (a.produces) return;
+        if (isManaAbility(a)) return;
         if (this.canActivate(pid, c, i)) out.push({ type: 'activate', cardId: c.id, index: i });
       });
     }
@@ -1313,7 +1388,7 @@ export class Game {
     // 1. mode
     const modes = this.modesFor(c, method);
     let mode = 0;
-    if (d.spell?.modes && method !== 'overload') {
+    if (d.spell?.modes && method !== 'overload' && method !== 'bestow' && method !== 'omen') {
       const opts = modes.map((m) => ({ text: m.text, enabled: this.hasTargetsFor(pid, m.targets, c) }));
       const r = await this.ask<number | null>(pid, { type: 'mode', player: pid, source: c, options: opts, cancellable });
       if (r === null || r === undefined) return false;
@@ -1327,6 +1402,23 @@ export class Game {
       const t = await this.chooseTargets(pid, specs, c, cancellable);
       if (!t) return false;
       targets = t;
+    }
+
+    // 2b. choose X (up to what we can afford)
+    if (this.spellCost(pid, c, method, altIndex, 0).x) {
+      let max = 0;
+      while (max < 30 && this.canPay(pid, this.spellCost(pid, c, method, altIndex, max + 1))) max++;
+      const x = await this.ask<number | null>(pid, {
+        type: 'number',
+        player: pid,
+        prompt: `${d.name}: choose X`,
+        min: 0,
+        max,
+        source: c,
+        purpose: 'x',
+      });
+      if (x === null || x === undefined) return false;
+      info.x = Math.max(0, Math.min(max, x));
     }
 
     // 3. choose additional costs
@@ -1380,7 +1472,7 @@ export class Game {
     }
 
     // 4. pay mana
-    const cost = this.spellCost(pid, c, method, altIndex);
+    const cost = this.spellCost(pid, c, method, altIndex, info.x ?? 0);
     if (!(await this.payMana(pid, cost))) {
       this.log(`Couldn't pay for ${d.name}.`, pid);
       return false;
@@ -1452,17 +1544,18 @@ export class Game {
     const cost = a.cost;
 
     // mana abilities
-    if (a.produces) {
+    if (isManaAbility(a)) {
+      const produces = this.produceOptions(c, index);
       let opt = 0;
-      if (a.produces.length > 1) {
-        const r = await this.ask<number | null>(pid, { type: 'color', player: pid, options: a.produces, source: c });
+      if (produces.length > 1) {
+        const r = await this.ask<number | null>(pid, { type: 'color', player: pid, options: produces, source: c });
         if (r === null || r === undefined) return false;
         opt = r;
       }
       if (cost.mana && !(await this.payMana(pid, parseCost(cost.mana)))) return false;
       if (cost.tap) c.tapped = true;
       if (cost.sacSelf) this.sacrifice(c);
-      this.addMana(pid, a.produces[opt]);
+      this.addMana(pid, produces[opt]);
       return true;
     }
 
@@ -1524,6 +1617,23 @@ export class Game {
       if (!ids) return false;
       returned = this.card(ids[0]);
     }
+    let bounced: CardInstance | undefined;
+    if (cost.returnPermanent) {
+      const cands = this.permanents(pid).filter((x) => cost.returnPermanent!.filter(this, x));
+      const ids = await this.ask<number[] | null>(pid, {
+        type: 'cards',
+        player: pid,
+        prompt: cost.returnPermanent.prompt,
+        cards: cands,
+        min: 1,
+        max: 1,
+        purpose: 'returnLand',
+        source: c,
+        cancellable,
+      });
+      if (!ids) return false;
+      bounced = this.card(ids[0]);
+    }
     if (cost.mana) {
       const exclude = cost.tap ? new Set([c.id]) : undefined;
       const sol = solvePayment(parseCost(cost.mana), this.players[pid].pool, this.manaSources(pid, exclude));
@@ -1545,6 +1655,8 @@ export class Game {
       this.log(`${returned.def.name} returns to hand.`, pid);
       this.moveCard(returned, 'hand');
     }
+    if (bounced) this.bounce(bounced);
+    if (a.oncePerTurn) (c.lastActivated ??= {})[index] = this.turn;
     if (cost.sacSelf) this.sacrifice(c);
     if (cost.exileSelf) this.moveCard(c, 'exile');
     if (cost.discardSelf) this.discardCards(pid, [c]);
@@ -1641,17 +1753,33 @@ export class Game {
     this.stack.pop();
     item.targets = legal;
     const ctx = this.makeCtx(item);
-    if (anyTargets && !anyLegal) {
+    // a bestow spell whose target is gone resolves as a creature instead of fizzling
+    const bestowFallsBack = item.kind === 'spell' && item.info.method === 'bestow';
+    if (anyTargets && !anyLegal && !bestowFallsBack) {
       this.log(`${item.card.def.name} fizzles (no legal targets).`, item.controller);
       if (item.kind === 'spell') this.finishSpell(item);
       this.resolving = null;
       this.changed();
       return;
     }
-    if (item.kind === 'spell') {
+    if (item.kind === 'spell' && item.info.method === 'omen' && item.card.def.omen) {
+      // Omen: do the sorcery's effect, then shuffle the card into its owner's library
+      const c = item.card;
+      this.log(`${c.def.omen!.name} resolves.`, item.controller);
+      await c.def.omen!.resolve(ctx);
+      if (c.zone === 'stack') {
+        c.zone = 'none';
+        this.moveCard(c, 'library');
+        this.shuffle(c.owner);
+        this.log(`${c.def.name} is shuffled into its owner's library.`, item.controller);
+      }
+    } else if (item.kind === 'spell') {
       const c = item.card;
       if (this.isPermanentCard(c)) {
         c.zone = 'none';
+        c.castInfo = item.info;
+        if (c.def.entersWithXCounters && item.info.x) c.counters['+1/+1'] = item.info.x;
+        if (item.info.method === 'bestow') c.bestowed = legal[0]?.length > 0;
         this.log(`${c.def.name} resolves.`, item.controller);
         if (c.def.chooseColor) {
           const opts: ManaColor[][] = [['W'], ['U'], ['B'], ['R'], ['G']];
@@ -1845,6 +1973,14 @@ export class Game {
     return t;
   }
 
+  /** Take the initiative and venture into Undercity. */
+  async takeInitiative(pid: PlayerId) {
+    this.initiative = pid;
+    this.log(`${this.players[pid].name} takes the initiative.`, pid);
+    this.changed();
+    await venture(this, pid, this.initiativeSource);
+  }
+
   becomeMonarch(pid: PlayerId) {
     if (this.monarch === pid) return;
     this.monarch = pid;
@@ -1961,6 +2097,23 @@ export class Game {
     this.log(`${equipment.def.name} is attached to ${creature.def.name}.`, equipment.controller);
     this.changed();
   }
+}
+
+/** what a bestowed creature can be attached to */
+const BESTOW_TARGET: TargetSpec = {
+  kind: 'permanent',
+  prompt: 'Choose a creature to bestow onto',
+  filter: (g, t) => t.kind === 'card' && !!g.card(t.id) && g.isCreature(g.card(t.id)!),
+};
+
+/** subtypes that aren't creature types (Changeling doesn't grant these) */
+const NON_CREATURE_SUBTYPES = new Set([
+  'Forest', 'Island', 'Swamp', 'Mountain', 'Plains', 'Desert',
+  'Aura', 'Cartouche', 'Equipment', 'Blood', 'Clue', 'Food', 'Map', 'Treasure',
+]);
+
+export function isManaAbility(a: ActivatedDef) {
+  return !!(a.produces || a.producesFn);
 }
 
 export function targetKey(t: Target) {

@@ -1738,5 +1738,301 @@
   "keywords": [],
   "image": "https://cards.scryfall.io/normal/front/c/2/c227437d-1fc7-4a00-ace5-80795adc51d3.jpg?1783930190",
   "art": "https://cards.scryfall.io/art_crop/front/c/2/c227437d-1fc7-4a00-ace5-80795adc51d3.jpg?1783930190"
+ },
+ "Avenging Hunter": {
+  "name": "Avenging Hunter",
+  "manaCost": "{4}{G}",
+  "cmc": 5,
+  "typeLine": "Creature — Dragon Ranger",
+  "oracle": "Trample\nWhen this creature enters, you take the initiative.",
+  "colors": [
+   "G"
+  ],
+  "power": "5",
+  "toughness": "4",
+  "keywords": [
+   "Trample"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/f/4/f4072640-0f9b-4f0a-84cc-eda415cc92e7.jpg?1783922721",
+  "art": "https://cards.scryfall.io/art_crop/front/f/4/f4072640-0f9b-4f0a-84cc-eda415cc92e7.jpg?1783922721"
+ },
+ "Elvish Mystic": {
+  "name": "Elvish Mystic",
+  "manaCost": "{G}",
+  "cmc": 1,
+  "typeLine": "Creature — Elf Druid",
+  "oracle": "{T}: Add {G}.",
+  "colors": [
+   "G"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/0/8/08b9a296-3b76-4f8f-9d71-7c9af92bb3b4.jpg?1785647413",
+  "art": "https://cards.scryfall.io/art_crop/front/0/8/08b9a296-3b76-4f8f-9d71-7c9af92bb3b4.jpg?1785647413"
+ },
+ "Fyndhorn Elves": {
+  "name": "Fyndhorn Elves",
+  "manaCost": "{G}",
+  "cmc": 1,
+  "typeLine": "Creature — Elf Druid",
+  "oracle": "{T}: Add {G}.",
+  "colors": [
+   "G"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/4/5/450744cf-7eba-491b-97b0-ca80c6368bbb.jpg?1783928794",
+  "art": "https://cards.scryfall.io/art_crop/front/4/5/450744cf-7eba-491b-97b0-ca80c6368bbb.jpg?1783928794"
+ },
+ "Generous Ent": {
+  "name": "Generous Ent",
+  "manaCost": "{5}{G}",
+  "cmc": 6,
+  "typeLine": "Creature — Treefolk",
+  "oracle": "Reach\nWhen this creature enters, create a Food token. (It's an artifact with \"{2}, {T}, Sacrifice this token: You gain 3 life.\")\nForestcycling {1} ({1}, Discard this card: Search your library for a Forest card, reveal it, put it into your hand, then shuffle.)",
+  "colors": [
+   "G"
+  ],
+  "power": "5",
+  "toughness": "7",
+  "keywords": [
+   "Reach",
+   "Landcycling",
+   "Food",
+   "Forestcycling",
+   "Typecycling",
+   "Cycling"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/8/5/85d22d5d-3875-42ff-b51e-c6e21db201f5.jpg?1783916266",
+  "art": "https://cards.scryfall.io/art_crop/front/8/5/85d22d5d-3875-42ff-b51e-c6e21db201f5.jpg?1783916266"
+ },
+ "Gingerbread Cabin": {
+  "name": "Gingerbread Cabin",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land — Forest",
+  "oracle": "({T}: Add {G}.)\nThis land enters tapped unless you control three or more other Forests.\nWhen this land enters untapped, create a Food token. (It's an artifact with \"{2}, {T}, Sacrifice this token: You gain 3 life.\")",
+  "colors": [],
+  "keywords": [
+   "Food"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/3/b/3b583cc8-95e6-4772-afe3-d405b65836e0.jpg?1783927494",
+  "art": "https://cards.scryfall.io/art_crop/front/3/b/3b583cc8-95e6-4772-afe3-d405b65836e0.jpg?1783927494"
+ },
+ "Land Grant": {
+  "name": "Land Grant",
+  "manaCost": "{1}{G}",
+  "cmc": 2,
+  "typeLine": "Sorcery",
+  "oracle": "If you have no land cards in hand, you may reveal your hand rather than pay this spell's mana cost.\nSearch your library for a Forest card, reveal that card, put it into your hand, then shuffle.",
+  "colors": [
+   "G"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/d/6/d6862005-32d1-473e-a28b-5dfc4b7782cd.jpg?1783945924",
+  "art": "https://cards.scryfall.io/art_crop/front/d/6/d6862005-32d1-473e-a28b-5dfc4b7782cd.jpg?1783945924"
+ },
+ "Lead the Stampede": {
+  "name": "Lead the Stampede",
+  "manaCost": "{2}{G}",
+  "cmc": 3,
+  "typeLine": "Sorcery",
+  "oracle": "Look at the top five cards of your library. You may reveal any number of creature cards from among them and put the revealed cards into your hand. Put the rest on the bottom of your library in any order.",
+  "colors": [
+   "G"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/9/e/9e76b676-c7a3-4de6-a78d-3059a0df83f2.jpg?1783931034",
+  "art": "https://cards.scryfall.io/art_crop/front/9/e/9e76b676-c7a3-4de6-a78d-3059a0df83f2.jpg?1783931034"
+ },
+ "Llanowar Elves": {
+  "name": "Llanowar Elves",
+  "manaCost": "{G}",
+  "cmc": 1,
+  "typeLine": "Creature — Elf Druid",
+  "oracle": "{T}: Add {G}.",
+  "colors": [
+   "G"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/6/a/6a0b230b-d391-4998-a3f7-7b158a0ec2cd.jpg?1783909057",
+  "art": "https://cards.scryfall.io/art_crop/front/6/a/6a0b230b-d391-4998-a3f7-7b158a0ec2cd.jpg?1783909057"
+ },
+ "Masked Vandal": {
+  "name": "Masked Vandal",
+  "manaCost": "{1}{G}",
+  "cmc": 2,
+  "typeLine": "Creature — Shapeshifter",
+  "oracle": "Changeling (This card is every creature type.)\nWhen this creature enters, you may exile a creature card from your graveyard. If you do, exile target artifact or enchantment an opponent controls.",
+  "colors": [
+   "G"
+  ],
+  "power": "1",
+  "toughness": "3",
+  "keywords": [
+   "Changeling"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/f/0/f0a9c72a-e450-41e3-80e5-06f2f1171245.jpg?1783928209",
+  "art": "https://cards.scryfall.io/art_crop/front/f/0/f0a9c72a-e450-41e3-80e5-06f2f1171245.jpg?1783928209"
+ },
+ "Nyxborn Hydra": {
+  "name": "Nyxborn Hydra",
+  "manaCost": "{X}{G}",
+  "cmc": 1,
+  "typeLine": "Enchantment Creature — Hydra",
+  "oracle": "Bestow {X}{G}{G} (If you cast this card for its bestow cost, it's an Aura spell with enchant creature. It becomes a creature again if it's not attached.)\nReach, trample\nThis permanent enters with X +1/+1 counters on it.\nEnchanted creature gets +1/+1 for each +1/+1 counter on this Aura and has reach and trample.",
+  "colors": [
+   "G"
+  ],
+  "power": "0",
+  "toughness": "1",
+  "keywords": [
+   "Reach",
+   "Trample",
+   "Bestow"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/9/0/902a969e-9f22-4e92-93eb-9d4536ca82e5.jpg?1783911257",
+  "art": "https://cards.scryfall.io/art_crop/front/9/0/902a969e-9f22-4e92-93eb-9d4536ca82e5.jpg?1783911257"
+ },
+ "Priest of Titania": {
+  "name": "Priest of Titania",
+  "manaCost": "{1}{G}",
+  "cmc": 2,
+  "typeLine": "Creature — Elf Druid",
+  "oracle": "{T}: Add {G} for each Elf on the battlefield.",
+  "colors": [
+   "G"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/e/b/eb11921b-1b28-483f-a707-4de21a6daa31.jpg?1783911212",
+  "art": "https://cards.scryfall.io/art_crop/front/e/b/eb11921b-1b28-483f-a707-4de21a6daa31.jpg?1783911212"
+ },
+ "Quirion Ranger": {
+  "name": "Quirion Ranger",
+  "manaCost": "{G}",
+  "cmc": 1,
+  "typeLine": "Creature — Elf Ranger",
+  "oracle": "Return a Forest you control to its owner's hand: Untap target creature. Activate only once each turn.",
+  "colors": [
+   "G"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/3/2/320fdf89-e158-41c5-b0bf-fee9dec36a75.jpg?1783926781",
+  "art": "https://cards.scryfall.io/art_crop/front/3/2/320fdf89-e158-41c5-b0bf-fee9dec36a75.jpg?1783926781"
+ },
+ "Sagu Wildling": {
+  "name": "Sagu Wildling",
+  "manaCost": "{4}{G}",
+  "cmc": 5,
+  "typeLine": "Creature — Dragon",
+  "oracle": "Flying\nWhen this creature enters, you gain 3 life.",
+  "colors": [
+   "G"
+  ],
+  "power": "3",
+  "toughness": "3",
+  "keywords": [
+   "Flying"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/d/8/d8b43b00-f4d1-436c-bf3f-6d414cd4ce38.jpg?1783907334",
+  "art": "https://cards.scryfall.io/art_crop/front/d/8/d8b43b00-f4d1-436c-bf3f-6d414cd4ce38.jpg?1783907334"
+ },
+ "Timberwatch Elf": {
+  "name": "Timberwatch Elf",
+  "manaCost": "{2}{G}",
+  "cmc": 3,
+  "typeLine": "Creature — Elf",
+  "oracle": "{T}: Target creature gets +X/+X until end of turn, where X is the number of Elves on the battlefield.",
+  "colors": [
+   "G"
+  ],
+  "power": "1",
+  "toughness": "2",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/3/8/38807f17-1cf2-4736-ad10-df6c8b1a9f55.jpg?1783928309",
+  "art": "https://cards.scryfall.io/art_crop/front/3/8/38807f17-1cf2-4736-ad10-df6c8b1a9f55.jpg?1783928309"
+ },
+ "Winding Way": {
+  "name": "Winding Way",
+  "manaCost": "{1}{G}",
+  "cmc": 2,
+  "typeLine": "Sorcery",
+  "oracle": "Choose creature or land. Reveal the top four cards of your library. Put all cards of the chosen type revealed this way into your hand and the rest into your graveyard.",
+  "colors": [
+   "G"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/d/3/d3340062-3071-4d8e-98f8-fd3343a011ad.jpg?1783911907",
+  "art": "https://cards.scryfall.io/art_crop/front/d/3/d3340062-3071-4d8e-98f8-fd3343a011ad.jpg?1783911907"
+ },
+ "Monstrous Emergence": {
+  "name": "Monstrous Emergence",
+  "manaCost": "{1}{G}",
+  "cmc": 2,
+  "typeLine": "Sorcery",
+  "oracle": "As an additional cost to cast this spell, choose a creature you control or reveal a creature card from your hand.\nMonstrous Emergence deals damage equal to the power of the creature you chose or the card you revealed to target creature.",
+  "colors": [
+   "G"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/b/9/b999eb47-b842-47f1-be91-c79fc46e1896.jpg?1783909451",
+  "art": "https://cards.scryfall.io/art_crop/front/b/9/b999eb47-b842-47f1-be91-c79fc46e1896.jpg?1783909451"
+ },
+ "Pulse of Murasa": {
+  "name": "Pulse of Murasa",
+  "manaCost": "{2}{G}",
+  "cmc": 3,
+  "typeLine": "Instant",
+  "oracle": "Return target creature or land card from a graveyard to its owner's hand. You gain 6 life.",
+  "colors": [
+   "G"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/a/4/a4b9f8f4-d704-4f16-8495-cf8185285859.jpg?1783927531",
+  "art": "https://cards.scryfall.io/art_crop/front/a/4/a4b9f8f4-d704-4f16-8495-cf8185285859.jpg?1783927531"
+ },
+ "Spinewoods Paladin": {
+  "name": "Spinewoods Paladin",
+  "manaCost": "{4}{G}",
+  "cmc": 5,
+  "typeLine": "Creature — Human Knight",
+  "oracle": "Trample\nWhen this creature enters, you gain 3 life.\nPlot {3}{G} (You may pay {3}{G} and exile this card from your hand. Cast it as a sorcery on a later turn without paying its mana cost. Plot only as a sorcery.)",
+  "colors": [
+   "G"
+  ],
+  "power": "5",
+  "toughness": "4",
+  "keywords": [
+   "Plot",
+   "Trample"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/1/b/1b2b432d-9e73-4ab2-a098-546d406df6c0.jpg?1783911802",
+  "art": "https://cards.scryfall.io/art_crop/front/1/b/1b2b432d-9e73-4ab2-a098-546d406df6c0.jpg?1783911802"
+ },
+ "Vitu-Ghazi Inspector": {
+  "name": "Vitu-Ghazi Inspector",
+  "manaCost": "{1}{G}",
+  "cmc": 2,
+  "typeLine": "Creature — Elf Detective",
+  "oracle": "As an additional cost to cast this spell, you may collect evidence 6. (Exile cards with total mana value 6 or greater from your graveyard.)\nReach\nWhen this creature enters, if evidence was collected, put a +1/+1 counter on target creature and you gain 2 life.",
+  "colors": [
+   "G"
+  ],
+  "power": "1",
+  "toughness": "3",
+  "keywords": [
+   "Collect evidence",
+   "Reach"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/6/6/664d15d7-2724-4a9b-b5a7-8042d4b7da7b.jpg?1783912857",
+  "art": "https://cards.scryfall.io/art_crop/front/6/6/664d15d7-2724-4a9b-b5a7-8042d4b7da7b.jpg?1783912857"
  }
 }

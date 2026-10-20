@@ -131,6 +131,28 @@ export const PRESETS: Record<string, string> = {
 4 Hydroblast
 2 Murmuring Mystic
 2 Steel Sabotage`,
+  'Mono Green Elves': `4 Avenging Hunter
+2 Elvish Mystic
+10 Forest
+3 Fyndhorn Elves
+4 Generous Ent
+1 Gingerbread Cabin
+2 Land Grant
+4 Lead the Stampede
+3 Llanowar Elves
+4 Masked Vandal
+4 Nyxborn Hydra
+4 Priest of Titania
+4 Quirion Ranger
+3 Sagu Wildling
+4 Timberwatch Elf
+4 Winding Way
+
+3 Faerie Macabre
+4 Monstrous Emergence
+2 Pulse of Murasa
+3 Spinewoods Paladin
+3 Vitu-Ghazi Inspector`,
   'Rakdos Madness': `4 Alms of the Vein
 4 Faithless Looting
 4 Fiery Temper

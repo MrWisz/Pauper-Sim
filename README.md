@@ -33,9 +33,9 @@ The layout adapts to small screens in portrait and landscape. With no mouse to h
 
 Every card's behaviour has to be scripted. Fully supported right now:
 
-- **Selesnya Bogles**, **Mono Blue Terror**, **Rakdos Madness**, **Mono Red Madness**, **Grixis Affinity**, **Dimir Faeries**, all main decks and sideboards (lists from MTGGoldfish, October 2026).
+- **Selesnya Bogles**, **Mono Blue Terror**, **Mono Green Elves**, **Rakdos Madness**, **Mono Red Madness**, **Grixis Affinity**, **Dimir Faeries**, all main decks and sideboards (lists from MTGGoldfish, October 2026).
 
-The engine supports Auras (attached on resolution, stacked behind their host, put into the graveyard when the host leaves), hexproof, ward, protection from a color, hybrid and Phyrexian mana, transforming double-faced cards (Delver of Secrets), cost reductions, escape and land Auras like Utopia Sprawl / Abundant Growth.
+The engine supports Auras (attached on resolution, stacked behind their host, put into the graveyard when the host leaves), hexproof, ward, protection from a color, hybrid and Phyrexian mana, transforming double-faced cards (Delver of Secrets), cost reductions, escape, mana creatures, X costs, bestow, omens, changeling, the initiative / Undercity dungeon, Food and Treasure and land Auras like Utopia Sprawl / Abundant Growth.
 
 Any other card is fetched from Scryfall when you import it. It works as a "vanilla" card: its type, P/T, keywords (flying, deathtouch, haste…), mana abilities, madness, flashback, affinity, cycling and ninjutsu all work, but the rest of its rules text does not. These cards get a red **!** badge, and the import screen lists them.
 

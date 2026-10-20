@@ -3,6 +3,9 @@ import { targetKey } from './game';
 import { parseCost, costMV } from './mana';
 import type { Action, CardInstance, ChoiceRequest, Controller, ManaColor, PlayerId, StackItem, Target, TargetSpec } from './types';
 
+/** cards whose targeted effects help the creature they target */
+const BENEFICIAL_SOURCES = new Set(['Timberwatch Elf', 'Quirion Ranger', 'Vitu-Ghazi Inspector', 'Toxin Analysis']);
+
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 interface Intent {
@@ -52,6 +55,8 @@ export class AIController implements Controller {
         return this.pickCards(g, req);
       case 'yesno':
         return this.yesNo(g, req.purpose, req.source);
+      case 'number':
+        return req.max;
       case 'color':
         return this.pickColor(g, req.options, req.purpose);
       case 'attackers':
@@ -164,6 +169,11 @@ export class AIController implements Controller {
     if (myTurn && (g.step === 'declareBlockers' || g.step === 'combatDamage')) {
       const nin = this.ninjutsu(g, all);
       if (nin) return nin;
+    }
+    // Timberwatch Elf: pump an unblocked attacker, or a creature that would lose its fight
+    if (g.step === 'declareBlockers') {
+      const pump = this.timberwatch(g, all);
+      if (pump) return pump;
     }
 
     if (myTurn && g.isMainPhase()) {
@@ -308,10 +318,25 @@ export class AIController implements Controller {
         const c = g.card(a.cardId)!;
         const kind = c.def.ai?.kind;
         const hint = c.def.ai;
+        if (a.method === 'omen') {
+          // Roost Seek: dig for a land when we are short
+          const lands = g.lands(me).length + g.players[me].hand.filter((x) => g.isLand(x)).length;
+          if (lands < 4 && !g.players[me].hand.some((x) => g.isLand(x))) consider(a, 26);
+          else if (lands < 4) consider(a, 9);
+          continue;
+        }
+        if (a.method === 'bestow') {
+          const maxX = this.maxX(g, c, 'bestow');
+          const hosts = g.creatures(me).filter((x) => !x.def.isToken);
+          if (hosts.length && maxX >= 1) consider(a, 23 + maxX * 1.5);
+          continue;
+        }
         if (g.isCreature(c)) {
           // flash counter-creatures are held for the opponent's spells / end step
           if (c.def.name === 'Spellstutter Sprite') continue;
-          consider(a, 20 + this.value(g, c) + (c.def.cmc === 1 ? 1 : 0));
+          const xBonus = c.def.entersWithXCounters ? this.maxX(g, c, 'normal') * 1.5 : 0;
+          if (c.def.entersWithXCounters && xBonus < 2) continue; // a 0/1 Hydra is not worth it
+          consider(a, 20 + this.value(g, c) + xBonus + (c.def.cmc === 1 ? 1 : 0));
           continue;
         }
         if (g.isAura(c)) {
@@ -424,6 +449,12 @@ export class AIController implements Controller {
               if (dead.length >= 2 && !main1) consider(a, 7);
             } else if (ab.label === 'Explore') {
               if (!main1 || g.players[me].hand.every((x) => g.isLand(x))) consider(a, 3);
+            } else if (ab.label?.startsWith('Return a Forest')) {
+              const tappedMana = g
+                .creatures(me)
+                .filter((x) => x.tapped && (x.def.activated ?? []).some((m, i) => m.producesFn && g.produceOptions(x, i)[0]?.length >= 2));
+              const wants = g.players[me].hand.some((x) => !g.isLand(x) && !g.castOptions(me, x).length);
+              if (tappedMana[0] && wants) consider(a, 13, { cardId: c.id, targets: [{ kind: 'card', id: tappedMana[0].id }] });
             } else if (ab.label === 'Exile a graveyard') {
               const gy = g.players[opp].graveyard;
               if (gy.some((x) => x.def.flashback || x.def.triggers?.some((t) => t.zone === 'graveyard'))) consider(a, 9, { cardId: c.id, targets: [{ kind: 'player', pid: opp }] });
@@ -500,6 +531,45 @@ export class AIController implements Controller {
     return 8;
   }
 
+  /** Biggest X we could pay for this spell right now */
+  maxX(g: Game, c: CardInstance, method: 'normal' | 'bestow') {
+    let x = 0;
+    while (x < 20 && g.canPay(this.me, g.spellCost(this.me, c, method, undefined, x + 1))) x++;
+    return x;
+  }
+
+  /** Timberwatch Elf during the declare-blockers step */
+  private timberwatch(g: Game, all: Action[]): Action | null {
+    const me = this.me;
+    for (const a of all) {
+      if (a.type !== 'activate') continue;
+      const c = g.card(a.cardId)!;
+      if (!c.def.activated![a.index].label?.startsWith('Pump')) continue;
+      const x = g.creatures().filter((e) => g.hasSubtype(e, 'Elf')).length;
+      if (g.active === me) {
+        // our attack: an unblocked attacker deals X more; or a blocked one wins its fight
+        const unblocked = g.attackers().filter((at) => at.controller === me && !at.wasBlocked);
+        const target =
+          unblocked.sort((p, q) => g.power(q) - g.power(p))[0] ??
+          g.attackers().find((at) => at.controller === me && at.blockedBy.some((id) => !this.kills(g, at, g.card(id)!)));
+        if (target) {
+          this.intent = { cardId: c.id, targets: [{ kind: 'card', id: target.id }] };
+          return a;
+        }
+      } else {
+        // their attack: save a blocker that would die
+        const blocker = g
+          .creatures(me)
+          .find((b) => b.blocking !== null && this.kills(g, g.card(b.blocking)!, b) && g.toughness(b) + x > g.power(g.card(b.blocking)!));
+        if (blocker) {
+          this.intent = { cardId: c.id, targets: [{ kind: 'card', id: blocker.id }] };
+          return a;
+        }
+      }
+    }
+    return null;
+  }
+
   /** Is paying 4 life (Snuff Out) reasonable right now? */
   payLifeOk(g: Game) {
     const life = g.players[this.me].life;
@@ -559,6 +629,17 @@ export class AIController implements Controller {
       cands.sort((x, y) => this.value(g, y) - this.value(g, x));
       if (!cands[0]) return null;
       return { targets: [{ kind: 'card', id: cands[0].id }, { kind: 'card', id: cands[0].id }], score: this.value(g, cands[0]) };
+    }
+    if (c.def.name === 'Monstrous Emergence') {
+      const myPower = Math.max(
+        0,
+        ...g.creatures(me).map((x) => g.power(x)),
+        ...g.players[me].hand.filter((x) => x !== c && g.isCreature(x)).map((x) => x.def.power ?? 0),
+      );
+      const cands = g.creatures(opp).filter((x) => g.canBeTargetedBy(x, me, c) && g.toughness(x) - x.damage <= myPower);
+      cands.sort((x, y) => this.value(g, y) - this.value(g, x));
+      if (!cands[0]) return null;
+      return { targets: [{ kind: 'card', id: cands[0].id }], score: this.value(g, cands[0]) };
     }
     if (c.def.name === 'Extract a Confession') {
       const crs = g.creatures(opp);
@@ -659,6 +740,7 @@ export class AIController implements Controller {
         if (ab.ai === 'cycle' && this.wantsCycle(g, c, ab.label ?? '')) return a;
         if (ab.ai === 'draw' && !ab.cost.discard) return a;
         if (ab.label === 'Gain 2 life' && g.players[me].life < 20) return a;
+        if (ab.label === 'Gain 3 life' && g.players[me].life < 15) return a;
         if (ab.label === 'Fetch basic land' && !g.attachments(c).length) return a;
       }
     }
@@ -751,6 +833,19 @@ export class AIController implements Controller {
 
   pickMode(g: Game, src: CardInstance, options: { text: string; enabled: boolean }[]) {
     if (this.intent?.cardId === src.id && this.intent.mode !== undefined && options[this.intent.mode]?.enabled) return this.intent.mode;
+    if (src.def.name === 'The Initiative') {
+      // Undercity: grow a creature if we have one, otherwise scry; Trap! over Arena; Catacombs when our board is thin
+      const pick = (name: string) => options.findIndex((o) => o.text.startsWith(name));
+      const mine = g.creatures(this.me).length;
+      if (pick('Forge') >= 0 && pick('Lost Well') >= 0) return mine ? pick('Forge') : pick('Lost Well');
+      if (pick('Trap!') >= 0) return pick('Trap!');
+      if (pick('Archives') >= 0 && pick('Catacombs') >= 0) return mine < 3 ? pick('Catacombs') : pick('Archives');
+      if (pick('Arena') >= 0 && pick('Stash') >= 0) return pick('Arena');
+    }
+    if (src.def.name === 'Winding Way') {
+      const lands = g.lands(this.me).length + g.players[this.me].hand.filter((x) => g.isLand(x)).length;
+      return lands < 3 ? 1 : 0;
+    }
     if (src.def.name === 'Cast into the Fire') {
       const arts = g.artifacts(this.opp(g)).filter((x) => this.value(g, x) >= 3);
       if (arts.length && options[1].enabled) return 1;
@@ -775,7 +870,9 @@ export class AIController implements Controller {
       const host = this.auraHost(g, src);
       if (host && keys.has(targetKey({ kind: 'card', id: host.id }))) return [{ kind: 'card', id: host.id }];
     }
-    const harmful = ['burn', 'removal', 'artifactRemoval', 'blast', 'sweeper', 'drain', 'gyHate'].includes(src.def.ai?.kind ?? '');
+    const harmful =
+      ['burn', 'removal', 'artifactRemoval', 'blast', 'sweeper', 'drain', 'gyHate'].includes(src.def.ai?.kind ?? '') || spec.prompt.startsWith('Arena');
+    const beneficial = BENEFICIAL_SOURCES.has(src.def.name) || spec.prompt.startsWith('Forge') || src.def.ai?.kind === 'pump';
     const scored = cands.map((t) => {
       let s = 0;
       // card-draw / self-mill spells (Thought Scour, Deep Analysis) target ourselves; harmful ones the opponent
@@ -789,6 +886,7 @@ export class AIController implements Controller {
         const v = this.value(g, c);
         if (c.zone === 'graveyard') s = mine ? (g.isCreature(c) ? v : -1) : v;
         else if (src.def.name === 'Cryogen Relic' || harmful) s = mine ? -v : v;
+        else if (beneficial) s = mine ? v : -v;
         else if (spec.prompt.includes('you control')) s = mine ? v : -v;
         else s = mine ? -v : v;
       }
@@ -863,6 +961,12 @@ export class AIController implements Controller {
         // ninjutsu: return the weakest unblocked attacker
         const sorted = [...cards].sort((a, b) => this.value(g, a) - this.value(g, b));
         return want(Math.max(1, min), sorted);
+      }
+      case 'takeAll':
+        return cards.map((c) => c.id);
+      case 'strongest': {
+        const power = (c: CardInstance) => (c.zone === 'battlefield' ? g.power(c) : c.def.power ?? 0);
+        return want(1, [...cards].sort((a, b) => power(b) - power(a)));
       }
       case 'exileGraveyard': {
         const sorted = [...cards].sort((a, b) => a.def.cmc - b.def.cmc);
@@ -1020,6 +1124,10 @@ export class AIController implements Controller {
     const sortedCands = [...cands].sort((a, b) => this.value(g, a) - this.value(g, b));
     for (const a of sortedCands) {
       if (g.power(a) <= 0) continue;
+      // Timberwatch Elf: tapping to pump another attacker beats attacking with a 1/2
+      const pumper = (a.def.activated ?? []).some((ab) => ab.label?.startsWith('Pump'));
+      const elves = g.creatures().filter((e) => g.hasSubtype(e, 'Elf')).length;
+      if (pumper && elves > g.power(a) && cands.length > 1) continue;
       const canBlockIt = blockers.filter((b) => g.canBlock(b, a));
       const badBlocks = canBlockIt.filter((b) => this.kills(g, b, a) && !this.kills(g, a, b));
       const trades = canBlockIt.filter((b) => this.kills(g, b, a) && this.kills(g, a, b));

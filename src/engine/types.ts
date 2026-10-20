@@ -74,7 +74,9 @@ export interface Ctx {
 }
 
 export interface CastInfo {
-  method: 'normal' | 'madness' | 'flashback' | 'plot' | 'alt' | 'overload';
+  method: 'normal' | 'madness' | 'flashback' | 'plot' | 'alt' | 'overload' | 'bestow' | 'omen';
+  /** value chosen for X */
+  x?: number;
   altIndex?: number;
   sacrificed?: { mv: number; name: string; wasCreature: boolean };
   discarded?: CardInstance;
@@ -122,6 +124,8 @@ export interface ActivatedCost {
   /** discard this many other cards from hand */
   discard?: number;
   returnUnblocked?: boolean;
+  /** return a permanent you control to its owner's hand (Quirion Ranger) */
+  returnPermanent?: { filter: (g: Game, c: CardInstance) => boolean; prompt: string };
 }
 
 export interface ActivatedDef {
@@ -134,6 +138,10 @@ export interface ActivatedDef {
   sorcery?: boolean;
   /** Mana abilities resolve immediately and don't use the stack. */
   produces?: ManaColor[][];
+  /** mana amount that depends on the board (Priest of Titania) */
+  producesFn?: (g: Game, card: CardInstance) => ManaColor[][];
+  /** "Activate only once each turn" */
+  oncePerTurn?: boolean;
   /** Special actions (plot) don't use the stack either. */
   special?: boolean;
   canActivate?: (g: Game, card: CardInstance, pid: PlayerId) => boolean;
@@ -206,6 +214,16 @@ export interface CardDef {
   costReduction?: (g: Game, card: CardInstance, pid: PlayerId) => number;
   /** back face of a transforming double-faced card */
   backFace?: CardDef;
+  /** Changeling: every creature type */
+  changeling?: boolean;
+  /** Bestow cost: cast as an Aura that becomes a creature again when unattached */
+  bestow?: string;
+  /** "This permanent enters with X +1/+1 counters" */
+  entersWithXCounters?: boolean;
+  /** Omen half (Sagu Wildling // Roost Seek): a sorcery that shuffles the card back into the library */
+  omen?: { name: string; manaCost: string; text: string; resolve: (c: Ctx) => Promise<void> };
+  /** extra condition to be able to cast at all */
+  castCondition?: (g: Game, card: CardInstance, pid: PlayerId) => boolean;
   /** Ward {N} (mana) or Ward—Pay N life */
   wardCost?: string;
   wardLife?: number;
@@ -273,6 +291,16 @@ export interface CardInstance {
   plottedTurn: number | null;
   /** front face while transformed (the card reverts when it leaves the battlefield) */
   frontDef?: CardDef;
+  /** how it was cast (X, evidence…), kept while it's on the battlefield */
+  castInfo?: CastInfo;
+  /** cast with bestow and attached: it's an Aura, not a creature */
+  bestowed?: boolean;
+  /** keywords "until your next turn" (Undercity's Throne of the Dead Three) */
+  nextTurnKeywords?: Keyword[];
+  /** goaded by this player until their next turn: must attack */
+  goadedBy?: PlayerId;
+  /** turn number each activated ability (by index) was last used, for once-per-turn abilities */
+  lastActivated?: Record<number, number>;
   /** color chosen as it entered (Utopia Sprawl, Benevolent Blessing) */
   chosenColor?: Color;
   /** turn number this permanent entered (for "entered this turn") */
@@ -339,7 +367,7 @@ export type ChoiceRequest =
       max: number;
       cancellable?: boolean;
       /** reason, for the AI */
-      purpose: 'discard' | 'sacrifice' | 'putBack' | 'reveal' | 'search' | 'exileGraveyard' | 'returnLand' | 'other' | 'evidence' | 'graveyardReturn';
+      purpose: 'discard' | 'sacrifice' | 'putBack' | 'reveal' | 'search' | 'exileGraveyard' | 'returnLand' | 'other' | 'evidence' | 'graveyardReturn' | 'takeAll' | 'strongest';
       source?: CardInstance;
     }
   | { type: 'yesno'; player: PlayerId; prompt: string; purpose: string; source?: CardInstance }
@@ -347,7 +375,8 @@ export type ChoiceRequest =
   | { type: 'attackers'; player: PlayerId; candidates: CardInstance[] }
   | { type: 'blockers'; player: PlayerId; attackers: CardInstance[]; candidates: CardInstance[] }
   | { type: 'scry'; player: PlayerId; cards: CardInstance[] }
-  | { type: 'order'; player: PlayerId; prompt: string; cards: CardInstance[] };
+  | { type: 'order'; player: PlayerId; prompt: string; cards: CardInstance[] }
+  | { type: 'number'; player: PlayerId; prompt: string; min: number; max: number; source: CardInstance; purpose: 'x' };
 
 export interface Controller {
   choose(g: Game, req: ChoiceRequest): Promise<any>;

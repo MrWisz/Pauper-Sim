@@ -25,6 +25,7 @@ import {
 } from './helpers';
 import { boglesScripts, boglesTokens } from './bogles';
 import { blueTerrorScripts, blueTerrorTokens } from './blueterror';
+import { elvesScripts, elvesTokens } from './elves';
 
 /** Behaviour overrides keyed by card name. Base stats come from cardData.json. */
 export type Script = Partial<CardDef>;
@@ -969,3 +970,6 @@ Object.assign(scripts, boglesScripts);
 Object.assign(tokenScripts, boglesTokens);
 Object.assign(scripts, blueTerrorScripts);
 Object.assign(tokenScripts, blueTerrorTokens);
+
+Object.assign(scripts, elvesScripts);
+Object.assign(tokenScripts, elvesTokens);

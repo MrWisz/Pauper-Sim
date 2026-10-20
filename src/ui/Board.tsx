@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import { Game, STEP_LABEL, targetKey } from '../engine/game';
+import { Game, STEP_LABEL, isManaAbility, targetKey } from '../engine/game';
 import type { Action, CardInstance, ChoiceRequest, ManaColor, PlayerId, Step, Target } from '../engine/types';
 import { CardBack, CardFace, CardView } from './CardView';
 import type { HumanController } from './human';
@@ -158,7 +158,7 @@ export function Board({
     if (g.canPlayLand(me, c)) items.push({ label: `Play ${c.def.name}`, run: act({ type: 'playLand', cardId: c.id }) });
     for (const o of g.castOptions(me, c)) items.push({ label: o.label, run: act({ type: 'cast', cardId: c.id, method: o.method, altIndex: o.altIndex }) });
     (c.def.activated ?? []).forEach((a, i) => {
-      if (a.produces) return;
+      if (isManaAbility(a)) return;
       if (g.canActivate(me, c, i)) items.push({ label: a.label ?? a.text, run: act({ type: 'activate', cardId: c.id, index: i }) });
     });
     return items;
@@ -406,6 +406,12 @@ export function Board({
           onClick={() => pickTarget({ kind: 'player', pid })}
         >
           {g.monarch === pid && <div className="crown" title="The Monarch">👑</div>}
+          {g.initiative === pid && (
+            <div className="initiative-badge" title={`The initiative — in Undercity: ${g.dungeonRoom[pid] ?? 'not entered yet'}`}>
+              🗝️
+            </div>
+          )}
+          {g.dungeonRoom[pid] && <div className="dungeon-room" title="Current room in Undercity">{g.dungeonRoom[pid]}</div>}
           <div className="life">{p.life}</div>
           <div className="pname">{p.name}</div>
         </div>

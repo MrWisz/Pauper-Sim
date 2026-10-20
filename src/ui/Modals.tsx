@@ -22,11 +22,13 @@ export function Modals({
   const [bottom, setBottom] = useState<Set<number>>(new Set());
   const [order, setOrder] = useState<number[]>([]);
   const [minimized, setMinimized] = useState(false);
+  const [num, setNum] = useState(0);
   useEffect(() => {
     setSel([]);
     setBottom(new Set());
     setOrder(req.type === 'scry' ? req.cards.map((c) => c.id) : []);
     setMinimized(false);
+    if (req.type === 'number') setNum(req.max);
   }, [req]);
 
   const toggle = (id: number, max: number) => {
@@ -274,6 +276,33 @@ export function Modals({
           Done
         </button>,
         'Use ◀ ▶ to change the order, and To top / To bottom to move cards between piles.',
+      );
+    }
+    case 'number': {
+      const n = Math.max(req.min, Math.min(req.max, num));
+      return shell(
+        req.prompt,
+        <div className="number-pick">
+          <CardView g={g} card={req.source} size="hand" onHover={onHover} onInspect={onInspect} />
+          <div className="number-controls">
+            <button className="btn secondary" disabled={n <= req.min} onClick={() => setNum(n - 1)}>
+              −
+            </button>
+            <span className="number-value">X = {n}</span>
+            <button className="btn secondary" disabled={n >= req.max} onClick={() => setNum(n + 1)}>
+              +
+            </button>
+          </div>
+          <div className="modal-sub">You can afford up to X = {req.max}.</div>
+        </div>,
+        <>
+          <button className="btn secondary" onClick={() => respond(null)}>
+            Cancel
+          </button>
+          <button className="btn primary" onClick={() => respond(n)}>
+            Cast with X = {n}
+          </button>
+        </>,
       );
     }
     case 'order':

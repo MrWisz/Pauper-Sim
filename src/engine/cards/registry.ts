@@ -141,13 +141,18 @@ export function buildDef(raw: RawCard): CardDef {
 
   const activated: ActivatedDef[] = [];
   const scriptAct = script.activated ?? [];
-  const scriptHasMana = scriptAct.some((a) => a.produces && !a.cost.mana);
-  if (tl.types.includes('Land') && !scriptHasMana) {
-    const basics = tl.subtypes.filter((s) => s in BASIC_MANA).map((s) => [BASIC_MANA[s]]);
+  const scriptHasMana = scriptAct.some((a) => (a.produces || a.producesFn) && !a.cost.mana);
+  if (!scriptHasMana) {
+    // "{T}: Add {G}." works on lands and on mana creatures like Llanowar Elves
     const parsed = parseManaAbilities(oracle);
+    const basics = tl.types.includes('Land') ? tl.subtypes.filter((s) => s in BASIC_MANA).map((s) => [BASIC_MANA[s]]) : [];
     if (parsed) activated.push(mana(...parsed));
     else if (basics.length) activated.push(mana(...basics));
   }
+  if (raw.keywords.includes('Changeling')) def.changeling = true;
+  const bestow = oracle.match(/^Bestow ((?:\{[^}]+\})+)/m);
+  if (bestow) def.bestow = bestow[1];
+  if (/enters with X \+1\/\+1 counters/.test(oracle)) def.entersWithXCounters = true;
   const cyc = oracle.match(/^Cycling (\{[^ ]+)/m);
   if (cyc && !scriptAct.some((a) => a.label?.startsWith('Cycling'))) activated.push(cycling(cyc[1]));
   const nin = oracle.match(/^Ninjutsu (\{[^ ]+)/m);
