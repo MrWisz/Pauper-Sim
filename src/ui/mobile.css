@@ -1,5 +1,13 @@
 /* Touch + small-screen layout. Loaded after styles.css so these rules win. */
 
+/* extra bottom space kept free for a hosting badge (set on Netlify by main.tsx) */
+:root {
+  --host-inset: 0px;
+}
+.host-badge {
+  --host-inset: 56px;
+}
+
 /* ───────────── card inspect sheet (touch: tap a card) ───────────── */
 .inspect-backdrop {
   position: fixed;
@@ -328,8 +336,8 @@
   .hand {
     grid-row: 2;
     grid-column: 1 / -1;
-    height: calc(var(--hand-h) + 26px);
-    padding: 4px 6px calc(16px + env(safe-area-inset-bottom, 0px));
+    height: calc(var(--hand-h) + 26px + var(--host-inset));
+    padding: 4px 6px calc(16px + var(--host-inset) + env(safe-area-inset-bottom, 0px));
     overflow-x: auto;
     overflow-y: hidden;
     justify-content: safe center;
@@ -346,7 +354,7 @@
     transform: none !important;
   }
   .end-turn-btn {
-    bottom: calc(var(--hand-h) + 80px);
+    bottom: calc(var(--hand-h) + 80px + var(--host-inset));
     right: 8px;
     padding: 6px 12px;
     font-size: 12px;
@@ -371,7 +379,7 @@
     min-width: 0;
   }
   .modal-min {
-    bottom: calc(var(--hand-h) + 78px);
+    bottom: calc(var(--hand-h) + 78px + var(--host-inset));
   }
   .scry-btns .btn.small {
     padding: 3px 6px;
@@ -536,6 +544,8 @@
     flex-direction: column;
     align-items: flex-end;
     max-width: 210px;
+    /* keep the buttons above a hosting badge */
+    padding-bottom: calc(var(--host-inset) * 0.4);
   }
   /* move End Turn up under the top bar so it never covers the prompt */
   .end-turn-btn {
