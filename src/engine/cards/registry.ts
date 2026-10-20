@@ -16,6 +16,8 @@ export interface RawCard {
   keywords: string[];
   image?: string;
   art?: string;
+  /** back face of a transforming double-faced card */
+  back?: RawCard;
 }
 
 registerTokens(tokenScripts);
@@ -154,7 +156,9 @@ export function buildDef(raw: RawCard): CardDef {
 
   Object.assign(def, script);
   def.activated = activated;
-  def.keywords = keywords;
+  // scripts may set keywords explicitly (e.g. per face of a double-faced card)
+  def.keywords = script.keywords ?? keywords;
+  if (raw.back) def.backFace = buildDef(raw.back);
 
   // Auras target what they will enchant as they are cast
   if (tl.subtypes.includes('Aura')) {

@@ -207,6 +207,15 @@ export class AIController implements Controller {
       const c = g.card(a.cardId)!;
       const kind = c.def.ai?.kind;
       if (kind === 'counter' && threat >= 2) {
+        // "counter unless they pay" only works if they can't pay the tax
+        const tax = c.def.name === 'Force Spike' ? 1 : c.def.name === 'Spell Pierce' ? 2 : 0;
+        if (tax) {
+          const theirs = top.controller;
+          const avail =
+            Object.values(g.players[theirs].pool).reduce((s, n) => s + n, 0) +
+            g.manaSources(theirs).reduce((s, src) => s + Math.max(...src.options.map((o) => o.length)), 0);
+          if (avail >= tax) continue;
+        }
         const spec = g.modesFor(c, a.method)[0].targets?.[0];
         if (spec && g.isTargetLegal(spec, { kind: 'stack', id: top.id }, { controller: me, source: c, chosen: [] })) {
           this.intent = { cardId: c.id, targets: [{ kind: 'stack', id: top.id }] };
@@ -769,7 +778,8 @@ export class AIController implements Controller {
     const harmful = ['burn', 'removal', 'artifactRemoval', 'blast', 'sweeper', 'drain', 'gyHate'].includes(src.def.ai?.kind ?? '');
     const scored = cands.map((t) => {
       let s = 0;
-      if (t.kind === 'player') s = t.pid === opp ? 5 : -5;
+      // card-draw / self-mill spells (Thought Scour, Deep Analysis) target ourselves; harmful ones the opponent
+      if (t.kind === 'player') s = src.def.ai?.kind === 'draw' ? (t.pid === me ? 5 : -5) : t.pid === opp ? 5 : -5;
       else if (t.kind === 'stack') {
         const it = g.stack.find((x) => x.id === t.id)!;
         s = it.controller === opp ? 10 + it.mv : -10;
@@ -885,6 +895,16 @@ export class AIController implements Controller {
   yesNo(g: Game, purpose: string, src?: CardInstance) {
     if (purpose === 'evidence') return g.creatures(this.opp(g)).length >= 2;
     if (purpose === 'exploreMill') return false;
+    if (purpose === 'ponderShuffle') {
+      // shuffle away a top three that doesn't give us what we need
+      const me = this.me;
+      const top = g.players[me].library.slice(0, 3);
+      const lands = g.lands(me).length + g.players[me].hand.filter((c) => g.isLand(c)).length;
+      const topLands = top.filter((c) => g.isLand(c)).length;
+      if (lands < 3 && topLands === 0) return true;
+      if (lands >= 5 && topLands === top.length) return true;
+      return false;
+    }
     return true;
   }
 

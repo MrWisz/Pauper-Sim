@@ -108,6 +108,29 @@ export const PRESETS: Record<string, string> = {
 1 Sentinel's Eyes
 2 Spirit Link
 3 Thraben Charm`,
+  'Mono Blue Terror': `4 Brainstorm
+4 Counterspell
+4 Cryptic Serpent
+2 Deem Inferior
+1 Deep Analysis
+4 Delver of Secrets
+2 Dispel
+2 Force Spike
+16 Island
+4 Lorien Revealed
+4 Mental Note
+2 Ponder
+2 Sleep of the Dead
+1 Spell Pierce
+4 Thought Scour
+4 Tolarian Terror
+
+1 Annul
+2 Blue Elemental Blast
+4 Gut Shot
+4 Hydroblast
+2 Murmuring Mystic
+2 Steel Sabotage`,
   'Rakdos Madness': `4 Alms of the Vein
 4 Faithless Looting
 4 Fiery Temper

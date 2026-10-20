@@ -60,6 +60,9 @@ export function sideInValue(d: CardDef, p: MatchupProfile): number {
   const n = d.name;
   if (n === 'Pyroblast' || n === 'Red Elemental Blast') return p.blue >= 3 ? 4 + p.blue * 0.3 : 0;
   if (n === 'Hydroblast' || n === 'Blue Elemental Blast') return p.red >= 3 ? 4 + p.red * 0.3 : 0;
+  if (n === 'Steel Sabotage') return p.artifacts >= 5 ? 4 + p.artifacts * 0.2 : 0;
+  if (n === 'Gut Shot') return p.smallCreatures >= 5 ? 3.5 + p.smallCreatures * 0.1 : 0;
+  if (n === 'Murmuring Mystic') return p.creatures <= 4 && p.instants + p.sorceries >= 8 ? 3.5 : 0;
   if (n === 'Annul') return p.artifacts + p.enchantments >= 5 ? 4 + p.artifacts * 0.2 : 0;
   if (n === 'Envelop') return p.sorceries >= 4 ? 4 : 0;
   if (n === 'Dispel') return p.instants >= 4 ? 3.5 : 0;

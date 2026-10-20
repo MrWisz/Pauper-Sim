@@ -403,6 +403,11 @@ export class Game {
     const wasArtifact = this.isArtifact(c);
     const prevController = c.controller;
     if (from === 'battlefield') {
+      // transformed cards are their front face everywhere but the battlefield
+      if (c.frontDef) {
+        c.def = c.frontDef;
+        c.frontDef = undefined;
+      }
       // things attached to it fall off; it falls off what it is attached to
       for (const e of this.attachments(c)) if (!this.isAura(e)) e.attachedTo = null;
       c.attachedTo = null;
@@ -644,6 +649,11 @@ export class Game {
 
     this.step = 'untap';
     for (const c of this.permanents(ap)) {
+      // "doesn't untap during its controller's next untap step" (Sleep of the Dead)
+      if (c.counters.frozen) {
+        delete c.counters.frozen;
+        continue;
+      }
       if (!c.tapped) continue;
       if ((c.counters.stun ?? 0) > 0) {
         c.counters.stun--;
@@ -933,11 +943,35 @@ export class Game {
     return opts;
   }
 
-  canPay(pid: PlayerId, cost: Cost, exclude?: Set<number>) {
+  /**
+   * Phyrexian symbols ({R/P}) can be paid with mana or 2 life each.
+   * Returns the all-mana version and the all-life version (with its life cost).
+   */
+  private phyrexianOptions(cost: Cost): { asMana: Cost; asLife: Cost; life: number } | null {
+    if (!cost.phyrexian?.length) return null;
+    const asMana: Cost = { ...cost, phyrexian: undefined };
+    for (const col of cost.phyrexian) (asMana as any)[col]++;
+    return { asMana, asLife: { ...cost, phyrexian: undefined }, life: 2 * cost.phyrexian.length };
+  }
+
+  canPay(pid: PlayerId, cost: Cost, exclude?: Set<number>): boolean {
+    const ph = this.phyrexianOptions(cost);
+    if (ph) {
+      if (this.canPay(pid, ph.asMana, exclude)) return true;
+      return this.players[pid].life > ph.life && this.canPay(pid, ph.asLife, exclude);
+    }
     return !!solvePayment(cost, this.players[pid].pool, this.manaSources(pid, exclude));
   }
 
   async payMana(pid: PlayerId, cost: Cost): Promise<boolean> {
+    const ph = this.phyrexianOptions(cost);
+    if (ph) {
+      // pay with mana when we can, otherwise with life
+      if (this.canPay(pid, ph.asMana)) return this.payMana(pid, ph.asMana);
+      if (this.players[pid].life <= ph.life || !this.canPay(pid, ph.asLife)) return false;
+      this.loseLife(pid, ph.life);
+      return this.payMana(pid, ph.asLife);
+    }
     if (costMV(cost) === 0) return true;
     const sol = solvePayment(cost, this.players[pid].pool, this.manaSources(pid));
     if (!sol) return false;
@@ -1006,6 +1040,9 @@ export class Game {
     }
     if (d.affinity && (method === 'normal' || method === 'madness')) {
       cost.generic = Math.max(0, cost.generic - this.artifacts(pid).length);
+    }
+    if (d.costReduction && (method === 'normal' || method === 'madness')) {
+      cost.generic = Math.max(0, cost.generic - d.costReduction(this, card, pid));
     }
     return cost;
   }
@@ -1649,8 +1686,12 @@ export class Game {
     const c = item.card;
     if (c.zone !== 'stack') return;
     c.zone = 'none';
-    if (item.info.method === 'flashback') this.moveCard(c, 'exile');
-    else this.moveCard(c, 'graveyard');
+    this.moveCard(c, this.exiledAfterCast(item) ? 'exile' : 'graveyard');
+  }
+
+  /** flashback exiles the card afterwards; escape doesn't */
+  private exiledAfterCast(item: StackItem) {
+    return item.info.method === 'flashback' && !item.card.def.flashback?.escape;
   }
 
   counterItem(item: StackItem) {
@@ -1661,7 +1702,7 @@ export class Game {
     this.pushFx({ type: 'countered', card: item.card });
     if (item.kind === 'spell') {
       item.card.zone = 'none';
-      if (item.info.method === 'flashback') this.moveCard(item.card, 'exile');
+      if (this.exiledAfterCast(item)) this.moveCard(item.card, 'exile');
       else this.moveCard(item.card, 'graveyard');
     }
     this.changed();
@@ -1873,6 +1914,45 @@ export class Game {
       if (yes) this.moveCard(top, 'graveyard');
     }
     this.changed();
+  }
+
+  /** Turn a double-faced permanent to its other face (keeps damage, counters, attachments, tapped state). */
+  transform(c: CardInstance) {
+    if (c.zone !== 'battlefield') return;
+    if (c.frontDef) {
+      this.log(`${c.def.name} transforms into ${c.frontDef.name}.`, c.controller);
+      c.def = c.frontDef;
+      c.frontDef = undefined;
+    } else if (c.def.backFace) {
+      this.log(`${c.def.name} transforms into ${c.def.backFace.name}!`, c.controller);
+      c.frontDef = c.def;
+      c.def = c.def.backFace;
+    }
+    this.pushFx({ type: 'trigger', card: c });
+    this.changed();
+  }
+
+  /** Put the top `n` cards of a library into its owner's graveyard. */
+  mill(pid: PlayerId, n: number) {
+    const cards = this.players[pid].library.slice(0, n);
+    for (const c of cards) this.moveCard(c, 'graveyard');
+    if (cards.length) this.log(`${this.players[pid].name} mills ${cards.map((c) => c.def.name).join(', ')}.`, pid);
+  }
+
+  /**
+   * "Counter target spell unless its controller pays X" (Force Spike, Spell Pierce).
+   */
+  async counterUnlessPays(item: StackItem | undefined, mana: string) {
+    if (!item || !this.stack.includes(item)) return;
+    const cost = parseCost(mana);
+    const payer = item.controller;
+    if (this.canPay(payer, cost) && (await this.yesNo(payer, `Pay ${mana} so ${item.card.def.name} isn't countered?`, 'payTax', item.card))) {
+      if (await this.payMana(payer, cost)) {
+        this.log(`${this.players[payer].name} pays ${mana}.`, payer);
+        return;
+      }
+    }
+    this.counterItem(item);
   }
 
   attach(equipment: CardInstance, creature: CardInstance) {

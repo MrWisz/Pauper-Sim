@@ -10,6 +10,8 @@ export interface Cost {
   C: number;
   /** hybrid symbols like {G/U}: each entry lists the colors that can pay it */
   hybrid?: ManaColor[][];
+  /** Phyrexian symbols like {R/P}: payable with that color or 2 life */
+  phyrexian?: ManaColor[];
 }
 
 export const COLORS: ManaColor[] = ['W', 'U', 'B', 'R', 'G', 'C'];
@@ -29,6 +31,7 @@ export function parseCost(s: string | undefined): Cost {
   for (const m of s.matchAll(/\{([^}]+)\}/g)) {
     const sym = m[1];
     if (/^\d+$/.test(sym)) c.generic += parseInt(sym, 10);
+    else if (/^[WUBRG]\/P$/.test(sym)) (c.phyrexian ??= []).push(sym[0] as ManaColor);
     else if (/^[WUBRGC]\/[WUBRGC]$/.test(sym)) (c.hybrid ??= []).push(sym.split('/') as ManaColor[]);
     else if (sym in c && sym !== 'generic' && sym !== 'hybrid') (c as any)[sym] += 1;
   }
@@ -36,7 +39,7 @@ export function parseCost(s: string | undefined): Cost {
 }
 
 export function costMV(c: Cost): number {
-  return c.generic + c.W + c.U + c.B + c.R + c.G + c.C + (c.hybrid?.length ?? 0);
+  return c.generic + c.W + c.U + c.B + c.R + c.G + c.C + (c.hybrid?.length ?? 0) + (c.phyrexian?.length ?? 0);
 }
 
 export function costToString(c: Cost): string {

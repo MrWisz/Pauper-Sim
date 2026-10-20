@@ -202,11 +202,23 @@ export interface CardDef {
   triggers?: TriggerDef[];
   activated?: ActivatedDef[];
   affinity?: boolean;
+  /** generic cost reduction (Tolarian Terror, Deem Inferior…) */
+  costReduction?: (g: Game, card: CardInstance, pid: PlayerId) => number;
+  /** back face of a transforming double-faced card */
+  backFace?: CardDef;
   /** Ward {N} (mana) or Ward—Pay N life */
   wardCost?: string;
   wardLife?: number;
   madness?: string;
-  flashback?: { mana?: string; altLabel?: string; label?: string; canPay?: AltCost['canPay']; pay?: AltCost['pay'] };
+  flashback?: {
+    mana?: string;
+    altLabel?: string;
+    label?: string;
+    canPay?: AltCost['canPay'];
+    pay?: AltCost['pay'];
+    /** escape: unlike flashback, the card isn't exiled afterwards */
+    escape?: boolean;
+  };
   overload?: string;
   /** Static bonus granted to the permanent this Aura/Equipment is attached to. */
   grant?: StaticGrant;
@@ -259,6 +271,8 @@ export interface CardInstance {
   blockedBy: number[];
   wasBlocked: boolean;
   plottedTurn: number | null;
+  /** front face while transformed (the card reverts when it leaves the battlefield) */
+  frontDef?: CardDef;
   /** color chosen as it entered (Utopia Sprawl, Benevolent Blessing) */
   chosenColor?: Color;
   /** turn number this permanent entered (for "entered this turn") */

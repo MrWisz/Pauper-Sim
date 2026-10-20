@@ -14,19 +14,37 @@ for (let i = 0; i < names.length; i += 70) {
   if (json.not_found?.length) console.warn('Not found:', json.not_found);
   for (const c of json.data) {
     const face = c.card_faces ? c.card_faces[0] : c;
-    out[c.name] = {
-      name: c.name,
+    // double-faced cards (Delver of Secrets // Insectile Aberration) are keyed by their front face
+    const name = c.card_faces ? face.name : c.name;
+    out[name] = {
+      name,
       manaCost: face.mana_cost ?? '',
       cmc: c.cmc,
       typeLine: face.type_line ?? c.type_line,
       oracle: face.oracle_text ?? '',
-      colors: c.colors ?? face.colors ?? [],
+      colors: face.colors ?? c.colors ?? [],
       power: face.power,
       toughness: face.toughness,
       keywords: c.keywords ?? [],
-      image: (c.image_uris ?? face.image_uris)?.normal,
-      art: (c.image_uris ?? face.image_uris)?.art_crop,
+      image: (face.image_uris ?? c.image_uris)?.normal,
+      art: (face.image_uris ?? c.image_uris)?.art_crop,
     };
+    const back = c.card_faces?.[1];
+    if (back && c.layout === 'transform') {
+      out[name].back = {
+        name: back.name,
+        manaCost: back.mana_cost ?? '',
+        cmc: c.cmc,
+        typeLine: back.type_line,
+        oracle: back.oracle_text ?? '',
+        colors: back.colors ?? [],
+        power: back.power,
+        toughness: back.toughness,
+        keywords: [], // Scryfall merges both faces' keywords; per-face keywords come from scripts
+        image: back.image_uris?.normal,
+        art: back.image_uris?.art_crop,
+      };
+    }
   }
   await new Promise((r) => setTimeout(r, 150));
 }

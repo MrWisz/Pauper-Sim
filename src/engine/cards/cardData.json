@@ -1520,5 +1520,223 @@
   "keywords": [],
   "image": "https://cards.scryfall.io/normal/front/d/d/dd28a646-f38f-4cdf-948c-969cd979e5e6.jpg?1783911295",
   "art": "https://cards.scryfall.io/art_crop/front/d/d/dd28a646-f38f-4cdf-948c-969cd979e5e6.jpg?1783911295"
+ },
+ "Cryptic Serpent": {
+  "name": "Cryptic Serpent",
+  "manaCost": "{5}{U}{U}",
+  "cmc": 7,
+  "typeLine": "Creature — Serpent",
+  "oracle": "This spell costs {1} less to cast for each instant and sorcery card in your graveyard.",
+  "colors": [
+   "U"
+  ],
+  "power": "6",
+  "toughness": "5",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/7/f/7f1af32a-dba2-4c2f-b0ee-9c83849fda53.jpg?1783915703",
+  "art": "https://cards.scryfall.io/art_crop/front/7/f/7f1af32a-dba2-4c2f-b0ee-9c83849fda53.jpg?1783915703"
+ },
+ "Deem Inferior": {
+  "name": "Deem Inferior",
+  "manaCost": "{3}{U}",
+  "cmc": 4,
+  "typeLine": "Sorcery",
+  "oracle": "This spell costs {1} less to cast for each card you've drawn this turn.\nThe owner of target nonland permanent puts it into their library second from the top or on the bottom.",
+  "colors": [
+   "U"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/c/c/cc0835c7-58ca-4f16-984a-c590ce6a229a.jpg?1783911291",
+  "art": "https://cards.scryfall.io/art_crop/front/c/c/cc0835c7-58ca-4f16-984a-c590ce6a229a.jpg?1783911291"
+ },
+ "Deep Analysis": {
+  "name": "Deep Analysis",
+  "manaCost": "{3}{U}",
+  "cmc": 4,
+  "typeLine": "Sorcery",
+  "oracle": "Target player draws two cards.\nFlashback—{1}{U}, Pay 3 life. (You may cast this card from your graveyard for its flashback cost. Then exile it.)",
+  "colors": [
+   "U"
+  ],
+  "keywords": [
+   "Flashback"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/1/a/1a297bae-f259-4fc7-b76a-285f972d69e3.jpg?1783903240",
+  "art": "https://cards.scryfall.io/art_crop/front/1/a/1a297bae-f259-4fc7-b76a-285f972d69e3.jpg?1783903240"
+ },
+ "Delver of Secrets": {
+  "name": "Delver of Secrets",
+  "manaCost": "{U}",
+  "cmc": 1,
+  "typeLine": "Creature — Human Wizard",
+  "oracle": "At the beginning of your upkeep, look at the top card of your library. You may reveal that card. If an instant or sorcery card is revealed this way, transform this creature.",
+  "colors": [
+   "U"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [
+   "Flying",
+   "Transform"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/6/9/6904ea20-e504-47da-95a0-08739fdde260.jpg?1783908173",
+  "art": "https://cards.scryfall.io/art_crop/front/6/9/6904ea20-e504-47da-95a0-08739fdde260.jpg?1783908173",
+  "back": {
+   "name": "Insectile Aberration",
+   "manaCost": "",
+   "cmc": 1,
+   "typeLine": "Creature — Human Insect",
+   "oracle": "Flying",
+   "colors": [
+    "U"
+   ],
+   "power": "3",
+   "toughness": "2",
+   "keywords": [],
+   "image": "https://cards.scryfall.io/normal/back/6/9/6904ea20-e504-47da-95a0-08739fdde260.jpg?1783908173",
+   "art": "https://cards.scryfall.io/art_crop/back/6/9/6904ea20-e504-47da-95a0-08739fdde260.jpg?1783908173"
+  }
+ },
+ "Force Spike": {
+  "name": "Force Spike",
+  "manaCost": "{U}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Counter target spell unless its controller pays {1}.",
+  "colors": [
+   "U"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/9/7/97a6c6c9-dd26-4ce7-850f-0b3fc49245bd.jpg?1783940420",
+  "art": "https://cards.scryfall.io/art_crop/front/9/7/97a6c6c9-dd26-4ce7-850f-0b3fc49245bd.jpg?1783940420"
+ },
+ "Mental Note": {
+  "name": "Mental Note",
+  "manaCost": "{U}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Mill two cards.\nDraw a card.",
+  "colors": [
+   "U"
+  ],
+  "keywords": [
+   "Mill"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/1/f/1f343724-6ecd-494f-8bfc-93676af4e173.jpg?1783945127",
+  "art": "https://cards.scryfall.io/art_crop/front/1/f/1f343724-6ecd-494f-8bfc-93676af4e173.jpg?1783945127"
+ },
+ "Ponder": {
+  "name": "Ponder",
+  "manaCost": "{U}",
+  "cmc": 1,
+  "typeLine": "Sorcery",
+  "oracle": "Look at the top three cards of your library, then put them back in any order. You may shuffle.\nDraw a card.",
+  "colors": [
+   "U"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/d/c/dc69f960-68ba-4315-8146-6a7a82047503.jpg?1783907102",
+  "art": "https://cards.scryfall.io/art_crop/front/d/c/dc69f960-68ba-4315-8146-6a7a82047503.jpg?1783907102"
+ },
+ "Sleep of the Dead": {
+  "name": "Sleep of the Dead",
+  "manaCost": "{U}",
+  "cmc": 1,
+  "typeLine": "Sorcery",
+  "oracle": "Tap target creature. It doesn't untap during its controller's next untap step.\nEscape—{2}{U}, Exile three other cards from your graveyard. (You may cast this card from your graveyard for its escape cost.)",
+  "colors": [
+   "U"
+  ],
+  "keywords": [
+   "Escape"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/4/0/4007572b-a6c8-4a56-b1a7-ff099189c9c0.jpg?1783931579",
+  "art": "https://cards.scryfall.io/art_crop/front/4/0/4007572b-a6c8-4a56-b1a7-ff099189c9c0.jpg?1783931579"
+ },
+ "Spell Pierce": {
+  "name": "Spell Pierce",
+  "manaCost": "{U}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Counter target noncreature spell unless its controller pays {2}.",
+  "colors": [
+   "U"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/8/d/8dd4374f-0301-4b2e-bc99-2cd19568cb3b.jpg?1783907902",
+  "art": "https://cards.scryfall.io/art_crop/front/8/d/8dd4374f-0301-4b2e-bc99-2cd19568cb3b.jpg?1783907902"
+ },
+ "Thought Scour": {
+  "name": "Thought Scour",
+  "manaCost": "{U}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Target player mills two cards.\nDraw a card.",
+  "colors": [
+   "U"
+  ],
+  "keywords": [
+   "Mill"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/4/a/4afee6b3-55a4-44e5-b08c-85e0c813cd09.jpg?1783921909",
+  "art": "https://cards.scryfall.io/art_crop/front/4/a/4afee6b3-55a4-44e5-b08c-85e0c813cd09.jpg?1783921909"
+ },
+ "Tolarian Terror": {
+  "name": "Tolarian Terror",
+  "manaCost": "{6}{U}",
+  "cmc": 7,
+  "typeLine": "Creature — Serpent",
+  "oracle": "This spell costs {1} less to cast for each instant and sorcery card in your graveyard.\nWard {2} (Whenever this creature becomes the target of a spell or ability an opponent controls, counter it unless that player pays {2}.)",
+  "colors": [
+   "U"
+  ],
+  "power": "5",
+  "toughness": "5",
+  "keywords": [
+   "Ward"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/2/5/2569d4f3-55ed-4f99-9592-34c7df0aab72.jpg?1783909076",
+  "art": "https://cards.scryfall.io/art_crop/front/2/5/2569d4f3-55ed-4f99-9592-34c7df0aab72.jpg?1783909076"
+ },
+ "Gut Shot": {
+  "name": "Gut Shot",
+  "manaCost": "{R/P}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "({R/P} can be paid with either {R} or 2 life.)\nGut Shot deals 1 damage to any target.",
+  "colors": [
+   "R"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/4/6/461987da-8860-4a04-8f93-d182523ca311.jpg?1783938404",
+  "art": "https://cards.scryfall.io/art_crop/front/4/6/461987da-8860-4a04-8f93-d182523ca311.jpg?1783938404"
+ },
+ "Murmuring Mystic": {
+  "name": "Murmuring Mystic",
+  "manaCost": "{3}{U}",
+  "cmc": 4,
+  "typeLine": "Creature — Human Wizard",
+  "oracle": "Whenever you cast an instant or sorcery spell, create a 1/1 blue Bird Illusion creature token with flying.",
+  "colors": [
+   "U"
+  ],
+  "power": "1",
+  "toughness": "5",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/9/e/9e68dcc2-bba4-4efa-97bb-3ed892037595.jpg?1783911941",
+  "art": "https://cards.scryfall.io/art_crop/front/9/e/9e68dcc2-bba4-4efa-97bb-3ed892037595.jpg?1783911941"
+ },
+ "Steel Sabotage": {
+  "name": "Steel Sabotage",
+  "manaCost": "{U}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Choose one —\n• Counter target artifact spell.\n• Return target artifact to its owner's hand.",
+  "colors": [
+   "U"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/c/2/c227437d-1fc7-4a00-ace5-80795adc51d3.jpg?1783930190",
+  "art": "https://cards.scryfall.io/art_crop/front/c/2/c227437d-1fc7-4a00-ace5-80795adc51d3.jpg?1783930190"
  }
 }

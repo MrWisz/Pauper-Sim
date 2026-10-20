@@ -24,6 +24,7 @@ import {
   tRaw,
 } from './helpers';
 import { boglesScripts, boglesTokens } from './bogles';
+import { blueTerrorScripts, blueTerrorTokens } from './blueterror';
 
 /** Behaviour overrides keyed by card name. Base stats come from cardData.json. */
 export type Script = Partial<CardDef>;
@@ -966,3 +967,5 @@ function karoo(): Script {
 
 Object.assign(scripts, boglesScripts);
 Object.assign(tokenScripts, boglesTokens);
+Object.assign(scripts, blueTerrorScripts);
+Object.assign(tokenScripts, blueTerrorTokens);
