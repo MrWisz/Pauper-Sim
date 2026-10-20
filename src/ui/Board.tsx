@@ -540,7 +540,7 @@ export function Board({
       {/* Me */}
       <div className="me-bottom">
         {playerPanel(me)}
-        <div className="hand">
+        <div className="hand" style={narrow ? handFit(g.players[me].hand.length) : undefined}>
           {g.players[me].hand.map((c, i, arr) => (
             <div key={c.id} className="hand-slot" style={{
                 zIndex: i,
@@ -711,6 +711,20 @@ export function Board({
       )}
     </div>
   );
+}
+
+/**
+ * Phones: size hand cards so the whole hand fits side by side without overlapping
+ * (overlapping cards made taps land on the neighbouring card). Below the minimum size the hand scrolls.
+ */
+function handFit(n: number): React.CSSProperties {
+  const landscape = window.innerHeight <= 520;
+  const max = landscape ? 52 : 74;
+  const gap = 4;
+  // in landscape the hand shares its row with the avatar and the buttons
+  const avail = landscape ? window.innerWidth - 360 : window.innerWidth - 16;
+  const w = Math.max(44, Math.min(max, Math.floor((avail - gap * Math.max(0, n - 1)) / Math.max(1, n))));
+  return { ['--hand-w' as any]: `${w}px`, ['--hand-h' as any]: `${Math.round(w * 1.395)}px` };
 }
 
 function ZoneViewer({

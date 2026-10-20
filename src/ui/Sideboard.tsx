@@ -36,24 +36,32 @@ export function SideboardScreen({ game, wins, main: main0, side: side0, baseMain
   const [side, setSide] = useState(side0);
   const [first, setFirst] = useState<PlayerId>(0);
   const [hover, setHover] = useState<CardDef | null>(null);
+  /** touch screens: tapping a row shows the card first, with buttons to move it */
+  const isTouch = useMemo(() => window.matchMedia('(hover: none)').matches, []);
+  const [picked, setPicked] = useState<{ name: string; fromMain: boolean } | null>(null);
 
   const mainGroups = useMemo(() => group(main), [main]);
   const sideGroups = useMemo(() => group(side), [side]);
 
-  const move = (name: string, fromMain: boolean) => {
-    const from = fromMain ? main : side;
-    const i = from.findIndex((d) => d.name === name);
-    if (i < 0) return;
-    const card = from[i];
-    const rest = [...from.slice(0, i), ...from.slice(i + 1)];
+  const move = (name: string, fromMain: boolean, copies = 1) => {
+    let from = fromMain ? main : side;
+    let to = fromMain ? side : main;
+    for (let k = 0; k < copies; k++) {
+      const i = from.findIndex((d) => d.name === name);
+      if (i < 0) break;
+      to = [...to, from[i]];
+      from = [...from.slice(0, i), ...from.slice(i + 1)];
+    }
     if (fromMain) {
-      setMain(rest);
-      setSide([...side, card]);
+      setMain(from);
+      setSide(to);
     } else {
-      setSide(rest);
-      setMain([...main, card]);
+      setSide(from);
+      setMain(to);
     }
   };
+
+  const pickedGroup = picked ? (picked.fromMain ? mainGroups : sideGroups).find((x) => x.def.name === picked.name) : undefined;
 
   const changed = useMemo(() => {
     const count = (xs: CardDef[]) => xs.reduce<Record<string, number>>((m, d) => ((m[d.name] = (m[d.name] ?? 0) + 1), m), {});
@@ -78,7 +86,7 @@ export function SideboardScreen({ game, wins, main: main0, side: side0, baseMain
           <button
             key={def.name}
             className={`sb-row ${typeOrder(def) === 2 ? 'land' : ''}`}
-            onClick={() => move(def.name, fromMain)}
+            onClick={() => (isTouch ? setPicked({ name: def.name, fromMain }) : move(def.name, fromMain))}
             onMouseEnter={() => setHover(def)}
             onMouseLeave={() => setHover(null)}
             title={fromMain ? 'Move one copy to the sideboard' : 'Move one copy to the main deck'}
@@ -103,7 +111,7 @@ export function SideboardScreen({ game, wins, main: main0, side: side0, baseMain
           </div>
         </div>
         <div className="sb-help">
-          Click a card to move one copy across. Your main deck must have at least 40 cards.
+          {isTouch ? 'Tap a card to see it and move it.' : 'Click a card to move one copy across.'} Your main deck must have at least 40 cards.
           {changed > 0 && <div className="sb-changed">{changed} card{changed > 1 ? 's' : ''} swapped from your original list.</div>}
           <div className="sb-ai">
             {aiSwaps > 0 ? `The computer sideboarded ${aiSwaps} card${aiSwaps > 1 ? 's' : ''}.` : 'The computer kept its main deck.'}
@@ -116,6 +124,44 @@ export function SideboardScreen({ game, wins, main: main0, side: side0, baseMain
         {column('Sideboard', sideGroups, side.length, false)}
         <div className="sb-preview">{hover ? <CardFace def={hover} /> : <div className="sb-preview-empty">Hover a card to see it</div>}</div>
       </div>
+
+      {picked && pickedGroup && (
+        <div className="inspect-backdrop" onClick={() => setPicked(null)}>
+          <div className="inspect-sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="inspect-card">
+              <CardFace def={pickedGroup.def} />
+            </div>
+            <div className="sb-sheet-count">
+              {pickedGroup.n} in your {picked.fromMain ? 'main deck' : 'sideboard'}
+            </div>
+            <div className="inspect-actions">
+              <button
+                className="btn primary"
+                onClick={() => {
+                  move(picked.name, picked.fromMain);
+                  if (pickedGroup.n <= 1) setPicked(null);
+                }}
+              >
+                Move 1 to {picked.fromMain ? 'sideboard' : 'main deck'}
+              </button>
+              {pickedGroup.n > 1 && (
+                <button
+                  className="btn secondary"
+                  onClick={() => {
+                    move(picked.name, picked.fromMain, pickedGroup.n);
+                    setPicked(null);
+                  }}
+                >
+                  Move all {pickedGroup.n} to {picked.fromMain ? 'sideboard' : 'main deck'}
+                </button>
+              )}
+              <button className="btn secondary" onClick={() => setPicked(null)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="sb-footer">
         <div className="sb-play">
