@@ -238,6 +238,24 @@ export const PRESETS: Record<string, string> = {
 2 Relic of Progenitus
 2 Suffocating Fumes
 2 Tithing Blade`,
+  'Mono White Heroic': `4 Akroan Skyguard
+4 Benevolent Blessing
+4 Dig Site Inventory
+2 Emerge Unscathed
+4 Ethereal Armor
+4 Homestead Courage
+4 Hyena Umbra
+4 Lagonna-Band Trailblazer
+18 Plains
+4 Seeker of the Way
+4 Sentinel's Eyes
+4 Spirit Link
+
+3 Beckon Apparition
+4 Gut Shot
+3 Mask of Law and Grace
+3 Shield of Duty and Reason
+2 Standard Bearer`,
   'Rakdos Madness': `4 Alms of the Vein
 4 Faithless Looting
 4 Fiery Temper

@@ -107,6 +107,11 @@ export class AIController implements Controller {
     return 1 + c.def.cmc * 0.5;
   }
 
+  /** creature that grows when we target it (heroic) */
+  isHeroic(c: CardInstance) {
+    return !!c.def.triggers?.some((t) => t.text.startsWith('Heroic'));
+  }
+
   isAggro(g: Game) {
     // red decks with burn are aggressive
     const all = [...g.players[this.me].library, ...g.players[this.me].hand, ...g.permanents(this.me)];
@@ -227,6 +232,8 @@ export class AIController implements Controller {
   private respond(g: Game, top: StackItem, all: Action[]): Action {
     const me = this.me;
     const threat = this.threatLevel(g, top);
+    const save = this.protectResponse(g, top, all);
+    if (save) return save;
     for (const a of all) {
       if (a.type !== 'cast') continue;
       const c = g.card(a.cardId)!;
@@ -470,6 +477,19 @@ export class AIController implements Controller {
           case 'drain':
             consider(a, aggro ? 18 : 12, { cardId: c.id, targets: [{ kind: 'player', pid: opp }] });
             break;
+          case 'pump': {
+            if (hint?.reactive || g.is(c, 'Instant')) break;
+            const spec = g.modesFor(c, a.method)[0].targets?.[0];
+            if (!spec) break;
+            const hosts = g.candidates(spec, { controller: me, source: c, chosen: [] })
+              .map((t) => (t.kind === 'card' ? g.card(t.id) : undefined))
+              .filter((x): x is CardInstance => !!x && x.controller === me);
+            if (!hosts.length) break;
+            const hs = (x: CardInstance) => (this.isHeroic(x) ? 6 : 0) + (g.hasKeyword(x, 'flying') ? 2 : 0) + this.value(g, x) * 0.3;
+            hosts.sort((x, y) => hs(y) - hs(x));
+            consider(a, 13 + hs(hosts[0]) + (main1 ? 2 : 0), { cardId: c.id, targets: [{ kind: 'card', id: hosts[0].id }] });
+            break;
+          }
           case 'sweeper': {
             if (hint?.reactive) break;
             const amt = hint?.amount ?? 1;
@@ -626,6 +646,31 @@ export class AIController implements Controller {
   }
 
   wantKick?: boolean;
+
+  protectColor?: string;
+
+  /** Emerge Unscathed: give protection from the color of the spell/ability aimed at our creature */
+  protectResponse(g: Game, top: StackItem, all: Action[]): Action | null {
+    const me = this.me;
+    if (top.controller === me) return null;
+    const color = top.card.def.colors[0];
+    if (!color) return null;
+    const victim = top.targets
+      .flat()
+      .map((t) => (t.kind === 'card' ? g.card(t.id) : undefined))
+      .find((x) => x && x.zone === 'battlefield' && x.controller === me && g.isCreature(x));
+    if (!victim || this.value(g, victim) + g.attachments(victim).length * 2 < 4) return null;
+    for (const a of all) {
+      if (a.type !== 'cast') continue;
+      const c = g.card(a.cardId)!;
+      if (c.def.name !== 'Emerge Unscathed') continue;
+      if (!g.isTargetLegal(g.modesFor(c, a.method)[0].targets![0], { kind: 'card', id: victim.id }, { controller: me, source: c, chosen: [] })) continue;
+      this.intent = { cardId: c.id, targets: [{ kind: 'card', id: victim.id }] };
+      this.protectColor = color;
+      return a;
+    }
+    return null;
+  }
 
   /** What "n damage to each creature and each player" is worth to us (Pestilence, Crypt Rats) */
   sweepGain(g: Game, n: number): number {
@@ -970,7 +1015,7 @@ export class AIController implements Controller {
     }
     if (!specs.length) return null;
     const spec = specs[0];
-    const cands = g.candidates(spec, { controller: me, source: c, chosen: [] });
+    const cands = g.candidates(spec, { controller: me, source: c, chosen: [], casting: true });
     let best: { t: Target; v: number } | null = null;
     for (const t of cands) {
       if (t.kind !== 'card') continue;
@@ -1122,6 +1167,8 @@ export class AIController implements Controller {
       g.attachments(x).length * 2 +
       this.value(g, x) +
       (x.def.isToken ? -4 : 0) +
+      (this.isHeroic(x) ? 6 : 0) +
+      (g.hasKeyword(x, 'flying') ? 2 : 0) +
       (aura.def.name === 'Angelic Gift' && g.hasKeyword(x, 'flying') ? -6 : 0) +
       (aura.def.name === 'Rancor' && g.hasKeyword(x, 'trample') ? -1 : 0);
     return [...cands].sort((a, b) => score(b) - score(a))[0];
@@ -1135,6 +1182,7 @@ export class AIController implements Controller {
     let s = 18 + aura.def.cmc + (safe ? 4 : -4);
     if (aura.def.name === 'Ancestral Mask') s += g.battlefield.filter((x) => g.is(x, 'Enchantment')).length * 2;
     if (aura.def.name === 'Benevolent Blessing') s -= 6;
+    if (this.isHeroic(host)) s += 4;
     if (g.step === 'main2') s -= 3;
     void me;
     return s;
@@ -1159,6 +1207,11 @@ export class AIController implements Controller {
 
   pickColor(g: Game, options: ManaColor[][], purpose?: string): number {
     const idx = (col: string) => Math.max(0, options.findIndex((o) => o[0] === col));
+    if (purpose === 'protection' && this.protectColor) {
+      const col = this.protectColor;
+      this.protectColor = undefined;
+      return idx(col);
+    }
     if (purpose === 'protection') {
       const counts: Record<string, number> = {};
       const opp = this.opp(g);
@@ -1371,6 +1424,7 @@ export class AIController implements Controller {
   yesNo(g: Game, purpose: string, src?: CardInstance) {
     if (purpose === 'evidence') return g.creatures(this.opp(g)).length >= 2;
     if (purpose === 'exploreMill') return false;
+    if (purpose === 'rebound') return true;
     if (purpose === 'cottage') return !!src && this.value(g, src) >= 4;
     if (purpose === 'kicker') return this.wantKick ?? true;
     if (purpose === 'surveil' && src) return this.scry(g, [src]).bottom.length > 0;

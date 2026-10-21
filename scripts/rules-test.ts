@@ -608,5 +608,76 @@ for (const arts of [0, 3]) {
   check("Chainer's Edict + Tempting Witch", edicted && !!food && food.zone !== 'battlefield' && g.players[1].life === 17, `edicted=${edicted}, food ${food?.zone}, opp life ${g.players[1].life}`);
 }
 
+// Heroic: targeting Lagonna-Band Trailblazer with Homestead Courage gives two counters (heroic + the spell)
+{
+  const { g, put, inHand, resolveAll } = setup();
+  put(0, 'Plains');
+  const lagonna = put(0, 'Lagonna-Band Trailblazer');
+  const courage = inHand(0, 'Homestead Courage');
+  (g.controllers[0] as any).choose = async (gg: Game, r: any) => (r.type === 'targets' ? [{ kind: 'card', id: lagonna.id }] : { type: 'pass' });
+  await g.castSpell(0, courage, 'normal');
+  await resolveAll();
+  check('heroic counter + spell counter', g.power(lagonna) === 2 && g.toughness(lagonna) === 6 && g.hasKeyword(lagonna, 'vigilance'), `${g.power(lagonna)}/${g.toughness(lagonna)}, vigilance=${g.hasKeyword(lagonna, 'vigilance')}`);
+}
+
+// Umbra armor: destroy and lethal damage take the Aura instead
+{
+  const { g, put, resolveAll } = setup();
+  const sky = put(0, 'Akroan Skyguard');
+  const u1 = g.makeCard(getDef('Hyena Umbra')!, 0);
+  g.moveCard(u1, 'battlefield', { controller: 0, attachTo: sky });
+  g.destroy(sky);
+  await resolveAll();
+  const survivedDestroy = sky.zone === 'battlefield' && u1.zone === 'graveyard';
+  const u2 = g.makeCard(getDef('Hyena Umbra')!, 0);
+  g.moveCard(u2, 'battlefield', { controller: 0, attachTo: sky });
+  sky.damage = 5;
+  await resolveAll();
+  check('umbra armor', survivedDestroy && sky.zone === 'battlefield' && sky.damage === 0 && u2.zone === 'graveyard', `destroy survived=${survivedDestroy}, after damage ${sky.zone} dmg ${sky.damage}, umbra ${u2.zone}`);
+}
+
+// Emerge Unscathed: protection from the chosen color, then rebound casts it again at the next upkeep
+{
+  const { g, put, inHand, resolveAll } = setup();
+  put(0, 'Plains');
+  const seeker = put(0, 'Seeker of the Way');
+  const emerge = inHand(0, 'Emerge Unscathed');
+  (g.controllers[0] as any).choose = async (gg: Game, r: any) =>
+    r.type === 'targets' ? [{ kind: 'card', id: seeker.id }] : r.type === 'color' ? 2 : r.type === 'yesno' ? true : { type: 'pass' };
+  await g.castSpell(0, emerge, 'normal');
+  await resolveAll();
+  const castDown = g.makeCard(getDef('Cast Down')!, 1);
+  const protectedNow = !g.canBeTargetedBy(seeker, 1, castDown) && g.power(seeker) === 3 && g.hasKeyword(seeker, 'lifelink');
+  const exiled = emerge.zone === 'exile' && !!emerge.reboundPending;
+  for (const c of g.battlefield) c.tempProtections = [];
+  g.active = 0;
+  g.queueRebound(0);
+  await resolveAll();
+  check(
+    'Emerge Unscathed + rebound',
+    protectedNow && exiled && emerge.zone === 'graveyard' && !g.canBeTargetedBy(seeker, 1, castDown),
+    `protected=${protectedNow}, exiled=${exiled}, after upkeep ${emerge.zone}, protected again=${!g.canBeTargetedBy(seeker, 1, castDown)}`,
+  );
+}
+
+// Standard Bearer: an opponent's targeted spell must pick the Flagbearer; Mask of Law and Grace stops black removal
+{
+  const { g, put } = setup();
+  const bearer = put(1, 'Standard Bearer');
+  const imp = put(1, 'Kitchen Imp');
+  const castDown = g.makeCard(getDef('Cast Down')!, 0);
+  const spec = castDown.def.spell!.targets![0];
+  const forced = g.candidates(spec, { controller: 0, source: castDown, chosen: [], casting: true }).map((t: any) => t.id);
+  const sky = put(0, 'Akroan Skyguard');
+  const mask = g.makeCard(getDef('Mask of Law and Grace')!, 0);
+  g.moveCard(mask, 'battlefield', { controller: 0, attachTo: sky });
+  const theirDown = g.makeCard(getDef('Cast Down')!, 1);
+  check(
+    'Standard Bearer + Mask of Law and Grace',
+    forced.length === 1 && forced[0] === bearer.id && !g.canBeTargetedBy(sky, 1, theirDown),
+    `forced targets ${forced.map((id: number) => g.card(id)!.def.name)} (imp ${imp.id}), masked targetable=${g.canBeTargetedBy(sky, 1, theirDown)}`,
+  );
+}
+
 console.log(failures ? `${failures} failure(s)` : 'all passed');
 process.exit(failures ? 1 : 0);

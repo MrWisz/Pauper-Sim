@@ -343,7 +343,11 @@ export class Game {
   /** colors this permanent has protection from */
   protections(c: CardInstance): string[] {
     const out: string[] = [];
-    for (const e of this.attachments(c)) if (e.def.grant?.protectionFromChosen && e.chosenColor) out.push(e.chosenColor);
+    for (const e of this.attachments(c)) {
+      if (e.def.grant?.protectionFromChosen && e.chosenColor) out.push(e.chosenColor);
+      if (e.def.grant?.protection) out.push(...e.def.grant.protection);
+    }
+    if (c.tempProtections) out.push(...c.tempProtections);
     return out;
   }
   protectedFrom(c: CardInstance, source: CardInstance) {
@@ -422,6 +426,7 @@ export class Game {
     opts: { tapped?: boolean; controller?: PlayerId; bottom?: boolean; silent?: boolean; attacking?: boolean; attachTo?: CardInstance } = {},
   ) {
     const from = c.zone;
+    if (to !== 'exile') c.reboundPending = false;
     if (from === 'stack') {
       const i = this.stack.findIndex((s) => s.kind === 'spell' && s.card === c);
       if (i >= 0) this.stack.splice(i, 1);
@@ -597,7 +602,10 @@ export class Game {
       if (!this.isCreature(c)) continue;
       const t = this.toughness(c);
       if (t <= 0) dying.push(c);
-      else if ((c.damage >= t || (c.deathtouched && c.damage > 0)) && !this.hasKeyword(c, 'indestructible')) dying.push(c);
+      else if ((c.damage >= t || (c.deathtouched && c.damage > 0)) && !this.hasKeyword(c, 'indestructible')) {
+        if (this.umbraSave(c)) changed = true;
+        else dying.push(c);
+      }
     }
     for (const c of dying) {
       this.log(`${c.def.name} dies.`, c.controller);
@@ -713,6 +721,7 @@ export class Game {
     this.changed();
 
     this.step = 'upkeep';
+    this.queueRebound(ap);
     this.emit({ type: 'step', step: 'upkeep', active: ap });
     if (this.initiative === ap) {
       this.addTrigger(this.initiativeSource, ap, 'The initiative: venture into Undercity', async () => venture(this, ap, this.initiativeSource));
@@ -763,6 +772,7 @@ export class Game {
       c.tempPower = 0;
       c.tempToughness = 0;
       c.tempKeywords = [];
+      c.tempProtections = [];
     }
     for (const pl of this.players) {
       pl.pool = emptyPool();
@@ -1166,6 +1176,7 @@ export class Game {
         cost = parseCost(d.overload);
         break;
       case 'plot':
+      case 'rebound':
         cost = parseCost('');
         break;
       case 'bestow':
@@ -1216,7 +1227,7 @@ export class Game {
   }
 
   private timingOk(pid: PlayerId, c: CardInstance, method: CastInfo['method']) {
-    if (method === 'madness') return true;
+    if (method === 'madness' || method === 'rebound') return true;
     if (method === 'plot') return this.canSorcery(pid);
     if (this.is(c, 'Instant') || this.hasKeyword(c, 'flash')) return true;
     return this.canSorcery(pid);
@@ -1256,6 +1267,7 @@ export class Game {
     if (method === 'plot' && (c.zone !== 'exile' || c.plottedTurn === null || c.plottedTurn >= this.turn || c.owner !== pid))
       return false;
     if (method === 'madness' && c.zone !== 'exile') return false;
+    if (method === 'rebound' && (c.zone !== 'exile' || !c.reboundPending || c.owner !== pid)) return false;
     if (method === 'foretell' && (c.zone !== 'exile' || !d.foretell || c.foretoldTurn === undefined || c.foretoldTurn >= this.turn || c.owner !== pid))
       return false;
     if (method === 'overload' && !d.overload) return false;
@@ -1402,7 +1414,7 @@ export class Game {
     }
     const used = new Set<string>();
     for (const i of spec.distinctFrom ?? []) for (const t of ctx.chosen[i] ?? []) used.add(targetKey(t));
-    return all.filter((t) => {
+    const legal = all.filter((t) => {
       if (used.has(targetKey(t))) return false;
       if (t.kind === 'card') {
         const c = this.card(t.id);
@@ -1410,6 +1422,16 @@ export class Game {
       }
       return spec.filter ? spec.filter(this, t, ctx) : true;
     });
+    // Standard Bearer: an opponent's spells and abilities must target a Flagbearer if able
+    if (ctx.casting) {
+      const isFlag = (t: Target) => {
+        const c = t.kind === 'card' ? this.card(t.id) : undefined;
+        return !!c && c.zone === 'battlefield' && c.controller !== ctx.controller && this.hasSubtype(c, 'Flagbearer');
+      };
+      const flags = legal.filter(isFlag);
+      if (flags.length && !ctx.chosen.flat().some(isFlag)) return flags;
+    }
+    return legal;
   }
 
   isTargetLegal(spec: TargetSpec, t: Target, ctx: TargetCtx): boolean {
@@ -1425,10 +1447,10 @@ export class Game {
     return spec.filter ? spec.filter(this, t, ctx) : true;
   }
 
-  async chooseTargets(pid: PlayerId, specs: TargetSpec[], source: CardInstance, cancellable: boolean): Promise<Target[][] | null> {
+  async chooseTargets(pid: PlayerId, specs: TargetSpec[], source: CardInstance, cancellable: boolean, casting = false): Promise<Target[][] | null> {
     const chosen: Target[][] = [];
     for (const spec of specs) {
-      const cands = this.candidates(spec, { controller: pid, source, chosen });
+      const cands = this.candidates(spec, { controller: pid, source, chosen, casting });
       const min = spec.min ?? 1;
       if (cands.length < min) return null;
       if ((spec.max ?? 1) === 0) {
@@ -1483,7 +1505,7 @@ export class Game {
     // 2. targets
     let targets: Target[][] = [];
     if (specs.length) {
-      const t = await this.chooseTargets(pid, specs, c, cancellable);
+      const t = await this.chooseTargets(pid, specs, c, cancellable, true);
       if (!t) return false;
       targets = t;
     }
@@ -1668,7 +1690,7 @@ export class Game {
 
     let targets: Target[][] = [];
     if (a.targets?.length) {
-      const t = await this.chooseTargets(pid, a.targets, c, cancellable);
+      const t = await this.chooseTargets(pid, a.targets, c, cancellable, true);
       if (!t) return false;
       targets = t;
     }
@@ -1940,7 +1962,11 @@ export class Game {
     const c = item.card;
     if (c.zone !== 'stack') return;
     c.zone = 'none';
-    this.moveCard(c, this.exiledAfterCast(item) ? 'exile' : 'graveyard');
+    if (c.def.rebound && item.info.method === 'normal') {
+      this.moveCard(c, 'exile');
+      c.reboundPending = true;
+      this.log(`${c.def.name} is exiled (rebound).`, item.controller);
+    } else this.moveCard(c, this.exiledAfterCast(item) ? 'exile' : 'graveyard');
   }
 
   /** flashback exiles the card afterwards; escape doesn't */
@@ -2088,8 +2114,20 @@ export class Game {
       this.log(`${c.def.name} is indestructible.`, c.controller);
       return false;
     }
+    if (this.umbraSave(c)) return false;
     this.log(`${c.def.name} is destroyed.`, c.controller);
     this.moveCard(c, 'graveyard');
+    return true;
+  }
+  /** umbra armor: remove all damage and destroy the Aura instead */
+  umbraSave(c: CardInstance) {
+    const umbra = this.attachments(c).find((e) => e.def.umbraArmor);
+    if (!umbra) return false;
+    c.damage = 0;
+    c.deathtouched = false;
+    this.log(`${umbra.def.name} is destroyed instead of ${c.def.name} (umbra armor).`, c.controller);
+    this.moveCard(umbra, 'graveyard');
+    this.changed();
     return true;
   }
   sacrifice(c: CardInstance) {
@@ -2121,6 +2159,20 @@ export class Game {
     this.log(`${this.players[pid].name} takes the initiative.`, pid);
     this.changed();
     await venture(this, pid, this.initiativeSource);
+  }
+
+  /** Rebound: at the beginning of its owner's upkeep, a rebounded card may be cast for free */
+  queueRebound(pid: PlayerId) {
+    for (const r of this.players[pid].exile.filter((x) => x.reboundPending)) {
+      this.addTrigger(r, pid, `Rebound: you may cast ${r.def.name} without paying its mana cost.`, async () => {
+        if (r.zone !== 'exile' || !r.reboundPending) return;
+        const cast = await this.yesNo(pid, `Rebound: cast ${r.def.name} for free?`, 'rebound', r);
+        if (!(cast && (await this.castSpell(pid, r, 'rebound', undefined, true)))) {
+          r.reboundPending = false;
+          this.log(`${r.def.name} stays in exile.`, pid);
+        }
+      });
+    }
   }
 
   /** Devotion to a color: the colored mana symbols of that color among the mana costs of permanents you control */

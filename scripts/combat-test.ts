@@ -444,5 +444,41 @@ for (const good of [true, false]) {
   check('Crypt Rats chooses X', used && x === 3, `activated=${used}, X=${x}`);
 }
 
+// 27. Emerge Unscathed answers removal aimed at a suited-up creature, with protection from the removal's color
+{
+  const { g, ai, put, hand } = setup(20);
+  g.active = 0;
+  g.step = 'main1';
+  put(1, 'Plains');
+  const seeker = put(1, 'Seeker of the Way');
+  const armor = g.makeCard(getDef('Ethereal Armor')!, 1);
+  g.moveCard(armor, 'battlefield', { controller: 1, attachTo: seeker });
+  const emerge = hand(1, 'Emerge Unscathed');
+  put(0, 'Swamp');
+  put(0, 'Swamp');
+  const castDown = hand(0, 'Cast Down');
+  (g.controllers as any)[0] = { async choose(gg: Game, r: any) { return r.type === 'targets' ? [{ kind: 'card', id: seeker.id }] : { type: 'pass' }; } };
+  await g.castSpell(0, castDown, 'normal');
+  const act = ai.decidePriority(g);
+  const used = act.type === 'cast' && act.cardId === emerge.id;
+  const color = used ? ai.pickColor(g, [['W'], ['U'], ['B'], ['R'], ['G']], 'protection') : -1;
+  check('Emerge Unscathed saves the creature', used && color === 2, `cast=${used}, color index ${color}`);
+}
+
+// 28. Homestead Courage goes on the heroic flier
+{
+  const { g, ai, put, hand } = setup(20);
+  g.active = 1;
+  g.step = 'main1';
+  put(1, 'Plains');
+  g.players[1].landsPlayedThisTurn = 1;
+  put(1, 'Seeker of the Way');
+  const sky = put(1, 'Akroan Skyguard');
+  const courage = hand(1, 'Homestead Courage');
+  const act = ai.decidePriority(g);
+  const t = (ai as any).intent?.targets?.[0];
+  check('pump targets the heroic creature', act.type === 'cast' && act.cardId === courage.id && t?.id === sky.id, `action ${act.type}, target ${t ? g.card(t.id)?.def.name : '-'}`);
+}
+
 console.log(failures ? `${failures} failure(s)` : 'all passed');
 process.exit(failures ? 1 : 0);

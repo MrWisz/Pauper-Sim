@@ -7,12 +7,18 @@ export interface MatchupProfile {
   seen: number;
   blue: number;
   red: number;
+  black: number;
+  green: number;
+  /** targeted removal / burn aimed at creatures */
+  removal: number;
   artifacts: number;
   enchantments: number;
   hexproof: number;
   graveyard: number;
   creatures: number;
   smallCreatures: number;
+  /** X/1s (Gut Shot) */
+  oneToughness: number;
   fliers: number;
   sorceries: number;
   instants: number;
@@ -24,12 +30,16 @@ export function profile(seen: CardDef[]): MatchupProfile {
     seen: seen.length,
     blue: 0,
     red: 0,
+    black: 0,
+    green: 0,
+    removal: 0,
     artifacts: 0,
     enchantments: 0,
     hexproof: 0,
     graveyard: 0,
     creatures: 0,
     smallCreatures: 0,
+    oneToughness: 0,
     fliers: 0,
     sorceries: 0,
     instants: 0,
@@ -39,6 +49,9 @@ export function profile(seen: CardDef[]): MatchupProfile {
     if (d.types.includes('Land')) continue;
     if (d.colors.includes('U')) p.blue++;
     if (d.colors.includes('R')) p.red++;
+    if (d.colors.includes('B')) p.black++;
+    if (d.colors.includes('G')) p.green++;
+    if (d.ai?.kind === 'removal' || d.ai?.kind === 'burn') p.removal++;
     if (d.types.includes('Artifact')) p.artifacts++;
     if (d.types.includes('Enchantment')) p.enchantments++;
     if (d.keywords.includes('hexproof')) p.hexproof++;
@@ -46,6 +59,7 @@ export function profile(seen: CardDef[]): MatchupProfile {
     if (d.types.includes('Creature')) {
       p.creatures++;
       if ((d.toughness ?? 0) <= 2) p.smallCreatures++;
+      if ((d.toughness ?? 0) <= 1) p.oneToughness++;
       if (d.keywords.includes('flying')) p.fliers++;
     }
     if (d.types.includes('Sorcery')) p.sorceries++;
@@ -65,12 +79,16 @@ export function sideInValue(d: CardDef, p: MatchupProfile): number {
   if (n === 'Vitu-Ghazi Inspector') return p.fliers >= 4 ? 3.5 : 0;
   if (n === 'Monstrous Emergence') return p.creatures >= 6 && p.hexproof < 2 ? 3.5 : 0;
   if (n === 'Steel Sabotage') return p.artifacts >= 5 ? 4 + p.artifacts * 0.2 : 0;
-  if (n === 'Gut Shot') return p.smallCreatures >= 5 ? 3.5 + p.smallCreatures * 0.1 : 0;
+  if (n === 'Gut Shot') return p.oneToughness >= 4 ? 3.5 + p.oneToughness * 0.15 : 0;
   if (n === 'Murmuring Mystic') return p.creatures <= 4 && p.instants + p.sorceries >= 8 ? 3.5 : 0;
   if (n === 'Annul') return p.artifacts + p.enchantments >= 5 ? 4 + p.artifacts * 0.2 : 0;
   if (n === 'Envelop') return p.sorceries >= 4 ? 4 : 0;
   if (n === 'Dispel') return p.instants >= 4 ? 3.5 : 0;
   if (d.ai?.kind === 'artifactRemoval' || n === 'Vandalblast') return p.artifacts >= 5 ? 4 + p.artifacts * 0.2 : 0;
+  if (n === 'Mask of Law and Grace') return p.black + p.red >= 5 && p.removal >= 3 ? 4 + p.removal * 0.1 : 0;
+  if (n === 'Shield of Duty and Reason') return p.green + p.blue >= 5 ? 3.5 + (p.green + p.blue) * 0.1 : 0;
+  if (n === 'Standard Bearer') return p.removal >= 5 ? 4 : 0;
+  if (n === 'Beckon Apparition') return p.graveyard >= 3 ? 3.5 + p.graveyard * 0.2 : 0;
   if (n === 'Thraben Charm') return p.enchantments >= 4 ? 5 : p.graveyard >= 4 ? 3 : 0;
   if (n === 'Extract a Confession') return p.hexproof >= 2 ? 5 : p.creatures >= 6 ? 3 : 0;
   if (['Relic of Progenitus', 'Nihil Spellbomb', 'Faerie Macabre', 'Bojuka Bog'].includes(n)) return p.graveyard >= 3 ? 3.5 + p.graveyard * 0.2 : 0;
@@ -92,6 +110,10 @@ export function keepValue(d: CardDef, p: MatchupProfile): number {
   // engines the deck is built around
   if (d.ai?.kind === 'draw' || d.madness) v += 1;
   if (['Pestilence', 'Gray Merchant of Asphodel', 'Crypt Rats'].includes(d.name)) v += 3;
+  if (d.name === 'Dig Site Inventory' || d.name === 'Homestead Courage') v += 1.5; // two heroic triggers per card
+  if (d.name === 'Ethereal Armor') v += 1.5;
+  // protection against a removal-heavy deck
+  if ((d.name === 'Emerge Unscathed' || d.name === 'Hyena Umbra') && p.removal >= 3) v += 1.5;
   if (d.ai?.kind === 'burn' && (d.ai.amount ?? 2) >= 3) v += 0.5;
   if (d.name === 'Fireblast') v -= 1.5; // situational finisher: first to go
   // removal is great against creature decks (unless they're hexproof)

@@ -60,6 +60,8 @@ export interface TargetCtx {
   source: CardInstance;
   /** targets already chosen for earlier specs */
   chosen: Target[][];
+  /** chosen while casting a spell / activating an ability (Standard Bearer applies) */
+  casting?: boolean;
 }
 
 export interface Ctx {
@@ -74,7 +76,7 @@ export interface Ctx {
 }
 
 export interface CastInfo {
-  method: 'normal' | 'madness' | 'flashback' | 'plot' | 'alt' | 'overload' | 'bestow' | 'omen' | 'foretell';
+  method: 'normal' | 'madness' | 'flashback' | 'plot' | 'alt' | 'overload' | 'bestow' | 'omen' | 'foretell' | 'rebound';
   /** kicker paid */
   kicked?: boolean;
   /** number of times replicate was paid */
@@ -187,6 +189,8 @@ export interface StaticGrant {
   damageLifegain?: boolean;
   /** protection from the color chosen as the Aura entered */
   protectionFromChosen?: boolean;
+  /** fixed protection colors (Mask of Law and Grace) */
+  protection?: Color[];
   /** enchanted land: "{T}: Add one mana of any color" */
   anyColorMana?: boolean;
   /** enchanted land adds one extra mana of the chosen color when tapped */
@@ -226,6 +230,10 @@ export interface CardDef {
   changeling?: boolean;
   /** Bestow cost: cast as an Aura that becomes a creature again when unattached */
   bestow?: string;
+  /** rebound: exiled as it resolves when cast from hand, cast free at your next upkeep */
+  rebound?: boolean;
+  /** umbra armor: if the enchanted creature would be destroyed, destroy this Aura instead */
+  umbraArmor?: boolean;
   /** "This permanent enters with X +1/+1 counters" */
   entersWithXCounters?: boolean;
   /** Omen half (Sagu Wildling // Roost Seek): a sorcery that shuffles the card back into the library */
@@ -306,6 +314,10 @@ export interface CardInstance {
   blockedBy: number[];
   wasBlocked: boolean;
   plottedTurn: number | null;
+  /** protection from colors until end of turn (Emerge Unscathed) */
+  tempProtections?: string[];
+  /** exiled by rebound, waiting for its owner's next upkeep */
+  reboundPending?: boolean;
   /** front face while transformed (the card reverts when it leaves the battlefield) */
   frontDef?: CardDef;
   /** how it was cast (X, evidence…), kept while it's on the battlefield */

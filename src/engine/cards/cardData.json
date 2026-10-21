@@ -2640,5 +2640,177 @@
   "keywords": [],
   "image": "https://cards.scryfall.io/normal/front/b/8/b87891cd-b457-4dff-8d18-a7eaf6748fc6.jpg?1783932575",
   "art": "https://cards.scryfall.io/art_crop/front/b/8/b87891cd-b457-4dff-8d18-a7eaf6748fc6.jpg?1783932575"
+ },
+ "Hyena Umbra": {
+  "name": "Hyena Umbra",
+  "manaCost": "{W}",
+  "cmc": 1,
+  "typeLine": "Enchantment — Aura",
+  "oracle": "Enchant creature\nEnchanted creature gets +1/+1 and has first strike.\nUmbra armor (If enchanted creature would be destroyed, instead remove all damage from it and destroy this Aura.)",
+  "colors": [
+   "W"
+  ],
+  "keywords": [
+   "Umbra armor",
+   "Enchant"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/f/6/f6cc0f1f-191a-4141-965f-8d159bf54732.jpg?1783921934",
+  "art": "https://cards.scryfall.io/art_crop/front/f/6/f6cc0f1f-191a-4141-965f-8d159bf54732.jpg?1783921934"
+ },
+ "Lagonna-Band Trailblazer": {
+  "name": "Lagonna-Band Trailblazer",
+  "manaCost": "{W}",
+  "cmc": 1,
+  "typeLine": "Creature — Centaur Scout",
+  "oracle": "Heroic — Whenever you cast a spell that targets this creature, put a +1/+1 counter on it.",
+  "colors": [
+   "W"
+  ],
+  "power": "0",
+  "toughness": "4",
+  "keywords": [
+   "Heroic"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/3/8/38a6f533-6acb-4c24-ae9d-fe4977230156.jpg?1783939457",
+  "art": "https://cards.scryfall.io/art_crop/front/3/8/38a6f533-6acb-4c24-ae9d-fe4977230156.jpg?1783939457"
+ },
+ "Homestead Courage": {
+  "name": "Homestead Courage",
+  "manaCost": "{W}",
+  "cmc": 1,
+  "typeLine": "Sorcery",
+  "oracle": "Put a +1/+1 counter on target creature you control. It gains vigilance until end of turn.\nFlashback {W} (You may cast this card from your graveyard for its flashback cost. Then exile it.)",
+  "colors": [
+   "W"
+  ],
+  "keywords": [
+   "Flashback"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/7/3/73a9c49f-fcd3-4572-bac7-6eb06fdc0815.jpg?1783925656",
+  "art": "https://cards.scryfall.io/art_crop/front/7/3/73a9c49f-fcd3-4572-bac7-6eb06fdc0815.jpg?1783925656"
+ },
+ "Emerge Unscathed": {
+  "name": "Emerge Unscathed",
+  "manaCost": "{W}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Target creature you control gains protection from the color of your choice until end of turn.\nRebound (If you cast this spell from your hand, exile it as it resolves. At the beginning of your next upkeep, you may cast this card from exile without paying its mana cost.)",
+  "colors": [
+   "W"
+  ],
+  "keywords": [
+   "Rebound"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/d/0/d016f166-183e-4d9e-9292-9bfb1ca0d72b.jpg?1783935557",
+  "art": "https://cards.scryfall.io/art_crop/front/d/0/d016f166-183e-4d9e-9292-9bfb1ca0d72b.jpg?1783935557"
+ },
+ "Akroan Skyguard": {
+  "name": "Akroan Skyguard",
+  "manaCost": "{1}{W}",
+  "cmc": 2,
+  "typeLine": "Creature — Human Soldier",
+  "oracle": "Flying\nHeroic — Whenever you cast a spell that targets this creature, put a +1/+1 counter on this creature.",
+  "colors": [
+   "W"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [
+   "Flying",
+   "Heroic"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/d/5/d55e85c3-234e-49c4-a307-96fb4497eea8.jpg?1783939586",
+  "art": "https://cards.scryfall.io/art_crop/front/d/5/d55e85c3-234e-49c4-a307-96fb4497eea8.jpg?1783939586"
+ },
+ "Dig Site Inventory": {
+  "name": "Dig Site Inventory",
+  "manaCost": "{W}",
+  "cmc": 1,
+  "typeLine": "Sorcery",
+  "oracle": "Put a +1/+1 counter on target creature you control. It gains vigilance until end of turn.\nFlashback {W} (You may cast this card from your graveyard for its flashback cost. Then exile it.)",
+  "colors": [
+   "W"
+  ],
+  "keywords": [
+   "Flashback"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/e/5/e52464ee-df8b-41ec-af93-4b0eb004383e.jpg?1783903707",
+  "art": "https://cards.scryfall.io/art_crop/front/e/5/e52464ee-df8b-41ec-af93-4b0eb004383e.jpg?1783903707"
+ },
+ "Seeker of the Way": {
+  "name": "Seeker of the Way",
+  "manaCost": "{1}{W}",
+  "cmc": 2,
+  "typeLine": "Creature — Human Warrior",
+  "oracle": "Prowess (Whenever you cast a noncreature spell, this creature gets +1/+1 until end of turn.)\nWhenever you cast a noncreature spell, this creature gains lifelink until end of turn.",
+  "colors": [
+   "W"
+  ],
+  "power": "2",
+  "toughness": "2",
+  "keywords": [
+   "Prowess"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/e/9/e9e3cb28-d318-4d5d-b5bf-1ea7c6249a89.jpg?1783921927",
+  "art": "https://cards.scryfall.io/art_crop/front/e/9/e9e3cb28-d318-4d5d-b5bf-1ea7c6249a89.jpg?1783921927"
+ },
+ "Standard Bearer": {
+  "name": "Standard Bearer",
+  "manaCost": "{1}{W}",
+  "cmc": 2,
+  "typeLine": "Creature — Human Flagbearer",
+  "oracle": "While an opponent is choosing targets as part of casting a spell they control or activating an ability they control, that player must choose at least one Flagbearer on the battlefield if able.",
+  "colors": [
+   "W"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/e/0/e0f8e16a-55f0-4147-a01a-dba7938f31c4.jpg?1783945354",
+  "art": "https://cards.scryfall.io/art_crop/front/e/0/e0f8e16a-55f0-4147-a01a-dba7938f31c4.jpg?1783945354"
+ },
+ "Shield of Duty and Reason": {
+  "name": "Shield of Duty and Reason",
+  "manaCost": "{W}",
+  "cmc": 1,
+  "typeLine": "Enchantment — Aura",
+  "oracle": "Enchant creature\nEnchanted creature has protection from green and from blue.",
+  "colors": [
+   "W"
+  ],
+  "keywords": [
+   "Enchant"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/4/d/4ddf4ee0-75d6-48a5-955c-97faf73b899f.jpg?1783945356",
+  "art": "https://cards.scryfall.io/art_crop/front/4/d/4ddf4ee0-75d6-48a5-955c-97faf73b899f.jpg?1783945356"
+ },
+ "Mask of Law and Grace": {
+  "name": "Mask of Law and Grace",
+  "manaCost": "{W}",
+  "cmc": 1,
+  "typeLine": "Enchantment — Aura",
+  "oracle": "Enchant creature\nEnchanted creature has protection from black and from red.",
+  "colors": [
+   "W"
+  ],
+  "keywords": [
+   "Enchant"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/6/b/6bd97150-b405-4bb5-b5a8-fceda4a45ebb.jpg?1783946085",
+  "art": "https://cards.scryfall.io/art_crop/front/6/b/6bd97150-b405-4bb5-b5a8-fceda4a45ebb.jpg?1783946085"
+ },
+ "Beckon Apparition": {
+  "name": "Beckon Apparition",
+  "manaCost": "{W/B}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Exile target card from a graveyard. Create a 1/1 white and black Spirit creature token with flying.",
+  "colors": [
+   "B",
+   "W"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/3/9/396bdd5f-2aad-48ba-a4b1-f2b2365a1a53.jpg?1783933771",
+  "art": "https://cards.scryfall.io/art_crop/front/3/9/396bdd5f-2aad-48ba-a4b1-f2b2365a1a53.jpg?1783933771"
  }
 }
