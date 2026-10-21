@@ -33,7 +33,7 @@ The layout adapts to small screens in portrait and landscape. With no mouse to h
 
 Every card's behaviour has to be scripted. Fully supported right now:
 
-- **Selesnya Bogles**, **Mono Blue Terror**, **Mono Green Elves**, **Bant Tron**, **Rakdos Madness**, **Mono Red Madness**, **Grixis Affinity**, **Dimir Faeries**, all main decks and sideboards (lists from MTGGoldfish, October 2026).
+- **Selesnya Bogles**, **Mono Blue Terror**, **Mono Green Elves**, **Bant Tron**, **Esper Affinity**, **Rakdos Madness**, **Mono Red Madness**, **Grixis Affinity**, **Dimir Faeries**, all main decks and sideboards (lists from MTGGoldfish, October 2026).
 
 The engine supports Auras (attached on resolution, stacked behind their host, put into the graveyard when the host leaves), hexproof, ward, protection from a color, hybrid and Phyrexian mana, transforming double-faced cards (Delver of Secrets), cost reductions, escape, mana creatures, X costs, bestow, omens, changeling, the initiative / Undercity dungeon, Food and Treasure, Urza's Tron, color filters in auto-payment (Prophetic Prism, Energy Refractor), fogs and damage prevention, kicker, replicate, storm, foretell and land Auras like Utopia Sprawl / Abundant Growth.
 

@@ -386,7 +386,7 @@ export type ChoiceRequest =
       max: number;
       cancellable?: boolean;
       /** reason, for the AI */
-      purpose: 'discard' | 'sacrifice' | 'putBack' | 'reveal' | 'search' | 'exileGraveyard' | 'returnLand' | 'other' | 'evidence' | 'graveyardReturn' | 'takeAll' | 'strongest' | 'shuffleBack';
+      purpose: 'discard' | 'sacrifice' | 'putBack' | 'reveal' | 'search' | 'exileGraveyard' | 'returnLand' | 'other' | 'evidence' | 'graveyardReturn' | 'takeAll' | 'strongest' | 'shuffleBack' | 'bounceOwn';
       source?: CardInstance;
     }
   | { type: 'yesno'; player: PlayerId; prompt: string; purpose: string; source?: CardInstance }

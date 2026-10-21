@@ -447,5 +447,67 @@ for (const islands of [0, 1]) {
   check('CoP: Blue shield', first === 20 && g.players[0].life === 19, `after 1st hit ${first}, after 2nd ${g.players[0].life}`);
 }
 
+// ───────────── Esper Affinity ─────────────
+
+// Glint Hawk returning Cryogen Relic draws a card (Relic leaving); with nothing returned, the Hawk dies
+{
+  const { g, put, inHand, resolveAll } = setup();
+  put(0, 'Plains');
+  const relic = put(0, 'Cryogen Relic');
+  const hawk = inHand(0, 'Glint Hawk');
+  (g.controllers[0] as any).choose = async (gg: Game, r: any) => (r.type === 'cards' ? [relic.id] : { type: 'pass' });
+  g.pendingTriggers = []; // Relic's own enter-the-battlefield draw from the setup
+  const hand = g.players[0].hand.length;
+  await g.castSpell(0, hawk, 'normal');
+  await resolveAll();
+  check('Glint Hawk bounces Cryogen Relic (+1 card)', hawk.zone === 'battlefield' && relic.zone === 'hand' && g.players[0].hand.length === hand - 1 + 1 + 1, `Hawk in ${hawk.zone}, Relic in ${relic.zone}, hand ${hand}→${g.players[0].hand.length}`);
+
+  const b = setup();
+  b.put(0, 'Plains');
+  const hawk2 = b.inHand(0, 'Glint Hawk');
+  await b.g.castSpell(0, hawk2, 'normal');
+  await b.resolveAll();
+  check('Glint Hawk with nothing to return is sacrificed', hawk2.zone === 'graveyard', `Hawk in ${hawk2.zone}`);
+}
+
+// Dispatch: taps without metalcraft, exiles with it
+for (const arts of [0, 3]) {
+  let target = 0;
+  const { g, put, inHand, resolveAll } = setup({ target: () => target });
+  put(0, 'Plains');
+  for (let i = 0; i < arts; i++) put(0, 'Seat of the Synod');
+  const victim = put(1, 'Guttersnipe');
+  target = victim.id;
+  const d = inHand(0, 'Dispatch');
+  await g.castSpell(0, d, 'normal');
+  await resolveAll();
+  if (arts) check('Dispatch with metalcraft exiles', victim.zone === 'exile', `in ${victim.zone}`);
+  else check('Dispatch without metalcraft taps', victim.zone === 'battlefield' && victim.tapped, `in ${victim.zone}, tapped=${victim.tapped}`);
+}
+
+// Tithing Blade: edict on entering; craft returns it as Consuming Sepulcher
+{
+  const { g, put, inHand, inGrave, resolveAll } = setup();
+  for (let i = 0; i < 7; i++) put(0, 'Swamp');
+  const victim = put(1, 'Guttersnipe');
+  const blade = inHand(0, 'Tithing Blade');
+  (g.controllers[0] as any).choose = async (gg: Game, r: any) => (r.type === 'cards' ? [r.cards[0].id] : { type: 'pass' });
+  await g.castSpell(0, blade, 'normal');
+  await resolveAll();
+  const edict = victim.zone === 'graveyard';
+  inGrave(0, 'Baleful Strix');
+  g.turn++;
+  for (const l of g.lands(0)) l.tapped = false;
+  g.active = 0;
+  g.step = 'main1';
+  const idx = blade.def.activated!.findIndex((a) => a.label?.startsWith('Craft'));
+  await g.activate(0, blade, idx);
+  await resolveAll();
+  check('Tithing Blade edict + craft', edict && blade.zone === 'battlefield' && blade.def.name === 'Consuming Sepulcher', `edict=${edict}, now ${blade.def.name} in ${blade.zone}`);
+  g.emit({ type: 'step', step: 'upkeep', active: 0 });
+  await resolveAll();
+  check('Consuming Sepulcher drains at upkeep', g.players[1].life === 19 && g.players[0].life === 21, `life ${g.players[0].life}–${g.players[1].life}`);
+}
+
 console.log(failures ? `${failures} failure(s)` : 'all passed');
 process.exit(failures ? 1 : 0);

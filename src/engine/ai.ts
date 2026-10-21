@@ -360,6 +360,12 @@ export class AIController implements Controller {
         if (g.isCreature(c)) {
           // flash counter-creatures are held for the opponent's spells / end step
           if (c.def.name === 'Spellstutter Sprite') continue;
+          if (c.def.name === 'Glint Hawk' || c.def.name === 'Kor Skyfisher') {
+            const best = this.bestBounce(g, c.def.name === 'Glint Hawk' ? (x) => g.isArtifact(x) : () => true, c);
+            if (c.def.name === 'Glint Hawk' && !best) continue; // it would just be sacrificed
+            consider(a, 20 + this.value(g, c) + (best ? this.bounceScore(g, best, c) * 0.6 : 0));
+            continue;
+          }
           const xBonus = c.def.entersWithXCounters ? this.maxX(g, c, 'normal') * 1.5 : 0;
           if (c.def.entersWithXCounters && xBonus < 2) continue; // a 0/1 Hydra is not worth it
           // ramp first: mana creatures early, Priest of Titania more so the more Elves we have
@@ -371,6 +377,17 @@ export class AIController implements Controller {
         if (g.isAura(c)) {
           const host = this.auraHost(g, c);
           if (host) consider(a, this.auraScore(g, c, host), { cardId: c.id, targets: [{ kind: 'card', id: host.id }] });
+          continue;
+        }
+        if (c.def.name === 'Grim Bauble') {
+          const t = g.creatures(opp).filter((x) => g.canBeTargetedBy(x, me, c) && g.toughness(x) - x.damage <= 2).sort((x, y) => this.value(g, y) - this.value(g, x))[0];
+          consider(a, t ? 22 + this.value(g, t) : 14, t ? { cardId: c.id, targets: [{ kind: 'card', id: t.id }] } : undefined);
+          continue;
+        }
+        if (c.def.name === 'Tithing Blade') {
+          const crs = g.creatures(opp);
+          if (crs.length) consider(a, 22 + Math.min(...crs.map((x) => this.value(g, x))) + (crs.length === 1 ? 3 : 0));
+          else consider(a, 6);
           continue;
         }
         if (g.isPermanentCard(c)) {
@@ -495,6 +512,8 @@ export class AIController implements Controller {
             } else if (ab.label?.startsWith('Return a Forest')) {
               const plan = this.quirionManaPlan(g);
               if (plan) consider(a, 30, { cardId: c.id, targets: [{ kind: 'card', id: plan.id }] });
+            } else if (ab.label?.startsWith('Craft')) {
+              if (!main1) consider(a, 7);
             } else if (ab.label === 'Search for a land') {
               if (this.missingTron(g).length) consider(a, 11);
               else if (g.lands(me).length < 4) consider(a, 5);
@@ -585,6 +604,26 @@ export class AIController implements Controller {
   }
 
   wantKick?: boolean;
+
+  /** how good it is to return this permanent to hand with Glint Hawk / Kor Skyfisher */
+  bounceScore(g: Game, c: CardInstance, source?: CardInstance): number {
+    const me = this.me;
+    if (source && c === source) return -10;
+    if (c.def.name === 'Cryogen Relic') return 10; // draws when it leaves and again when it comes back
+    const etbValue = c.def.triggers?.some((t) => t.event === 'etb') && !c.def.isToken;
+    if (etbValue && !g.isLand(c)) return 7 - c.def.cmc * 0.5;
+    const landDrop = g.players[me].landsPlayedThisTurn < 1;
+    if (g.isLand(c)) return landDrop ? (c.tapped ? 6 : 4) : -2;
+    if (c.def.isToken) return -5;
+    return 3 - c.def.cmc;
+  }
+
+  bestBounce(g: Game, filter: (c: CardInstance) => boolean, source?: CardInstance): CardInstance | undefined {
+    return g
+      .permanents(this.me)
+      .filter(filter)
+      .sort((a, b) => this.bounceScore(g, b, source) - this.bounceScore(g, a, source))[0];
+  }
 
   /** Urza pieces we don't control yet */
   missingTron(g: Game): string[] {
@@ -834,6 +873,7 @@ export class AIController implements Controller {
       if (!cands[0]) return null;
       return { targets: [{ kind: 'card', id: cands[0].id }, { kind: 'card', id: cands[0].id }], score: this.value(g, cands[0]) };
     }
+    if (c.def.name === 'Dispatch' && g.artifacts(me).length < 3) return null;
     if (c.def.name === 'Monstrous Emergence') {
       const myPower = Math.max(
         0,
@@ -1169,6 +1209,12 @@ export class AIController implements Controller {
         // ninjutsu: return the weakest unblocked attacker
         const sorted = [...cards].sort((a, b) => this.value(g, a) - this.value(g, b));
         return want(Math.max(1, min), sorted);
+      }
+      case 'bounceOwn': {
+        const src = req.source;
+        const scored = cards.map((c) => ({ c, s: this.bounceScore(g, c, src) })).sort((a, b) => b.s - a.s);
+        // optional bounce (Glint Hawk): only skip when nothing is worth it and min is 0 — the Hawk then dies, so still return something
+        return scored.length ? [scored[0].c.id] : [];
       }
       case 'shuffleBack': {
         // recycle fogs and key spells first

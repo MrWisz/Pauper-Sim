@@ -2351,5 +2351,135 @@
   "keywords": [],
   "image": "https://cards.scryfall.io/normal/front/c/3/c3b71cc5-0a81-4cab-bae3-49335c04aaaa.jpg?1783940040",
   "art": "https://cards.scryfall.io/art_crop/front/c/3/c3b71cc5-0a81-4cab-bae3-49335c04aaaa.jpg?1783940040"
+ },
+ "Ancient Den": {
+  "name": "Ancient Den",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Artifact Land",
+  "oracle": "{T}: Add {W}.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/d/9/d9a7b0f6-97f9-4937-865c-e25c142c3ed7.jpg?1783906017",
+  "art": "https://cards.scryfall.io/art_crop/front/d/9/d9a7b0f6-97f9-4937-865c-e25c142c3ed7.jpg?1783906017"
+ },
+ "Dispatch": {
+  "name": "Dispatch",
+  "manaCost": "{W}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "Tap target creature.\nMetalcraft — If you control three or more artifacts, exile that creature.",
+  "colors": [
+   "W"
+  ],
+  "keywords": [
+   "Metalcraft"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/9/9/99d30a21-b003-4a17-a4c5-97811f230896.jpg?1783903251",
+  "art": "https://cards.scryfall.io/art_crop/front/9/9/99d30a21-b003-4a17-a4c5-97811f230896.jpg?1783903251"
+ },
+ "Glint Hawk": {
+  "name": "Glint Hawk",
+  "manaCost": "{W}",
+  "cmc": 1,
+  "typeLine": "Creature — Bird",
+  "oracle": "Flying\nWhen this creature enters, sacrifice it unless you return an artifact you control to its owner's hand.",
+  "colors": [
+   "W"
+  ],
+  "power": "2",
+  "toughness": "2",
+  "keywords": [
+   "Flying"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/2/8/284c4710-4183-4743-9c8b-515cc98cbbb8.jpg?1783941745",
+  "art": "https://cards.scryfall.io/art_crop/front/2/8/284c4710-4183-4743-9c8b-515cc98cbbb8.jpg?1783941745"
+ },
+ "Grim Bauble": {
+  "name": "Grim Bauble",
+  "manaCost": "{B}",
+  "cmc": 1,
+  "typeLine": "Artifact",
+  "oracle": "When this artifact enters, target creature an opponent controls gets -2/-2 until end of turn.\n{2}{B}, {T}, Sacrifice this artifact: Surveil 2. (Look at the top two cards of your library, then put any number of them into your graveyard and the rest on top of your library in any order.)",
+  "colors": [
+   "B"
+  ],
+  "keywords": [
+   "Surveil"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/9/b/9bfdf60a-6f67-4872-8961-d63776b192c3.jpg?1783907895",
+  "art": "https://cards.scryfall.io/art_crop/front/9/b/9bfdf60a-6f67-4872-8961-d63776b192c3.jpg?1783907895"
+ },
+ "Kor Skyfisher": {
+  "name": "Kor Skyfisher",
+  "manaCost": "{1}{W}",
+  "cmc": 2,
+  "typeLine": "Creature — Kor Soldier",
+  "oracle": "Flying\nWhen this creature enters, return a permanent you control to its owner's hand.",
+  "colors": [
+   "W"
+  ],
+  "power": "2",
+  "toughness": "3",
+  "keywords": [
+   "Flying"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/d/7/d7501662-1216-4e08-bd2b-e0a459057942.jpg?1783936681",
+  "art": "https://cards.scryfall.io/art_crop/front/d/7/d7501662-1216-4e08-bd2b-e0a459057942.jpg?1783936681"
+ },
+ "Razortide Bridge": {
+  "name": "Razortide Bridge",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Artifact Land",
+  "oracle": "This land enters tapped.\nIndestructible\n{T}: Add {W} or {U}.",
+  "colors": [],
+  "keywords": [
+   "Indestructible"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/0/b/0bbd24cd-48f7-40d7-9741-f30108f04b84.jpg?1783906009",
+  "art": "https://cards.scryfall.io/art_crop/front/0/b/0bbd24cd-48f7-40d7-9741-f30108f04b84.jpg?1783906009"
+ },
+ "Dust to Dust": {
+  "name": "Dust to Dust",
+  "manaCost": "{1}{W}{W}",
+  "cmc": 3,
+  "typeLine": "Sorcery",
+  "oracle": "Exile two target artifacts.",
+  "colors": [
+   "W"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/0/d/0daac8e4-12cb-42d0-8a9b-1fbede68967b.jpg?1787743258",
+  "art": "https://cards.scryfall.io/art_crop/front/0/d/0daac8e4-12cb-42d0-8a9b-1fbede68967b.jpg?1787743258"
+ },
+ "Tithing Blade": {
+  "name": "Tithing Blade",
+  "manaCost": "{1}{B}",
+  "cmc": 2,
+  "typeLine": "Artifact",
+  "oracle": "When this artifact enters, each opponent sacrifices a creature of their choice.\nCraft with creature {4}{B} ({4}{B}, Exile this artifact, Exile a creature you control or a creature card from your graveyard: Return this card transformed under its owner's control. Craft only as a sorcery.)",
+  "colors": [
+   "B"
+  ],
+  "keywords": [
+   "Craft",
+   "Transform"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/d/b/dbaa9a2d-e9fd-4746-a26c-f99ae731f024.jpg?1783913774",
+  "art": "https://cards.scryfall.io/art_crop/front/d/b/dbaa9a2d-e9fd-4746-a26c-f99ae731f024.jpg?1783913774",
+  "back": {
+   "name": "Consuming Sepulcher",
+   "manaCost": "",
+   "cmc": 2,
+   "typeLine": "Artifact",
+   "oracle": "At the beginning of your upkeep, each opponent loses 1 life and you gain 1 life.",
+   "colors": [
+    "B"
+   ],
+   "keywords": [],
+   "image": "https://cards.scryfall.io/normal/back/d/b/dbaa9a2d-e9fd-4746-a26c-f99ae731f024.jpg?1783913774",
+   "art": "https://cards.scryfall.io/art_crop/back/d/b/dbaa9a2d-e9fd-4746-a26c-f99ae731f024.jpg?1783913774"
+  }
  }
 }

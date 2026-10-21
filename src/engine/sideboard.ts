@@ -60,6 +60,7 @@ export function sideInValue(d: CardDef, p: MatchupProfile): number {
   const n = d.name;
   if (n === 'Pyroblast' || n === 'Red Elemental Blast') return p.blue >= 3 ? 4 + p.blue * 0.3 : 0;
   if (n === 'Hydroblast' || n === 'Blue Elemental Blast') return p.red >= 3 ? 4 + p.red * 0.3 : 0;
+  if (n === 'Tithing Blade') return p.hexproof >= 2 ? 5 : p.creatures >= 6 ? 3 : 0;
   if (n === 'Pulse of Murasa' || n === 'Spinewoods Paladin') return p.burn >= 4 ? 3.5 + p.burn * 0.1 : 0;
   if (n === 'Vitu-Ghazi Inspector') return p.fliers >= 4 ? 3.5 : 0;
   if (n === 'Monstrous Emergence') return p.creatures >= 6 && p.hexproof < 2 ? 3.5 : 0;

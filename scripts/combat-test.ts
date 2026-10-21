@@ -366,5 +366,46 @@ for (const mountains of [1, 3]) {
   check('Stream of Thought mills out the opponent', act.type === 'cast' && act.cardId === stream.id, `action ${act.type === 'cast' ? g.card(act.cardId)!.def.name : act.type}`);
 }
 
+// ───────────── Esper Affinity AI ─────────────
+
+// 22. Glint Hawk returns Cryogen Relic rather than a land or another artifact
+{
+  const { g, ai, put } = setup(20);
+  g.active = 1;
+  const seat = put(1, 'Seat of the Synod', true);
+  const relic = put(1, 'Cryogen Relic');
+  const map = put(1, 'Expedition Map');
+  const hawk = put(1, 'Glint Hawk');
+  const pick = ai.pickCards(g, { type: 'cards', player: 1, prompt: '', cards: [seat, relic, map], min: 0, max: 1, purpose: 'bounceOwn', source: hawk });
+  check('bounce prefers Cryogen Relic', pick[0] === relic.id, `returns ${g.card(pick[0])?.def.name}`);
+}
+
+// 23. No Glint Hawk without an artifact to return (it would be sacrificed)
+{
+  const { g, ai, put, hand } = setup(20);
+  g.active = 1;
+  g.step = 'main1';
+  put(1, 'Plains');
+  g.players[1].landsPlayedThisTurn = 1;
+  const hawk = hand(1, 'Glint Hawk');
+  const act = ai.decidePriority(g);
+  check('no Glint Hawk without an artifact', !(act.type === 'cast' && act.cardId === hawk.id), `action ${act.type === 'cast' ? g.card(act.cardId)!.def.name : act.type}`);
+}
+
+// 24. Dispatch only with metalcraft
+for (const arts of [1, 3]) {
+  const { g, ai, put, hand } = setup(20);
+  g.active = 1;
+  g.step = 'main1';
+  put(1, 'Plains');
+  for (let i = 0; i < arts; i++) put(1, 'Seat of the Synod');
+  g.players[1].landsPlayedThisTurn = 1;
+  put(0, 'Myr Enforcer');
+  const dispatch = hand(1, 'Dispatch');
+  const act = ai.decidePriority(g);
+  const cast = act.type === 'cast' && act.cardId === dispatch.id;
+  check(arts >= 3 ? 'Dispatch exiles with metalcraft' : 'no Dispatch without metalcraft', arts >= 3 ? cast : !cast, `artifacts ${arts}, cast=${cast}`);
+}
+
 console.log(failures ? `${failures} failure(s)` : 'all passed');
 process.exit(failures ? 1 : 0);

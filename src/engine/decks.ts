@@ -189,6 +189,31 @@ export const PRESETS: Record<string, string> = {
 4 Hydroblast
 2 Murmuring Mystic
 1 Vandalblast`,
+  'Esper Affinity': `2 Ancient Den
+4 Baleful Strix
+2 Blood Fountain
+4 Cryogen Relic
+4 Dispatch
+3 Giant's Boulder
+4 Glint Hawk
+1 Grim Bauble
+2 Kor Skyfisher
+4 Mistvault Bridge
+4 Myr Enforcer
+4 Razortide Bridge
+2 Reckoner's Bargain
+4 Refurbished Familiar
+4 Seat of the Synod
+4 Thoughtcast
+4 Utrom Monitor
+4 Vault of Whispers
+
+2 Arms of Hadar
+3 Dust to Dust
+2 Envelop
+4 Hydroblast
+2 Nihil Spellbomb
+2 Tithing Blade`,
   'Rakdos Madness': `4 Alms of the Vein
 4 Faithless Looting
 4 Fiery Temper
