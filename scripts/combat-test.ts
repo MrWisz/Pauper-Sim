@@ -260,5 +260,111 @@ for (const mountains of [1, 3]) {
   check('keep 1 land + 2 mana elves', keep && !ai.keepHand(g, oneLandNoElves, 0), `elf hand kept=${keep}, 1-lander without elves kept=${ai.keepHand(g, oneLandNoElves, 0)}`);
 }
 
+// ───────────── Tron AI ─────────────
+
+// 16. Fog: a big unblocked attack gets Moment's Peace (after blockers are declared)
+{
+  const { g, ai, put, hand } = setup(10);
+  g.active = 0;
+  g.step = 'declareBlockers';
+  put(1, 'Forest');
+  put(1, 'Island');
+  hand(1, "Moment's Peace");
+  for (const n of ['Myr Enforcer', 'Guttersnipe']) {
+    const a = put(0, n);
+    a.attacking = true;
+    a.tapped = true;
+  }
+  const act = ai.decidePriority(g);
+  const name = act.type === 'cast' ? g.card(act.cardId)!.def.name : act.type;
+  check("fog a 6-damage attack", name === "Moment's Peace", `action ${name}`);
+}
+
+// 17. ...but not a single 1/1 poke
+{
+  const { g, ai, put, hand } = setup(20);
+  g.active = 0;
+  g.step = 'declareBlockers';
+  put(1, 'Forest');
+  put(1, 'Island');
+  hand(1, "Moment's Peace");
+  const a = put(0, 'Voldaren Epicure');
+  a.attacking = true;
+  a.tapped = true;
+  const act = ai.decidePriority(g);
+  const name = act.type === 'cast' ? g.card(act.cardId)!.def.name : act.type;
+  check('no fog for 1 damage', name !== "Moment's Peace", `action ${name}`);
+}
+
+// 18. Keep fog mana up: with 3 lands, Moment's Peace in hand and a threatening board, don't tap out for a 2-drop artifact
+{
+  const { g, ai, put, hand } = setup(20);
+  g.active = 1;
+  g.step = 'main1';
+  put(1, 'Forest');
+  put(1, 'Island');
+  put(1, 'Island');
+  hand(1, "Moment's Peace");
+  hand(1, 'Generous Ent'); // can't afford anyway
+  const prism = hand(1, 'Prophetic Prism'); // 2 mana: leaves 1, not enough for Moment's Peace
+  put(0, 'Myr Enforcer');
+  put(0, 'Guttersnipe');
+  g.players[1].landsPlayedThisTurn = 1;
+  const act = ai.decidePriority(g);
+  check('holds up fog mana', !(act.type === 'cast' && act.cardId === prism.id), `action ${act.type === 'cast' ? g.card(act.cardId)!.def.name : act.type}`);
+}
+
+// 19. Assemble Tron: play the missing Urza piece over a basic
+{
+  const { g, ai, put, hand } = setup(20);
+  g.active = 1;
+  g.step = 'main1';
+  put(1, "Urza's Mine");
+  put(1, "Urza's Power Plant");
+  hand(1, 'Island');
+  const tower = hand(1, "Urza's Tower");
+  const act = ai.decidePriority(g);
+  check('plays the missing Tron piece', act.type === 'playLand' && act.cardId === tower.id, `plays ${act.type === 'playLand' ? g.card(act.cardId)!.def.name : act.type}`);
+}
+
+// 20. Crop Rotation: sacrifice the basic (not a Tron piece) to fetch the missing Urza land
+{
+  const { g, ai, put, hand } = setup(20);
+  g.active = 1;
+  g.step = 'main1';
+  const mine = put(1, "Urza's Mine");
+  const plant = put(1, "Urza's Power Plant");
+  const forest = put(1, 'Forest');
+  const tower = g.makeCard(getDef("Urza's Tower")!, 1);
+  tower.zone = 'library';
+  g.players[1].library.splice(10, 0, tower);
+  g.players[1].landsPlayedThisTurn = 1;
+  const crop = hand(1, 'Crop Rotation');
+  const act = ai.decidePriority(g);
+  const isCrop = act.type === 'cast' && act.cardId === crop.id;
+  if (isCrop) {
+    await g.perform(1, act);
+    while (g.stack.length) await g.resolveTop();
+  }
+  check(
+    'Crop Rotation completes Tron',
+    isCrop && tower.zone === 'battlefield' && forest.zone === 'graveyard' && mine.zone === 'battlefield' && plant.zone === 'battlefield',
+    `cast=${isCrop}, Tower in ${tower.zone}, Forest in ${forest.zone}`,
+  );
+}
+
+// 21. Stream of Thought for the win: opponent has 8 cards left, we can replicate once
+{
+  const { g, ai, put, hand } = setup(20);
+  g.active = 1;
+  g.step = 'main1';
+  for (let i = 0; i < 5; i++) put(1, 'Island');
+  g.players[1].landsPlayedThisTurn = 1;
+  g.players[0].library.splice(8);
+  const stream = hand(1, 'Stream of Thought');
+  const act = ai.decidePriority(g);
+  check('Stream of Thought mills out the opponent', act.type === 'cast' && act.cardId === stream.id, `action ${act.type === 'cast' ? g.card(act.cardId)!.def.name : act.type}`);
+}
+
 console.log(failures ? `${failures} failure(s)` : 'all passed');
 process.exit(failures ? 1 : 0);

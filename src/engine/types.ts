@@ -74,7 +74,13 @@ export interface Ctx {
 }
 
 export interface CastInfo {
-  method: 'normal' | 'madness' | 'flashback' | 'plot' | 'alt' | 'overload' | 'bestow' | 'omen';
+  method: 'normal' | 'madness' | 'flashback' | 'plot' | 'alt' | 'overload' | 'bestow' | 'omen' | 'foretell';
+  /** kicker paid */
+  kicked?: boolean;
+  /** number of times replicate was paid */
+  replicate?: number;
+  /** spells cast before this one this turn (storm) */
+  storm?: number;
   /** value chosen for X */
   x?: number;
   altIndex?: number;
@@ -222,6 +228,14 @@ export interface CardDef {
   entersWithXCounters?: boolean;
   /** Omen half (Sagu Wildling // Roost Seek): a sorcery that shuffles the card back into the library */
   omen?: { name: string; manaCost: string; text: string; resolve: (c: Ctx) => Promise<void> };
+  /** Kicker cost (optional extra cost) */
+  kicker?: string;
+  /** Replicate cost (pay any number of times to copy the spell) */
+  replicate?: string;
+  /** Storm: copy it for each spell cast before it this turn */
+  storm?: boolean;
+  /** Foretell cost: exile face down for {2} on your turn, cast later for this */
+  foretell?: string;
   /** extra condition to be able to cast at all */
   castCondition?: (g: Game, card: CardInstance, pid: PlayerId) => boolean;
   /** Ward {N} (mana) or Ward—Pay N life */
@@ -263,6 +277,7 @@ export interface AiHint {
     | 'gyHate'
     | 'artifactRemoval'
     | 'blast'
+    | 'fog'
     | 'other';
   amount?: number;
   /** only cast at instant speed in response / end of turn */
@@ -301,6 +316,8 @@ export interface CardInstance {
   goadedBy?: PlayerId;
   /** turn number each activated ability (by index) was last used, for once-per-turn abilities */
   lastActivated?: Record<number, number>;
+  /** turn it was foretold (exiled face down) */
+  foretoldTurn?: number;
   /** color chosen as it entered (Utopia Sprawl, Benevolent Blessing) */
   chosenColor?: Color;
   /** turn number this permanent entered (for "entered this turn") */
@@ -337,6 +354,8 @@ export interface Player {
   lost: boolean;
   drewFromEmpty: boolean;
   mulligans: number;
+  /** Circle of Protection: Blue shields left this turn */
+  copBlue?: number;
 }
 
 export type Action =
@@ -367,7 +386,7 @@ export type ChoiceRequest =
       max: number;
       cancellable?: boolean;
       /** reason, for the AI */
-      purpose: 'discard' | 'sacrifice' | 'putBack' | 'reveal' | 'search' | 'exileGraveyard' | 'returnLand' | 'other' | 'evidence' | 'graveyardReturn' | 'takeAll' | 'strongest';
+      purpose: 'discard' | 'sacrifice' | 'putBack' | 'reveal' | 'search' | 'exileGraveyard' | 'returnLand' | 'other' | 'evidence' | 'graveyardReturn' | 'takeAll' | 'strongest' | 'shuffleBack';
       source?: CardInstance;
     }
   | { type: 'yesno'; player: PlayerId; prompt: string; purpose: string; source?: CardInstance }
@@ -376,7 +395,7 @@ export type ChoiceRequest =
   | { type: 'blockers'; player: PlayerId; attackers: CardInstance[]; candidates: CardInstance[] }
   | { type: 'scry'; player: PlayerId; cards: CardInstance[] }
   | { type: 'order'; player: PlayerId; prompt: string; cards: CardInstance[] }
-  | { type: 'number'; player: PlayerId; prompt: string; min: number; max: number; source: CardInstance; purpose: 'x' };
+  | { type: 'number'; player: PlayerId; prompt: string; min: number; max: number; source: CardInstance; purpose: 'x' | 'replicate' };
 
 export interface Controller {
   choose(g: Game, req: ChoiceRequest): Promise<any>;

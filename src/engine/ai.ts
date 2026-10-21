@@ -3,6 +3,9 @@ import { targetKey } from './game';
 import { parseCost, costMV } from './mana';
 import type { Action, CardInstance, ChoiceRequest, Controller, ManaColor, PlayerId, StackItem, Target, TargetSpec } from './types';
 
+/** Urza's Tron pieces (land subtypes) */
+const TRON = ['Mine', 'Power-Plant', 'Tower'];
+
 /** cards whose targeted effects help the creature they target */
 const BENEFICIAL_SOURCES = new Set(['Timberwatch Elf', 'Quirion Ranger', 'Vitu-Ghazi Inspector', 'Toxin Analysis']);
 
@@ -197,6 +200,10 @@ export class AIController implements Controller {
 
     if (!myTurn) {
       // removal on attackers
+      if (g.step === 'declareBlockers') {
+        const fog = this.fogResponse(g, all);
+        if (fog) return fog;
+      }
       if (g.step === 'declareAttackers' || g.step === 'declareBlockers') {
         // facing lethal: spend whatever removal saves the most damage, before anything else
         const save = this.emergencyResponse(g, all);
@@ -230,6 +237,11 @@ export class AIController implements Controller {
             Object.values(g.players[theirs].pool).reduce((s, n) => s + n, 0) +
             g.manaSources(theirs).reduce((s, src) => s + Math.max(...src.options.map((o) => o.length)), 0);
           if (avail >= tax) continue;
+        }
+        if (c.def.name === 'Prohibit') {
+          const canKick = g.canPay(me, g.spellCost(me, c, a.method, undefined, 0, true));
+          if (top.mv > (canKick ? 4 : 2)) continue;
+          this.wantKick = top.mv > 2;
         }
         const spec = g.modesFor(c, a.method)[0].targets?.[0];
         if (spec && g.isTargetLegal(spec, { kind: 'stack', id: top.id }, { controller: me, source: c, chosen: [] })) {
@@ -302,6 +314,8 @@ export class AIController implements Controller {
       const castableNow = g.players[me].hand.some((c) => !g.isLand(c) && costMV(g.spellCost(me, c, 'normal')) <= this.availableMana(g) + 1);
       if (tapped) s += castableNow ? -2 : 2;
       if (l.def.triggers?.some((t) => t.text.includes('damage to target opponent'))) s += 1;
+      const piece = TRON.find((p) => g.hasSubtype(l, p));
+      if (piece) s += g.lands(me).some((x) => g.hasSubtype(x, piece)) ? -2 : 6;
       return s;
     };
     lands.sort((a, b) => score(b) - score(a));
@@ -314,7 +328,14 @@ export class AIController implements Controller {
     const aggro = this.isAggro(g);
     const main1 = g.step === 'main1';
     let best: { a: Action; s: number; intent?: Intent } | null = null;
+    // fog decks keep mana up for Moment's Peace / Tangle while the opponent has an army
+    const reserve = this.fogReserve(g);
+    const avail = this.availableMana(g);
     const consider = (a: Action, s: number, intent?: Intent) => {
+      if (reserve && s < 90) {
+        const cost = this.actionCost(g, a);
+        if (cost > 0 && avail - cost < reserve && !this.isFog(g, a)) return;
+      }
       if (s > 0 && (!best || s > best.s)) best = { a, s, intent };
     };
 
@@ -369,6 +390,20 @@ export class AIController implements Controller {
             });
             continue;
           }
+        }
+        if (c.def.name === 'Crop Rotation') {
+          // fetch the missing Urza piece (sacrificing a land that isn't a needed piece)
+          const missing = this.missingTron(g);
+          const fodder = g.lands(me).some((l) => this.sacCost(g, l) < 10);
+          if (missing.length === 1 && fodder && g.players[me].library.some((x) => g.hasSubtype(x, missing[0]))) consider(a, 26);
+          continue;
+        }
+        if (c.def.name === 'Stream of Thought') {
+          const maxRep = this.maxReplicate(g, c);
+          const oppLib = g.players[opp].library.length;
+          if (oppLib <= 4 * (1 + maxRep)) consider(a, 95, { cardId: c.id, targets: [{ kind: 'player', pid: opp }] });
+          else if (!main1 && maxRep >= 1) consider(a, 6, { cardId: c.id, targets: [{ kind: 'player', pid: opp }] });
+          continue;
         }
         if (c.def.name === 'Bushwhack') {
           const lands = g.lands(me).length + g.players[me].hand.filter((x) => g.isLand(x)).length;
@@ -460,6 +495,9 @@ export class AIController implements Controller {
             } else if (ab.label?.startsWith('Return a Forest')) {
               const plan = this.quirionManaPlan(g);
               if (plan) consider(a, 30, { cardId: c.id, targets: [{ kind: 'card', id: plan.id }] });
+            } else if (ab.label === 'Search for a land') {
+              if (this.missingTron(g).length) consider(a, 11);
+              else if (g.lands(me).length < 4) consider(a, 5);
             } else if (ab.label === 'Exile a graveyard') {
               const gy = g.players[opp].graveyard;
               if (gy.some((x) => x.def.flashback || x.def.triggers?.some((t) => t.zone === 'graveyard'))) consider(a, 9, { cardId: c.id, targets: [{ kind: 'player', pid: opp }] });
@@ -544,6 +582,87 @@ export class AIController implements Controller {
     }
     if (c.def.name === 'Highway Robbery') return hand.some((x) => x.def.madness) ? 11 : 5;
     return 8;
+  }
+
+  wantKick?: boolean;
+
+  /** Urza pieces we don't control yet */
+  missingTron(g: Game): string[] {
+    const me = this.me;
+    const deckHasTron = [...g.players[me].library, ...g.players[me].hand, ...g.lands(me)].some((c) => TRON.some((p) => g.hasSubtype(c, p)));
+    if (!deckHasTron) return [];
+    return TRON.filter((p) => !g.lands(me).some((l) => g.hasSubtype(l, p)));
+  }
+
+  maxReplicate(g: Game, c: CardInstance) {
+    let r = 0;
+    while (r < 10 && g.canPay(this.me, g.spellCost(this.me, c, 'normal', undefined, 0, false, r + 1))) r++;
+    return r;
+  }
+
+  isFog(g: Game, a: Action) {
+    return a.type === 'cast' && g.card(a.cardId)!.def.ai?.kind === 'fog';
+  }
+
+  /** mana an action would cost us */
+  actionCost(g: Game, a: Action): number {
+    if (a.type === 'cast') {
+      const c = g.card(a.cardId)!;
+      return costMV(g.spellCost(this.me, c, a.method, a.altIndex));
+    }
+    if (a.type === 'activate') {
+      const ab = g.card(a.cardId)!.def.activated![a.index];
+      return costMV(parseCost(ab.cost.mana));
+    }
+    return 0;
+  }
+
+  /** how much mana to keep open for a fog (0 if no fog or no real attack coming) */
+  fogReserve(g: Game): number {
+    const me = this.me;
+    const opp = this.opp(g);
+    const threat = g.creatures(opp).reduce((s, c) => s + Math.max(0, g.power(c)), 0);
+    if (threat < 3) return 0;
+    const costs: number[] = [];
+    for (const c of g.players[me].hand) if (c.def.ai?.kind === 'fog') costs.push(costMV(g.spellCost(me, c, 'normal')));
+    for (const c of g.players[me].graveyard) if (c.def.ai?.kind === 'fog' && c.def.flashback) costs.push(costMV(g.spellCost(me, c, 'flashback')));
+    return costs.length ? Math.min(...costs) : 0;
+  }
+
+  /** Opponent's attack, after blocks: fog it if it would hurt; Circle of Protection: Blue against blue attackers */
+  private fogResponse(g: Game, all: Action[]): Action | null {
+    const me = this.me;
+    const opp = this.opp(g);
+    const attackers = g.attackers().filter((a) => a.controller === opp);
+    if (!attackers.length || g.preventCombatTurn === g.turn || g.preventCreatureTurn === g.turn) return null;
+    const blocks: Record<number, number> = {};
+    for (const a of attackers) for (const id of a.blockedBy) blocks[id] = a.id;
+    const through = this.damageThrough(g, attackers, blocks);
+    const life = g.players[me].life - this.reachMargin(g, opp);
+    // our blockers that would die also count
+    const losses = g.creatures(me).filter((b) => b.blocking !== null && this.kills(g, g.card(b.blocking)!, b)).reduce((s, b) => s + this.value(g, b), 0);
+    const worth = through >= life || through >= 4 || (through >= 2 && attackers.length >= 3) || losses >= 6;
+    if (worth) {
+      // Tangle when several attackers (they stay tapped), cast from hand before flashback
+      const fogs = all
+        .filter((a) => this.isFog(g, a))
+        .map((a) => {
+          const c = g.card((a as Extract<Action, { type: 'cast' }>).cardId)!;
+          let score = 10 - this.actionCost(g, a);
+          if (c.def.name === 'Tangle' && attackers.length >= 2) score += 3;
+          if (a.type === 'cast' && a.method === 'flashback') score -= 2;
+          return { a, score };
+        })
+        .sort((x, y) => y.score - x.score);
+      if (fogs[0]) return fogs[0].a;
+    }
+    // Circle of Protection: Blue: one shield per unblocked blue attacker
+    const blueHits = attackers.filter((a) => !a.wasBlocked && a.def.colors.includes('U')).length;
+    if (blueHits > (g.players[me].copBlue ?? 0)) {
+      const cop = all.find((a) => a.type === 'activate' && g.card(a.cardId)!.def.name === 'Circle of Protection: Blue');
+      if (cop) return cop;
+    }
+    return null;
   }
 
   /** Biggest X we could pay for this spell right now */
@@ -669,7 +788,11 @@ export class AIController implements Controller {
   sacCost(g: Game, c: CardInstance) {
     if (c.def.isToken && !g.isCreature(c)) return 0;
     if (c.def.triggers?.some((t) => t.event === 'ltb')) return 0.5; // Ichor Wellspring, Spellbomb
-    if (g.isLand(c)) return g.lands(this.me).length >= 5 ? 2 : 6;
+    if (g.isLand(c)) {
+      const piece = TRON.find((p) => g.hasSubtype(c, p));
+      if (piece && g.lands(this.me).filter((x) => g.hasSubtype(x, piece)).length === 1) return 10;
+      return g.lands(this.me).length >= 5 ? 2 : 6;
+    }
     if (g.isCreature(c)) return this.value(g, c);
     return 1.5 + c.def.cmc;
   }
@@ -811,6 +934,9 @@ export class AIController implements Controller {
     const r = this.bestRemoval(g, all, false);
     if (r) return r;
     for (const a of all) {
+      if (a.type === 'cast' && g.card(a.cardId)!.def.name === 'Weather the Storm' && g.players[me].life < 12) return a;
+    }
+    for (const a of all) {
       if (a.type === 'cast') {
         const c = g.card(a.cardId)!;
         if (c.def.ai?.kind === 'draw' && (g.is(c, 'Instant') || g.hasKeyword(c, 'flash')) && !c.def.additionalCost) return a;
@@ -822,6 +948,7 @@ export class AIController implements Controller {
         if (ab.ai === 'draw' && !ab.cost.discard) return a;
         if (ab.label === 'Gain 2 life' && g.players[me].life < 20) return a;
         if (ab.label === 'Gain 3 life' && g.players[me].life < 15) return a;
+        if (ab.label === 'Gain 5 life' && g.players[me].life < 12) return a;
         if (ab.label === 'Fetch basic land' && !g.attachments(c).length) return a;
       }
     }
@@ -1043,6 +1170,25 @@ export class AIController implements Controller {
         const sorted = [...cards].sort((a, b) => this.value(g, a) - this.value(g, b));
         return want(Math.max(1, min), sorted);
       }
+      case 'shuffleBack': {
+        // recycle fogs and key spells first
+        const prio = (c: CardInstance) =>
+          c.def.ai?.kind === 'fog' ? 10 : c.def.name === 'Mystical Teachings' ? 8 : c.def.name === 'Stream of Thought' ? 7 : g.isLand(c) ? 0 : 3 + c.def.cmc * 0.1;
+        return [...cards].filter((c) => prio(c) > 0).sort((a, b) => prio(b) - prio(a)).slice(0, max).map((c) => c.id);
+      }
+      case 'search': {
+        // lands: the missing Urza piece; Mystical Teachings: a fog when we have none
+        const missing = this.missingTron(g);
+        const piece = cards.find((c) => missing.some((m) => g.hasSubtype(c, m)));
+        if (piece) return [piece.id];
+        const hand = g.players[me].hand;
+        if (!hand.some((c) => c.def.ai?.kind === 'fog')) {
+          const fog = cards.find((c) => c.def.ai?.kind === 'fog');
+          if (fog) return [fog.id];
+        }
+        const sorted = [...cards].sort((a, b) => this.value(g, b) - this.value(g, a));
+        return want(Math.max(min, Math.min(max, 1)), sorted);
+      }
       case 'takeAll':
         return cards.map((c) => c.id);
       case 'strongest': {
@@ -1080,6 +1226,8 @@ export class AIController implements Controller {
   yesNo(g: Game, purpose: string, src?: CardInstance) {
     if (purpose === 'evidence') return g.creatures(this.opp(g)).length >= 2;
     if (purpose === 'exploreMill') return false;
+    if (purpose === 'kicker') return this.wantKick ?? true;
+    if (purpose === 'surveil' && src) return this.scry(g, [src]).bottom.length > 0;
     if (purpose === 'ponderShuffle') {
       // shuffle away a top three that doesn't give us what we need
       const me = this.me;

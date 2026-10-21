@@ -114,6 +114,12 @@ export class Game {
   paceMs = 0;
   /** turn during which damage can't be prevented (Flaring Pain) */
   preventionTurn = -1;
+  /** "prevent all combat damage this turn" (Moment's Peace, Tangle) */
+  preventCombatTurn = -1;
+  /** "prevent all damage that would be dealt by creatures this turn" (Ethereal Haze) */
+  preventCreatureTurn = -1;
+  /** spells cast this turn (storm) */
+  spellsThisTurn = 0;
   private nextId = 1;
   private listeners = new Set<() => void>();
   private monarchSource: CardInstance;
@@ -676,6 +682,7 @@ export class Game {
     this.turn++;
     const ap = this.active;
     this.turnStartTick[ap] = ++this.tick;
+    this.spellsThisTurn = 0;
     for (const c of this.battlefield) {
       if (c.controller === ap && c.nextTurnKeywords) c.nextTurnKeywords = undefined;
       if (c.goadedBy === ap) c.goadedBy = undefined;
@@ -757,7 +764,10 @@ export class Game {
       c.tempToughness = 0;
       c.tempKeywords = [];
     }
-    for (const pl of this.players) pl.pool = emptyPool();
+    for (const pl of this.players) {
+      pl.pool = emptyPool();
+      pl.copBlue = 0;
+    }
     // madness triggers from cleanup discards
     if (this.pendingTriggers.length) {
       await this.priorityStep();
@@ -945,8 +955,8 @@ export class Game {
     const playerHits = new Map<number, { src: CardInstance; player: PlayerId; n: number }>();
     for (const as of assignments) {
       if (typeof as.to === 'number') {
-        this.dealDamage(as.src, { kind: 'player', pid: as.to }, as.n, true);
-        playerHits.set(as.src.id, { src: as.src, player: as.to, n: as.n });
+        const dealt = this.dealDamage(as.src, { kind: 'player', pid: as.to }, as.n, true);
+        if (dealt > 0) playerHits.set(as.src.id, { src: as.src, player: as.to, n: dealt });
       } else this.dealDamage(as.src, { kind: 'card', id: as.to.id }, as.n, true);
     }
     this.changed();
@@ -1011,13 +1021,69 @@ export class Game {
     return { asMana, asLife: { ...cost, phyrexian: undefined }, life: 2 * cost.phyrexian.length };
   }
 
+  /** "{1}, {T}: Add one mana of any color" style abilities usable to fix colors while paying */
+  private filterAbilities(pid: PlayerId, exclude?: Set<number>) {
+    const out: { card: CardInstance; n: number; tap: boolean }[] = [];
+    for (const c of this.permanents(pid)) {
+      if (exclude?.has(c.id)) continue;
+      for (const a of c.def.activated ?? []) {
+        if (!a.produces || !a.cost.mana || a.cost.sacSelf || a.produces.length < 5) continue;
+        if (a.cost.tap && (c.tapped || (this.isCreature(c) && this.isSick(c)))) continue;
+        out.push({ card: c, n: costMV(parseCost(a.cost.mana)), tap: !!a.cost.tap });
+        break;
+      }
+    }
+    return out.sort((a, b) => a.n - b.n);
+  }
+
+  /**
+   * Find a way to pay: plain sources first; if colors are missing, route some colored symbols through
+   * filters (each one turns N mana of any kind into one mana of the color we need).
+   */
+  private planPayment(pid: PlayerId, cost: Cost, exclude?: Set<number>): { cost: Cost; filters: { card: CardInstance; color: string }[] } | null {
+    const pool = this.players[pid].pool;
+    if (solvePayment(cost, pool, this.manaSources(pid, exclude))) return { cost, filters: [] };
+    const filters = this.filterAbilities(pid, exclude);
+    if (!filters.length) return null;
+    const slots: string[] = [];
+    for (const k of ['W', 'U', 'B', 'R', 'G'] as const) for (let i = 0; i < cost[k]; i++) slots.push(k);
+    const max = Math.min(slots.length, 3);
+    const combos = (k: number, start = 0): number[][] =>
+      k === 0 ? [[]] : slots.slice(start).flatMap((_, i) => combos(k - 1, start + i + 1).map((rest) => [start + i, ...rest]));
+    for (let m = 1; m <= max; m++) {
+      for (const combo of combos(m)) {
+        const c2: Cost = { ...cost };
+        const used: { card: CardInstance; color: string }[] = [];
+        const ex = new Set(exclude ?? []);
+        let ok = true;
+        let fi = 0;
+        for (const slot of combo) {
+          // tap-filters are used once; untapped ones (Energy Refractor) can be used again
+          let f = filters[fi];
+          while (f && f.tap && ex.has(f.card.id)) f = filters[++fi];
+          if (!f) {
+            ok = false;
+            break;
+          }
+          const color = slots[slot];
+          (c2 as any)[color]--;
+          c2.generic += f.n;
+          used.push({ card: f.card, color });
+          if (f.tap) ex.add(f.card.id);
+        }
+        if (ok && solvePayment(c2, pool, this.manaSources(pid, ex))) return { cost: c2, filters: used };
+      }
+    }
+    return null;
+  }
+
   canPay(pid: PlayerId, cost: Cost, exclude?: Set<number>): boolean {
     const ph = this.phyrexianOptions(cost);
     if (ph) {
       if (this.canPay(pid, ph.asMana, exclude)) return true;
       return this.players[pid].life > ph.life && this.canPay(pid, ph.asLife, exclude);
     }
-    return !!solvePayment(cost, this.players[pid].pool, this.manaSources(pid, exclude));
+    return !!this.planPayment(pid, cost, exclude);
   }
 
   async payMana(pid: PlayerId, cost: Cost): Promise<boolean> {
@@ -1030,7 +1096,17 @@ export class Game {
       return this.payMana(pid, ph.asLife);
     }
     if (costMV(cost) === 0) return true;
-    const sol = solvePayment(cost, this.players[pid].pool, this.manaSources(pid));
+    const plan = this.planPayment(pid, cost);
+    if (!plan) return false;
+    const ex = new Set<number>();
+    for (const f of plan.filters) {
+      if ((f.card.def.activated ?? []).some((a) => a.produces && a.cost.mana && a.cost.tap)) {
+        f.card.tapped = true;
+        ex.add(f.card.id);
+      }
+      this.log(`${f.card.def.name} filters mana into {${f.color}}.`, pid);
+    }
+    const sol = solvePayment(plan.cost, this.players[pid].pool, this.manaSources(pid, ex));
     if (!sol) return false;
     for (const t of sol.taps) {
       const c = this.card(t.id)!;
@@ -1073,7 +1149,7 @@ export class Game {
 
   // ───────────────────────────── costs ─────────────────────────────
 
-  spellCost(pid: PlayerId, card: CardInstance, method: CastInfo['method'], altIndex?: number, x = 0): Cost {
+  spellCost(pid: PlayerId, card: CardInstance, method: CastInfo['method'], altIndex?: number, x = 0, kicked = false, replicate = 0): Cost {
     const d = card.def;
     let cost: Cost;
     switch (method) {
@@ -1098,6 +1174,9 @@ export class Game {
       case 'omen':
         cost = parseCost(d.omen?.manaCost);
         break;
+      case 'foretell':
+        cost = parseCost(d.foretell);
+        break;
       default:
         cost = parseCost(d.manaCost);
     }
@@ -1109,6 +1188,8 @@ export class Game {
     }
     // {X}: the chosen value is paid as generic mana
     if (cost.x) cost.generic += cost.x * x;
+    if (kicked && d.kicker) cost = addCosts(cost, parseCost(d.kicker));
+    for (let i = 0; i < replicate && d.replicate; i++) cost = addCosts(cost, parseCost(d.replicate));
     return cost;
   }
 
@@ -1175,6 +1256,8 @@ export class Game {
     if (method === 'plot' && (c.zone !== 'exile' || c.plottedTurn === null || c.plottedTurn >= this.turn || c.owner !== pid))
       return false;
     if (method === 'madness' && c.zone !== 'exile') return false;
+    if (method === 'foretell' && (c.zone !== 'exile' || !d.foretell || c.foretoldTurn === undefined || c.foretoldTurn >= this.turn || c.owner !== pid))
+      return false;
     if (method === 'overload' && !d.overload) return false;
     if (method === 'alt') {
       const alt = d.altCosts?.[altIndex ?? 0];
@@ -1213,6 +1296,7 @@ export class Game {
         out.push({ method: 'flashback', label: d.flashback?.label ?? `Flashback ${d.flashback?.mana ?? d.flashback?.altLabel ?? ''}` });
     } else if (c.zone === 'exile') {
       if (this.canCast(pid, c, 'plot', undefined, ignoreTiming)) out.push({ method: 'plot', label: 'Cast plotted card (free)' });
+      if (this.canCast(pid, c, 'foretell', undefined, ignoreTiming)) out.push({ method: 'foretell', label: `Cast foretold ${d.name} ${d.foretell}` });
     }
     return out;
   }
@@ -1472,7 +1556,29 @@ export class Game {
     }
 
     // 4. pay mana
-    const cost = this.spellCost(pid, c, method, altIndex, info.x ?? 0);
+    // 2c. kicker / replicate
+    if (d.kicker && this.canPay(pid, this.spellCost(pid, c, method, altIndex, info.x ?? 0, true))) {
+      info.kicked = await this.yesNo(pid, `Pay kicker ${d.kicker} for ${d.name}?`, 'kicker', c);
+    }
+    if (d.replicate) {
+      let max = 0;
+      while (max < 10 && this.canPay(pid, this.spellCost(pid, c, method, altIndex, info.x ?? 0, info.kicked, max + 1))) max++;
+      if (max > 0) {
+        const r = await this.ask<number | null>(pid, {
+          type: 'number',
+          player: pid,
+          prompt: `${d.name}: how many times to pay replicate ${d.replicate}?`,
+          min: 0,
+          max,
+          source: c,
+          purpose: 'replicate',
+        });
+        if (r === null || r === undefined) return false;
+        info.replicate = Math.max(0, Math.min(max, r));
+      }
+    }
+    info.storm = this.spellsThisTurn;
+    const cost = this.spellCost(pid, c, method, altIndex, info.x ?? 0, info.kicked, info.replicate ?? 0);
     if (!(await this.payMana(pid, cost))) {
       this.log(`Couldn't pay for ${d.name}.`, pid);
       return false;
@@ -1518,6 +1624,7 @@ export class Game {
       mv: d.cmc,
     };
     this.stack.push(item);
+    this.spellsThisTurn++;
     this.pushFx({ type: 'cast', card: c, controller: pid, text: modes[mode].text });
     const how = method === 'normal' ? '' : method === 'alt' ? ` (${d.altCosts![altIndex ?? 0].label})` : ` (${method})`;
     this.log(`${this.players[pid].name} casts ${d.name}${how}${this.describeTargets(targets)}.`, pid);
@@ -1838,17 +1945,32 @@ export class Game {
 
   // ───────────────────────────── effects ─────────────────────────────
 
-  dealDamage(source: CardInstance, t: Target | PlayerId | CardInstance, n: number, combat = false) {
-    if (n <= 0) return;
+  dealDamage(source: CardInstance, t: Target | PlayerId | CardInstance, n: number, combat = false): number {
+    if (n <= 0) return 0;
     let target: Target;
     if (typeof t === 'number') target = { kind: 'player', pid: t };
     else if ('def' in t) target = { kind: 'card', id: t.id };
     else target = t;
+    if (this.preventionTurn !== this.turn) {
+      if (combat && this.preventCombatTurn === this.turn) {
+        this.log(`Combat damage from ${source.def.name} is prevented.`, source.controller);
+        return 0;
+      }
+      if (this.preventCreatureTurn === this.turn && this.isCreature(source)) {
+        this.log(`Damage from ${source.def.name} is prevented.`, source.controller);
+        return 0;
+      }
+      if (target.kind === 'player' && source.def.colors.includes('U') && (this.players[target.pid].copBlue ?? 0) > 0) {
+        this.players[target.pid].copBlue!--;
+        this.log(`Circle of Protection: Blue prevents damage from ${source.def.name}.`, target.pid);
+        return 0;
+      }
+    }
     if (target.kind === 'card' && this.preventionTurn !== this.turn) {
       const c = this.card(target.id);
       if (c && this.protectedFrom(c, source)) {
         this.log(`Damage from ${source.def.name} to ${c.def.name} is prevented (protection).`, source.controller);
-        return;
+        return 0;
       }
     }
     if (target.kind === 'player') {
@@ -1857,16 +1979,17 @@ export class Game {
       this.log(`${source.def.name} deals ${n} damage to ${this.players[target.pid].name}.`, source.controller);
     } else if (target.kind === 'card') {
       const c = this.card(target.id);
-      if (!c || c.zone !== 'battlefield' || !this.isCreature(c)) return;
+      if (!c || c.zone !== 'battlefield' || !this.isCreature(c)) return 0;
       c.damage += n;
       this.pushFx({ type: 'damage', target, amount: n });
       if (this.hasKeyword(source, 'deathtouch')) c.deathtouched = true;
       this.log(`${source.def.name} deals ${n} damage to ${c.def.name}.`, source.controller);
-    } else return;
+    } else return 0;
     if (this.hasKeyword(source, 'lifelink')) this.gainLife(source.controller, n);
     if (source.zone === 'battlefield')
       for (const e of this.attachments(source)) if (e.def.grant?.damageLifegain) this.gainLife(e.controller, n);
     this.changed();
+    return n;
   }
 
   loseLife(pid: PlayerId, n: number) {
@@ -2111,6 +2234,14 @@ const NON_CREATURE_SUBTYPES = new Set([
   'Forest', 'Island', 'Swamp', 'Mountain', 'Plains', 'Desert',
   'Aura', 'Cartouche', 'Equipment', 'Blood', 'Clue', 'Food', 'Map', 'Treasure',
 ]);
+
+function addCosts(a: Cost, b: Cost): Cost {
+  const out: Cost = { ...a };
+  for (const k of ['generic', 'W', 'U', 'B', 'R', 'G', 'C'] as const) out[k] += b[k];
+  if (b.hybrid?.length) out.hybrid = [...(a.hybrid ?? []), ...b.hybrid];
+  if (b.phyrexian?.length) out.phyrexian = [...(a.phyrexian ?? []), ...b.phyrexian];
+  return out;
+}
 
 export function isManaAbility(a: ActivatedDef) {
   return !!(a.produces || a.producesFn);

@@ -26,6 +26,7 @@ import {
 import { boglesScripts, boglesTokens } from './bogles';
 import { blueTerrorScripts, blueTerrorTokens } from './blueterror';
 import { elvesScripts, elvesTokens } from './elves';
+import { tronScripts } from './tron';
 
 /** Behaviour overrides keyed by card name. Base stats come from cardData.json. */
 export type Script = Partial<CardDef>;
@@ -192,12 +193,12 @@ export const scripts: Record<string, Script> = {
   },
   'Kessig Flamebreather': {
     triggers: [
-      castTrigger('Deal 1 damage to each opponent.', nonCreatureSpell, async (c) => c.g.dealDamage(c.src, c.opp, 1)),
+      castTrigger('Deal 1 damage to each opponent.', nonCreatureSpell, async (c) => void c.g.dealDamage(c.src, c.opp, 1)),
     ],
   },
   Guttersnipe: {
     triggers: [
-      castTrigger('Deal 2 damage to each opponent.', instantOrSorcery, async (c) => c.g.dealDamage(c.src, c.opp, 2)),
+      castTrigger('Deal 2 damage to each opponent.', instantOrSorcery, async (c) => void c.g.dealDamage(c.src, c.opp, 2)),
     ],
   },
   'Faithless Looting': {
@@ -973,3 +974,5 @@ Object.assign(tokenScripts, blueTerrorTokens);
 
 Object.assign(scripts, elvesScripts);
 Object.assign(tokenScripts, elvesTokens);
+
+Object.assign(scripts, tronScripts);

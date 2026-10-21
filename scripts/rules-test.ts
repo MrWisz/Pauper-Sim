@@ -322,5 +322,130 @@ for (const islands of [0, 1]) {
   check('Gingerbread Cabin untapped + Food', !cabin.tapped && g.permanents(0).some((c) => c.def.name === 'Food'), `tapped=${cabin.tapped}`);
 }
 
+// ───────────── Tron ─────────────
+
+// Urza's Tron: Mine + Power Plant + Tower = 7 mana; one piece alone is 1
+{
+  const { g, put } = setup();
+  const mine = put(0, "Urza's Mine");
+  const onePiece = g.manaSources(0).reduce((s, x) => s + x.options[0].length, 0);
+  put(0, "Urza's Power Plant");
+  put(0, "Urza's Tower");
+  const tron = g.manaSources(0).reduce((s, x) => s + x.options[0].length, 0);
+  check('Urza Tron mana', onePiece === 1 && tron === 7, `one piece ${onePiece}, assembled ${tron}`);
+  void mine;
+}
+
+// Color filters: Ethereal Haze ({W}) cast off Islands with a Prophetic Prism
+{
+  const { g, put, inHand, resolveAll } = setup();
+  put(0, 'Island');
+  put(0, 'Island');
+  const prism = put(0, 'Prophetic Prism');
+  const haze = inHand(0, 'Ethereal Haze');
+  const can = g.canCast(0, haze, 'normal');
+  const ok = await g.castSpell(0, haze, 'normal');
+  await resolveAll();
+  check('Prism fixes {W} for Ethereal Haze', can && ok && prism.tapped && g.preventCreatureTurn === g.turn, `castable=${can}, cast=${ok}, Prism tapped=${prism.tapped}`);
+}
+
+// Moment's Peace: no combat damage, and "deals combat damage to a player" triggers don't fire
+{
+  const { g, put } = setup();
+  const ninja = put(1, 'Ninja of the Deep Hours');
+  g.active = 1;
+  ninja.attacking = true;
+  g.preventCombatTurn = g.turn;
+  const handBefore = g.players[1].hand.length;
+  await (g as any).combatDamage(false);
+  await g.stateCheck();
+  while (g.stack.length) await g.resolveTop();
+  check('fog prevents damage and the Ninja draw', g.players[0].life === 20 && g.players[1].hand.length === handBefore, `life ${g.players[0].life}, Ninja drew ${g.players[1].hand.length - handBefore}`);
+}
+
+// Tangle: attackers stay tapped next untap
+{
+  const { g, put, inHand, resolveAll } = setup();
+  put(0, 'Forest');
+  put(0, 'Forest');
+  const atk = put(1, 'Ninja of the Deep Hours');
+  atk.attacking = true;
+  atk.tapped = true;
+  const tangle = inHand(0, 'Tangle');
+  await g.castSpell(0, tangle, 'normal');
+  await resolveAll();
+  check('Tangle freezes attackers', g.preventCombatTurn === g.turn && atk.counters.frozen === 1, `frozen=${atk.counters.frozen}`);
+}
+
+// Prohibit: kicked it counters mana value 4
+{
+  const { g, put, inHand } = setup({ yes: true });
+  for (let i = 0; i < 4; i++) put(0, 'Island');
+  const ent = g.makeCard(getDef('Ninja of the Deep Hours')!, 1); // mana value 4
+  ent.zone = 'stack';
+  const item = { id: 777, kind: 'spell' as const, controller: 1 as PlayerId, card: ent, text: '', targets: [], specs: [], mode: 0, info: { method: 'normal' as const }, mv: 4 };
+  g.stack.push(item);
+  const prohibit = inHand(0, 'Prohibit');
+  (g.controllers[0] as any).choose = async (gg: Game, r: any) => (r.type === 'targets' ? [{ kind: 'stack', id: 777 }] : r.type === 'yesno' ? true : { type: 'pass' });
+  await g.castSpell(0, prohibit, 'normal');
+  await g.resolveTop();
+  check('kicked Prohibit counters MV 4', !g.stack.includes(item), `countered=${!g.stack.includes(item)}`);
+}
+
+// Stream of Thought with one replicate mills 8
+{
+  const { g, put, inHand, resolveAll } = setup();
+  for (let i = 0; i < 5; i++) put(0, 'Island');
+  const stream = inHand(0, 'Stream of Thought');
+  (g.controllers[0] as any).choose = async (gg: Game, r: any) =>
+    r.type === 'targets' ? [{ kind: 'player', pid: 1 }] : r.type === 'number' ? 1 : r.type === 'cards' ? [] : { type: 'pass' };
+  const before = g.players[1].library.length;
+  await g.castSpell(0, stream, 'normal');
+  await resolveAll();
+  check('Stream of Thought replicated mills 8', before - g.players[1].library.length === 8, `milled ${before - g.players[1].library.length}`);
+}
+
+// Weather the Storm after two other spells gains 9
+{
+  const { g, put, inHand, resolveAll } = setup();
+  put(0, 'Forest');
+  put(0, 'Forest');
+  g.spellsThisTurn = 2;
+  const wts = inHand(0, 'Weather the Storm');
+  await g.castSpell(0, wts, 'normal');
+  await resolveAll();
+  check('Weather the Storm counts storm', g.players[0].life === 29, `life ${g.players[0].life}`);
+}
+
+// Foretell: pay {2} on your turn, cast it on a later turn for {1}{U}
+{
+  const { g, put, inHand, resolveAll } = setup();
+  for (let i = 0; i < 4; i++) put(0, 'Island');
+  g.active = 0;
+  const behold = inHand(0, 'Behold the Multiverse');
+  const idx = behold.def.activated!.findIndex((a) => a.label?.startsWith('Foretell'));
+  await g.activate(0, behold, idx);
+  const exiled = behold.zone === 'exile';
+  const sameTurn = g.castOptions(0, behold).length;
+  g.turn++;
+  for (const l of g.lands(0)) l.tapped = false;
+  (g.controllers[0] as any).choose = async (gg: Game, r: any) => (r.type === 'scry' ? { top: r.cards.map((c: CardInstance) => c.id), bottom: [] } : { type: 'pass' });
+  const hand = g.players[0].hand.length;
+  const ok = await g.castSpell(0, behold, 'foretell');
+  await resolveAll();
+  check('foretell', exiled && sameTurn === 0 && ok && g.players[0].hand.length === hand + 2 && g.lands(0).filter((l) => l.tapped).length === 2, `exiled=${exiled}, castable same turn=${sameTurn > 0}, later cast=${ok}`);
+}
+
+// Circle of Protection: Blue stops the next blue source
+{
+  const { g, put } = setup();
+  const strix = put(1, 'Baleful Strix');
+  g.players[0].copBlue = 1;
+  g.dealDamage(strix, 0, 1);
+  const first = g.players[0].life;
+  g.dealDamage(strix, 0, 1);
+  check('CoP: Blue shield', first === 20 && g.players[0].life === 19, `after 1st hit ${first}, after 2nd ${g.players[0].life}`);
+}
+
 console.log(failures ? `${failures} failure(s)` : 'all passed');
 process.exit(failures ? 1 : 0);

@@ -288,19 +288,19 @@ export function Modals({
             <button className="btn secondary" disabled={n <= req.min} onClick={() => setNum(n - 1)}>
               −
             </button>
-            <span className="number-value">X = {n}</span>
+            <span className="number-value">{req.purpose === 'replicate' ? `${n} cop${n === 1 ? 'y' : 'ies'}` : `X = ${n}`}</span>
             <button className="btn secondary" disabled={n >= req.max} onClick={() => setNum(n + 1)}>
               +
             </button>
           </div>
-          <div className="modal-sub">You can afford up to X = {req.max}.</div>
+          <div className="modal-sub">{req.purpose === 'replicate' ? `You can afford up to ${req.max} extra cop${req.max === 1 ? 'y' : 'ies'}.` : `You can afford up to X = ${req.max}.`}</div>
         </div>,
         <>
           <button className="btn secondary" onClick={() => respond(null)}>
             Cancel
           </button>
           <button className="btn primary" onClick={() => respond(n)}>
-            Cast with X = {n}
+            {req.purpose === 'replicate' ? `Cast with ${n} extra cop${n === 1 ? 'y' : 'ies'}` : `Cast with X = ${n}`}
           </button>
         </>,
       );

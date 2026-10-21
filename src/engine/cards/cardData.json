@@ -2034,5 +2034,322 @@
   ],
   "image": "https://cards.scryfall.io/normal/front/6/6/664d15d7-2724-4a9b-b5a7-8042d4b7da7b.jpg?1783912857",
   "art": "https://cards.scryfall.io/art_crop/front/6/6/664d15d7-2724-4a9b-b5a7-8042d4b7da7b.jpg?1783912857"
+ },
+ "Behold the Multiverse": {
+  "name": "Behold the Multiverse",
+  "manaCost": "{3}{U}",
+  "cmc": 4,
+  "typeLine": "Instant",
+  "oracle": "Scry 2, then draw two cards.\nForetell {1}{U} (During your turn, you may pay {2} and exile this card from your hand face down. Cast it on a later turn for its foretell cost.)",
+  "colors": [
+   "U"
+  ],
+  "keywords": [
+   "Foretell",
+   "Scry"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/2/7/27855a38-a682-4f97-ad22-ac625e86faec.jpg?1783928268",
+  "art": "https://cards.scryfall.io/art_crop/front/2/7/27855a38-a682-4f97-ad22-ac625e86faec.jpg?1783928268"
+ },
+ "Bonder's Ornament": {
+  "name": "Bonder's Ornament",
+  "manaCost": "{3}",
+  "cmc": 3,
+  "typeLine": "Artifact",
+  "oracle": "{T}: Add one mana of any color.\n{4}, {T}: Each player who controls a permanent named Bonder's Ornament draws a card.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/8/9/89486719-4aba-4465-986b-fecbe4d409a1.jpg?1783915605",
+  "art": "https://cards.scryfall.io/art_crop/front/8/9/89486719-4aba-4465-986b-fecbe4d409a1.jpg?1783915605"
+ },
+ "Bramble Wurm": {
+  "name": "Bramble Wurm",
+  "manaCost": "{6}{G}",
+  "cmc": 7,
+  "typeLine": "Creature — Wurm",
+  "oracle": "Reach, trample\nWhen this creature enters, you gain 5 life.\n{2}{G}, Exile this card from your graveyard: You gain 5 life.",
+  "colors": [
+   "G"
+  ],
+  "power": "7",
+  "toughness": "6",
+  "keywords": [
+   "Reach",
+   "Trample"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/7/e/7ed00113-a0d7-4825-b066-f911a1ffb900.jpg?1783908103",
+  "art": "https://cards.scryfall.io/art_crop/front/7/e/7ed00113-a0d7-4825-b066-f911a1ffb900.jpg?1783908103"
+ },
+ "Conduit Pylons": {
+  "name": "Conduit Pylons",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land — Desert",
+  "oracle": "When this land enters, surveil 1. (Look at the top card of your library. You may put it into your graveyard.)\n{T}: Add {C}.\n{1}, {T}: Add one mana of any color.",
+  "colors": [],
+  "keywords": [
+   "Surveil"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/5/f/5ffa48cc-b991-4d47-b7ec-cf678915c758.jpg?1783911776",
+  "art": "https://cards.scryfall.io/art_crop/front/5/f/5ffa48cc-b991-4d47-b7ec-cf678915c758.jpg?1783911776"
+ },
+ "Crop Rotation": {
+  "name": "Crop Rotation",
+  "manaCost": "{G}",
+  "cmc": 1,
+  "typeLine": "Instant",
+  "oracle": "As an additional cost to cast this spell, sacrifice a land.\nSearch your library for a land card, put that card onto the battlefield, then shuffle.",
+  "colors": [
+   "G"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/5/2/523414cb-f8db-407a-808a-01454e03d8b9.jpg?1783918448",
+  "art": "https://cards.scryfall.io/art_crop/front/5/2/523414cb-f8db-407a-808a-01454e03d8b9.jpg?1783918448"
+ },
+ "Energy Refractor": {
+  "name": "Energy Refractor",
+  "manaCost": "{2}",
+  "cmc": 2,
+  "typeLine": "Artifact",
+  "oracle": "When this artifact enters, draw a card.\n{2}: Add one mana of any color.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/c/c/cc2a81fb-5045-4b7b-8cfb-b90c4f4a1f51.jpg?1783920019",
+  "art": "https://cards.scryfall.io/art_crop/front/c/c/cc2a81fb-5045-4b7b-8cfb-b90c4f4a1f51.jpg?1783920019"
+ },
+ "Ethereal Haze": {
+  "name": "Ethereal Haze",
+  "manaCost": "{W}",
+  "cmc": 1,
+  "typeLine": "Instant — Arcane",
+  "oracle": "Prevent all damage that would be dealt by creatures this turn.",
+  "colors": [
+   "W"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/7/f/7f1996af-5f15-447f-9b1d-98a7e97df53a.jpg?1783944341",
+  "art": "https://cards.scryfall.io/art_crop/front/7/f/7f1996af-5f15-447f-9b1d-98a7e97df53a.jpg?1783944341"
+ },
+ "Expedition Map": {
+  "name": "Expedition Map",
+  "manaCost": "{1}",
+  "cmc": 1,
+  "typeLine": "Artifact",
+  "oracle": "{2}, {T}, Sacrifice this artifact: Search your library for a land card, reveal it, put it into your hand, then shuffle.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/0/8/08e66835-c228-48fa-bcaa-eb96edbd4f5a.jpg?1783908888",
+  "art": "https://cards.scryfall.io/art_crop/front/0/8/08e66835-c228-48fa-bcaa-eb96edbd4f5a.jpg?1783908888"
+ },
+ "Moment's Peace": {
+  "name": "Moment's Peace",
+  "manaCost": "{1}{G}",
+  "cmc": 2,
+  "typeLine": "Instant",
+  "oracle": "Prevent all combat damage that would be dealt this turn.\nFlashback {2}{G} (You may cast this card from your graveyard for its flashback cost. Then exile it.)",
+  "colors": [
+   "G"
+  ],
+  "keywords": [
+   "Flashback"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/4/0/40ebe935-ccf9-435e-8fe8-53bcbf3526e7.jpg?1783945215",
+  "art": "https://cards.scryfall.io/art_crop/front/4/0/40ebe935-ccf9-435e-8fe8-53bcbf3526e7.jpg?1783945215"
+ },
+ "Mystical Teachings": {
+  "name": "Mystical Teachings",
+  "manaCost": "{3}{U}",
+  "cmc": 4,
+  "typeLine": "Instant",
+  "oracle": "Search your library for an instant card or a card with flash, reveal it, put it into your hand, then shuffle.\nFlashback {5}{B} (You may cast this card from your graveyard for its flashback cost. Then exile it.)",
+  "colors": [
+   "U"
+  ],
+  "keywords": [
+   "Flashback"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/3/f/3f88eacf-5c7b-4a35-86f0-af3b0516d4c2.jpg?1783908933",
+  "art": "https://cards.scryfall.io/art_crop/front/3/f/3f88eacf-5c7b-4a35-86f0-af3b0516d4c2.jpg?1783908933"
+ },
+ "Prohibit": {
+  "name": "Prohibit",
+  "manaCost": "{1}{U}",
+  "cmc": 2,
+  "typeLine": "Instant",
+  "oracle": "Kicker {2} (You may pay an additional {2} as you cast this spell.)\nCounter target spell if its mana value is 2 or less. If this spell was kicked, counter that spell if its mana value is 4 or less instead.",
+  "colors": [
+   "U"
+  ],
+  "keywords": [
+   "Kicker"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/0/a/0ae544bf-7229-4b82-99ad-32c3af36e30f.jpg?1783933138",
+  "art": "https://cards.scryfall.io/art_crop/front/0/a/0ae544bf-7229-4b82-99ad-32c3af36e30f.jpg?1783933138"
+ },
+ "Prophetic Prism": {
+  "name": "Prophetic Prism",
+  "manaCost": "{2}",
+  "cmc": 2,
+  "typeLine": "Artifact",
+  "oracle": "When this artifact enters, draw a card.\n{1}, {T}: Add one mana of any color.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/1/f/1fae351c-b918-4648-a361-d5239ae63156.jpg?1783915058",
+  "art": "https://cards.scryfall.io/art_crop/front/1/f/1fae351c-b918-4648-a361-d5239ae63156.jpg?1783915058"
+ },
+ "Remote Isle": {
+  "name": "Remote Isle",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land",
+  "oracle": "This land enters tapped.\n{T}: Add {U}.\nCycling {2} ({2}, Discard this card: Draw a card.)",
+  "colors": [],
+  "keywords": [
+   "Cycling"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/a/3/a340af37-c0a7-4f26-974b-95397b5c32f7.jpg?1783918401",
+  "art": "https://cards.scryfall.io/art_crop/front/a/3/a340af37-c0a7-4f26-974b-95397b5c32f7.jpg?1783918401"
+ },
+ "Stream of Thought": {
+  "name": "Stream of Thought",
+  "manaCost": "{U}",
+  "cmc": 1,
+  "typeLine": "Sorcery",
+  "oracle": "Target player mills four cards. You shuffle up to four cards from your graveyard into your library.\nReplicate {2}{U}{U} (When you cast this spell, copy it for each time you paid its replicate cost. You may choose new targets for the copies.)",
+  "colors": [
+   "U"
+  ],
+  "keywords": [
+   "Replicate",
+   "Mill"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/8/b/8b75bef5-a039-4edf-8e43-56b8d089605e.jpg?1783933137",
+  "art": "https://cards.scryfall.io/art_crop/front/8/b/8b75bef5-a039-4edf-8e43-56b8d089605e.jpg?1783933137"
+ },
+ "Tangle": {
+  "name": "Tangle",
+  "manaCost": "{1}{G}",
+  "cmc": 2,
+  "typeLine": "Instant",
+  "oracle": "Prevent all combat damage that would be dealt this turn.\nEach attacking creature doesn't untap during its controller's next untap step.",
+  "colors": [
+   "G"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/6/3/635ca3c1-d544-44fc-a178-3bfe4fe69551.jpg?1783939245",
+  "art": "https://cards.scryfall.io/art_crop/front/6/3/635ca3c1-d544-44fc-a178-3bfe4fe69551.jpg?1783939245"
+ },
+ "Tangled Islet": {
+  "name": "Tangled Islet",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land — Forest Island",
+  "oracle": "({T}: Add {G} or {U}.)\nThis land enters tapped.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/b/b/bb1920f1-aab3-4066-8be9-029102886d03.jpg?1783903717",
+  "art": "https://cards.scryfall.io/art_crop/front/b/b/bb1920f1-aab3-4066-8be9-029102886d03.jpg?1783903717"
+ },
+ "Urza's Mine": {
+  "name": "Urza's Mine",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land — Urza's Mine",
+  "oracle": "{T}: Add {C}. If you control an Urza's Power-Plant and an Urza's Tower, add {C}{C} instead.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/3/9/396bbb7d-ae61-4d8d-b931-9ed2f712832e.jpg?1783915371",
+  "art": "https://cards.scryfall.io/art_crop/front/3/9/396bbb7d-ae61-4d8d-b931-9ed2f712832e.jpg?1783915371"
+ },
+ "Urza's Power Plant": {
+  "name": "Urza's Power Plant",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land — Urza's Power-Plant",
+  "oracle": "{T}: Add {C}. If you control an Urza's Mine and an Urza's Tower, add {C}{C} instead.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/b/0/b0449a19-37f7-4169-9e32-928db5ec76fe.jpg?1783915370",
+  "art": "https://cards.scryfall.io/art_crop/front/b/0/b0449a19-37f7-4169-9e32-928db5ec76fe.jpg?1783915370"
+ },
+ "Urza's Tower": {
+  "name": "Urza's Tower",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land — Urza's Tower",
+  "oracle": "{T}: Add {C}. If you control an Urza's Mine and an Urza's Power-Plant, add {C}{C}{C} instead.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/1/e/1e9f09b3-dd2d-4ba9-a57e-4f3c1793f752.jpg?1783915371",
+  "art": "https://cards.scryfall.io/art_crop/front/1/e/1e9f09b3-dd2d-4ba9-a57e-4f3c1793f752.jpg?1783915371"
+ },
+ "Weather the Storm": {
+  "name": "Weather the Storm",
+  "manaCost": "{1}{G}",
+  "cmc": 2,
+  "typeLine": "Instant",
+  "oracle": "You gain 3 life.\nStorm (When you cast this spell, copy it for each spell cast before it this turn.)",
+  "colors": [
+   "G"
+  ],
+  "keywords": [
+   "Storm"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/f/6/f6a9fa51-78c3-42e6-8c2e-39658f59ed87.jpg?1783933087",
+  "art": "https://cards.scryfall.io/art_crop/front/f/6/f6a9fa51-78c3-42e6-8c2e-39658f59ed87.jpg?1783933087"
+ },
+ "Ancient Grudge": {
+  "name": "Ancient Grudge",
+  "manaCost": "{1}{R}",
+  "cmc": 2,
+  "typeLine": "Instant",
+  "oracle": "Destroy target artifact.\nFlashback {G} (You may cast this card from your graveyard for its flashback cost. Then exile it.)",
+  "colors": [
+   "R"
+  ],
+  "keywords": [
+   "Flashback"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/5/f/5f28d4a2-6c75-44c2-93ac-e7159c1c623f.jpg?1783927805",
+  "art": "https://cards.scryfall.io/art_crop/front/5/f/5f28d4a2-6c75-44c2-93ac-e7159c1c623f.jpg?1783927805"
+ },
+ "Breath Weapon": {
+  "name": "Breath Weapon",
+  "manaCost": "{2}{R}",
+  "cmc": 3,
+  "typeLine": "Instant",
+  "oracle": "Breath Weapon deals 2 damage to each non-Dragon creature.",
+  "colors": [
+   "R"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/0/1/0174e40a-0ef5-4439-91e6-3fc39f482520.jpg?1783922743",
+  "art": "https://cards.scryfall.io/art_crop/front/0/1/0174e40a-0ef5-4439-91e6-3fc39f482520.jpg?1783922743"
+ },
+ "Circle of Protection: Blue": {
+  "name": "Circle of Protection: Blue",
+  "manaCost": "{1}{W}",
+  "cmc": 2,
+  "typeLine": "Enchantment",
+  "oracle": "{1}: The next time a blue source of your choice would deal damage to you this turn, prevent that damage.",
+  "colors": [
+   "W"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/5/c/5ced2118-dfb3-4f29-ad6b-454c0a8a094b.jpg?1783944851",
+  "art": "https://cards.scryfall.io/art_crop/front/5/c/5ced2118-dfb3-4f29-ad6b-454c0a8a094b.jpg?1783944851"
+ },
+ "Crypt Incursion": {
+  "name": "Crypt Incursion",
+  "manaCost": "{2}{B}",
+  "cmc": 3,
+  "typeLine": "Instant",
+  "oracle": "Exile all creature cards from target player's graveyard. You gain 3 life for each card exiled this way.",
+  "colors": [
+   "B"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/c/3/c3b71cc5-0a81-4cab-bae3-49335c04aaaa.jpg?1783940040",
+  "art": "https://cards.scryfall.io/art_crop/front/c/3/c3b71cc5-0a81-4cab-bae3-49335c04aaaa.jpg?1783940040"
  }
 }
