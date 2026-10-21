@@ -91,6 +91,9 @@ export class AIController implements Controller {
       if (c.def.triggers?.some((t) => t.event === 'cast' || t.event === 'combatDamagePlayer')) v += 2.5;
       if (c.def.isToken) v -= 1;
       if (g.attachments(c).length) v += 2;
+      const made = this.manaMade(g, c);
+      if (made) v += 2 + made;
+      if ((c.def.activated ?? []).some((ab) => ab.label?.startsWith('Pump') || ab.label?.startsWith('Return a Forest'))) v += 2;
       return v;
     }
     if (g.isLand(c)) return 1;
@@ -131,7 +134,9 @@ export class AIController implements Controller {
   keepHand(g: Game, hand: CardInstance[], mulls: number) {
     if (mulls >= 2) return true;
     const lands = hand.filter((c) => g.isLand(c)).length;
-    if (hand.length === 7) return lands >= 2 && lands <= 5;
+    const elves = hand.filter((c) => c.def.cmc === 1 && g.isCreature(c) && (c.def.activated ?? []).some((a) => (a.produces || a.producesFn) && a.cost.tap)).length;
+    const effective = lands + elves * 0.5;
+    if (hand.length === 7) return lands >= 1 && effective >= 2 && lands <= 5;
     return lands >= 1 && lands <= 4;
   }
 
@@ -336,7 +341,10 @@ export class AIController implements Controller {
           if (c.def.name === 'Spellstutter Sprite') continue;
           const xBonus = c.def.entersWithXCounters ? this.maxX(g, c, 'normal') * 1.5 : 0;
           if (c.def.entersWithXCounters && xBonus < 2) continue; // a 0/1 Hydra is not worth it
-          consider(a, 20 + this.value(g, c) + xBonus + (c.def.cmc === 1 ? 1 : 0));
+          // ramp first: mana creatures early, Priest of Titania more so the more Elves we have
+          const ramps = (c.def.activated ?? []).some((ab) => (ab.produces || ab.producesFn) && !ab.cost.mana && ab.cost.tap);
+          const rampBonus = ramps && g.turn <= 8 ? 5 + (c.def.name === 'Priest of Titania' ? g.creatures().filter((e) => g.hasSubtype(e, 'Elf')).length : 0) : 0;
+          consider(a, 20 + this.value(g, c) + xBonus + rampBonus + (c.def.cmc === 1 ? 1 : 0));
           continue;
         }
         if (g.isAura(c)) {
@@ -450,11 +458,8 @@ export class AIController implements Controller {
             } else if (ab.label === 'Explore') {
               if (!main1 || g.players[me].hand.every((x) => g.isLand(x))) consider(a, 3);
             } else if (ab.label?.startsWith('Return a Forest')) {
-              const tappedMana = g
-                .creatures(me)
-                .filter((x) => x.tapped && (x.def.activated ?? []).some((m, i) => m.producesFn && g.produceOptions(x, i)[0]?.length >= 2));
-              const wants = g.players[me].hand.some((x) => !g.isLand(x) && !g.castOptions(me, x).length);
-              if (tappedMana[0] && wants) consider(a, 13, { cardId: c.id, targets: [{ kind: 'card', id: tappedMana[0].id }] });
+              const plan = this.quirionManaPlan(g);
+              if (plan) consider(a, 30, { cardId: c.id, targets: [{ kind: 'card', id: plan.id }] });
             } else if (ab.label === 'Exile a graveyard') {
               const gy = g.players[opp].graveyard;
               if (gy.some((x) => x.def.flashback || x.def.triggers?.some((t) => t.zone === 'graveyard'))) consider(a, 9, { cardId: c.id, targets: [{ kind: 'player', pid: opp }] });
@@ -506,6 +511,16 @@ export class AIController implements Controller {
   private drawSpellScore(g: Game, c: CardInstance, a: Action): number {
     const me = this.me;
     const hand = g.players[me].hand;
+    // Elves refills: dig first when the hand is nearly empty, so the new cards can still be cast this turn
+    if (c.def.name === 'Lead the Stampede' || c.def.name === 'Winding Way') {
+      const spells = hand.filter((x) => x !== c && !g.isLand(x)).length;
+      return spells <= 1 ? 27 : 8;
+    }
+    if (c.def.name === 'Land Grant') {
+      const lands = g.lands(me).length + hand.filter((x) => g.isLand(x)).length;
+      if (lands >= 5) return 0;
+      return a.type === 'cast' && a.method === 'alt' ? 12 : 7;
+    }
     const ac = c.def.additionalCost;
     if (ac?.kind === 'discard') {
       const others = hand.filter((x) => x !== c);
@@ -567,7 +582,73 @@ export class AIController implements Controller {
         }
       }
     }
+    // combo: Quirion Ranger returns a tapped Forest to untap a tapped Timberwatch, which then pumps again
+    const quirion = this.quirionAction(g, all);
+    if (quirion && this.tappedForests(g).length) {
+      const tappedPumper = g.creatures(me).find((c) => c.tapped && (c.def.activated ?? []).some((ab) => ab.label?.startsWith('Pump')));
+      const worth =
+        g.active === me
+          ? g.attackers().some((at) => at.controller === me && !at.wasBlocked)
+          : g.creatures(me).some((b) => b.blocking !== null && this.kills(g, g.card(b.blocking)!, b));
+      if (tappedPumper && worth) {
+        this.intent = { cardId: quirion.cardId, targets: [{ kind: 'card', id: tappedPumper.id }] };
+        return quirion;
+      }
+    }
     return null;
+  }
+
+  /** the Quirion Ranger activation, if it can be used right now */
+  private quirionAction(g: Game, all: Action[]): Extract<Action, { type: 'activate' }> | null {
+    for (const a of all) {
+      if (a.type !== 'activate') continue;
+      if (g.card(a.cardId)!.def.activated![a.index].label?.startsWith('Return a Forest')) return a;
+    }
+    return null;
+  }
+
+  /** Forests we've already tapped for mana: returning one costs us nothing this turn */
+  tappedForests(g: Game) {
+    return g.lands(this.me).filter((l) => l.tapped && g.hasSubtype(l, 'Forest'));
+  }
+
+  /** how much mana a creature makes when tapped (0 if none) */
+  manaMade(g: Game, c: CardInstance): number {
+    let best = 0;
+    (c.def.activated ?? []).forEach((a, i) => {
+      if (!a.produces && !a.producesFn) return;
+      if (a.cost.mana || a.cost.sacSelf) return;
+      for (const o of g.produceOptions(c, i)) best = Math.max(best, o.length);
+    });
+    return best;
+  }
+
+  /**
+   * Main phase: should Quirion Ranger return a tapped Forest to untap a tapped mana creature?
+   * Only if that extra mana (plus replaying the Forest if our land drop is free) lets us cast something we can't now.
+   */
+  quirionManaPlan(g: Game): CardInstance | null {
+    const me = this.me;
+    if (!this.tappedForests(g).length) return null;
+    const p = g.players[me];
+    const landDropFree = p.landsPlayedThisTurn < 1;
+    // with the land drop used, the Forest would be stuck in hand; only fine if we have no other land to play next turn
+    if (!landDropFree && p.hand.some((x) => g.isLand(x))) return null;
+    const target = g
+      .creatures(me)
+      .filter((x) => x.tapped && !g.isSick(x) && this.manaMade(g, x) > 0)
+      .sort((a, b) => this.manaMade(g, b) - this.manaMade(g, a))[0];
+    if (!target) return null;
+    const avail = this.availableMana(g);
+    const extra = this.manaMade(g, target) + (landDropFree ? 1 : 0);
+    const enables = p.hand.some((x) => {
+      if (g.isLand(x)) return false;
+      const cost = costMV(g.spellCost(me, x, 'normal'));
+      return cost > avail && cost <= avail + extra;
+    });
+    // a bigger X for Nyxborn Hydra also counts
+    const biggerX = p.hand.some((x) => x.def.entersWithXCounters) && this.manaMade(g, target) >= 2;
+    return enables || biggerX ? target : null;
   }
 
   /** Is paying 4 life (Snuff Out) reasonable right now? */
@@ -939,8 +1020,8 @@ export class AIController implements Controller {
       }
       case 'returnLand': {
         const sorted = [...cards].sort((a, b) => {
-          const sa = (a.tapped ? 2 : 0) + (a === req.source ? -5 : 0) + (a.def.supertypes.includes('Basic') ? 1 : 0);
-          const sb = (b.tapped ? 2 : 0) + (b === req.source ? -5 : 0) + (b.def.supertypes.includes('Basic') ? 1 : 0);
+          const sa = (a.tapped ? 10 : 0) + (a === req.source ? -5 : 0) + (a.def.supertypes.includes('Basic') ? 1 : 0);
+          const sb = (b.tapped ? 10 : 0) + (b === req.source ? -5 : 0) + (b.def.supertypes.includes('Basic') ? 1 : 0);
           return sb - sa;
         });
         return want(1, sorted);
@@ -1118,6 +1199,20 @@ export class AIController implements Controller {
     if (all.length) {
       const theirBest = this.survivalBlocks(g, all, blockers, oppLife);
       if (theirBest.through >= oppLife) return all.map((c) => c.id);
+      // Elves: attackers + Timberwatch pumps on whatever gets through
+      const pumpers = g.creatures(me).filter((c) => !c.tapped && !g.isSick(c) && (c.def.activated ?? []).some((ab) => ab.label?.startsWith('Pump')));
+      if (pumpers.length) {
+        const x = g.creatures().filter((e) => g.hasSubtype(e, 'Elf')).length;
+        const quirionReady = g
+          .creatures(me)
+          .some((q) => (q.def.activated ?? []).some((ab, i) => ab.oncePerTurn && ab.label?.startsWith('Return a Forest') && q.lastActivated?.[i] !== g.turn));
+        const pumps = pumpers.length + (quirionReady && this.tappedForests(g).length ? 1 : 0);
+        const attackers = all.filter((c) => !pumpers.includes(c));
+        if (attackers.length) {
+          const through = this.survivalBlocks(g, attackers, blockers, oppLife).through;
+          if (through > 0 && through + x * pumps >= oppLife) return attackers.map((c) => c.id);
+        }
+      }
     }
 
     const out: number[] = [];

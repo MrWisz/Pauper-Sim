@@ -174,5 +174,91 @@ for (const mountains of [1, 3]) {
   else check('ward lets the spell through when paid', !countered && died, `countered=${countered}, warded creature died=${died}`);
 }
 
+// ───────────── Elves AI ─────────────
+
+// 11. Quirion Ranger: return a Forest already tapped for mana to untap a tapped Priest, when that lets it cast more
+{
+  const { g, ai, put, hand } = setup(20);
+  g.active = 1;
+  g.step = 'main1';
+  const tappedForest = put(1, 'Forest', true);
+  put(1, 'Forest', true);
+  const untappedForest = put(1, 'Forest');
+  const priest = put(1, 'Priest of Titania', true);
+  put(1, 'Llanowar Elves', true);
+  put(1, 'Timberwatch Elf');
+  put(1, 'Quirion Ranger');
+  hand(1, 'Avenging Hunter'); // 5 mana: we have 1 untapped Forest; untapping Priest (+4) and replaying the Forest (+1) gets there
+  const act = ai.decidePriority(g);
+  const isQuirion = act.type === 'activate' && g.card(act.cardId)!.def.name === 'Quirion Ranger';
+  const tgt = ai.intent?.targets?.[0];
+  check('Quirion untaps Priest to cast more', isQuirion && tgt?.kind === 'card' && tgt.id === priest.id, `action ${act.type === 'activate' ? g.card(act.cardId)!.def.name : act.type}`);
+  if (isQuirion) {
+    await g.perform(1, act);
+    while (g.stack.length) await g.resolveTop();
+    const back = g.players[1].hand.find((c) => c.def.name === 'Forest');
+    check(
+      'Quirion only returns a tapped Forest',
+      !!back && back !== untappedForest && untappedForest.zone === 'battlefield' && !priest.tapped,
+      `returned ${back === tappedForest || (back && back !== untappedForest) ? 'a tapped Forest' : 'the untapped Forest'}, Priest tapped=${priest.tapped}`,
+    );
+  }
+}
+
+// 12. ...but never when no Forest has been tapped (untapping would cost us a land's mana)
+{
+  const { g, ai, put, hand } = setup(20);
+  g.active = 1;
+  g.step = 'main1';
+  for (let i = 0; i < 3; i++) put(1, 'Forest');
+  put(1, 'Priest of Titania', true);
+  put(1, 'Llanowar Elves', true);
+  put(1, 'Quirion Ranger');
+  hand(1, 'Generous Ent');
+  const act = ai.decidePriority(g);
+  const name = act.type === 'activate' ? g.card(act.cardId)!.def.name : act.type;
+  check('no Quirion without a tapped Forest', name !== 'Quirion Ranger', `action ${name}`);
+}
+
+// 13. Combo: Timberwatch already pumped this combat -> Quirion untaps it (tapped Forest) so it can pump again
+{
+  const { g, ai, put } = setup(20);
+  g.active = 1;
+  g.step = 'declareBlockers';
+  put(1, 'Forest', true);
+  const attacker = put(1, 'Llanowar Elves');
+  attacker.attacking = true;
+  attacker.tapped = true;
+  attacker.wasBlocked = false;
+  const tw = put(1, 'Timberwatch Elf', true); // used its pump already
+  put(1, 'Quirion Ranger');
+  const act = ai.decidePriority(g);
+  const isQuirion = act.type === 'activate' && g.card(act.cardId)!.def.name === 'Quirion Ranger';
+  const tgt = ai.intent?.targets?.[0];
+  check('Quirion untaps Timberwatch for a second pump', isQuirion && tgt?.kind === 'card' && tgt.id === tw.id, `action ${act.type === 'activate' ? g.card(act.cardId)!.def.name : act.type}`);
+}
+
+// 14. Lethal with pumps: opponent at 5, two 1/1 elves attack and Timberwatch (3 Elves = +3) stays home to pump
+{
+  const { g, ai, put } = setup(20);
+  g.players[0].life = 5;
+  g.active = 1;
+  const a1 = put(1, 'Llanowar Elves');
+  const a2 = put(1, 'Fyndhorn Elves');
+  const tw = put(1, 'Timberwatch Elf');
+  const ids = ai.declareAttackers(g, [a1, a2, tw]);
+  check('attack for lethal with Timberwatch held back', ids.length === 2 && !ids.includes(tw.id), `attacks with ${ids.map((id) => g.card(id)!.def.name).join(', ')}`);
+}
+
+// 15. Mulligans: 1 Forest + 2 one-drop mana elves is a keep
+{
+  const { g, ai } = setup(20);
+  const mk = (n: string) => g.makeCard(getDef(n)!, 1);
+  const handCards = ['Forest', 'Llanowar Elves', 'Elvish Mystic', 'Priest of Titania', 'Timberwatch Elf', 'Lead the Stampede', 'Quirion Ranger'].map(mk);
+  const keep = ai.keepHand(g, handCards, 0);
+  const oneLandNoElves = ['Forest', 'Generous Ent', 'Avenging Hunter', 'Lead the Stampede', 'Winding Way', 'Nyxborn Hydra', 'Masked Vandal'].map(mk);
+  check('keep 1 land + 2 mana elves', keep && !ai.keepHand(g, oneLandNoElves, 0), `elf hand kept=${keep}, 1-lander without elves kept=${ai.keepHand(g, oneLandNoElves, 0)}`);
+}
+
 console.log(failures ? `${failures} failure(s)` : 'all passed');
 process.exit(failures ? 1 : 0);
