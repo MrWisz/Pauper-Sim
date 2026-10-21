@@ -146,6 +146,8 @@ export interface ActivatedDef {
   produces?: ManaColor[][];
   /** mana amount that depends on the board (Priest of Titania) */
   producesFn?: (g: Game, card: CardInstance) => ManaColor[][];
+  /** {X} paid with this color only (Crypt Rats: "Spend only black mana on X") */
+  xMana?: ManaColor;
   /** "Activate only once each turn" */
   oncePerTurn?: boolean;
   /** Special actions (plot) don't use the stack either. */

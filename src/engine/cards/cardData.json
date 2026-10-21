@@ -2481,5 +2481,164 @@
    "image": "https://cards.scryfall.io/normal/back/d/b/dbaa9a2d-e9fd-4746-a26c-f99ae731f024.jpg?1783913774",
    "art": "https://cards.scryfall.io/art_crop/back/d/b/dbaa9a2d-e9fd-4746-a26c-f99ae731f024.jpg?1783913774"
   }
+ },
+ "Bake into a Pie": {
+  "name": "Bake into a Pie",
+  "manaCost": "{2}{B}{B}",
+  "cmc": 4,
+  "typeLine": "Instant",
+  "oracle": "Destroy target creature. Create a Food token. (It's an artifact with \"{2}, {T}, Sacrifice this token: You gain 3 life.\")",
+  "colors": [
+   "B"
+  ],
+  "keywords": [
+   "Food"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/2/a/2ab0e660-86a3-4b92-82fa-77dcb5db947d.jpg?1783909076",
+  "art": "https://cards.scryfall.io/art_crop/front/2/a/2ab0e660-86a3-4b92-82fa-77dcb5db947d.jpg?1783909076"
+ },
+ "Chainer's Edict": {
+  "name": "Chainer's Edict",
+  "manaCost": "{1}{B}",
+  "cmc": 2,
+  "typeLine": "Sorcery",
+  "oracle": "Target player sacrifices a creature of their choice.\nFlashback {5}{B}{B} (You may cast this card from your graveyard for its flashback cost. Then exile it.)",
+  "colors": [
+   "B"
+  ],
+  "keywords": [
+   "Flashback"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/a/1/a1d194d7-dccf-4421-be8f-8efdcf9fbbeb.jpg?1788983756",
+  "art": "https://cards.scryfall.io/art_crop/front/a/1/a1d194d7-dccf-4421-be8f-8efdcf9fbbeb.jpg?1788983756"
+ },
+ "Chittering Rats": {
+  "name": "Chittering Rats",
+  "manaCost": "{1}{B}{B}",
+  "cmc": 3,
+  "typeLine": "Creature — Rat",
+  "oracle": "When this creature enters, target opponent puts a card from their hand on top of their library.",
+  "colors": [
+   "B"
+  ],
+  "power": "2",
+  "toughness": "2",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/9/8/980135d5-dfaa-4beb-b4b3-1e256bb46e61.jpg?1783944446",
+  "art": "https://cards.scryfall.io/art_crop/front/9/8/980135d5-dfaa-4beb-b4b3-1e256bb46e61.jpg?1783944446"
+ },
+ "Crypt Rats": {
+  "name": "Crypt Rats",
+  "manaCost": "{2}{B}",
+  "cmc": 3,
+  "typeLine": "Creature — Rat",
+  "oracle": "{X}: This creature deals X damage to each creature and each player. Spend only black mana on X.",
+  "colors": [
+   "B"
+  ],
+  "power": "1",
+  "toughness": "1",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/9/6/96916db2-5121-4ff1-880c-369744f11ecf.jpg?1783933130",
+  "art": "https://cards.scryfall.io/art_crop/front/9/6/96916db2-5121-4ff1-880c-369744f11ecf.jpg?1783933130"
+ },
+ "Cuombajj Witches": {
+  "name": "Cuombajj Witches",
+  "manaCost": "{B}{B}",
+  "cmc": 2,
+  "typeLine": "Creature — Human Wizard",
+  "oracle": "{T}: This creature deals 1 damage to any target and 1 damage to any target of an opponent's choice.",
+  "colors": [
+   "B"
+  ],
+  "power": "1",
+  "toughness": "3",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/6/a/6a26e910-275a-4981-831b-bfed936a7e3f.jpg?1783928842",
+  "art": "https://cards.scryfall.io/art_crop/front/6/a/6a26e910-275a-4981-831b-bfed936a7e3f.jpg?1783928842"
+ },
+ "Gray Merchant of Asphodel": {
+  "name": "Gray Merchant of Asphodel",
+  "manaCost": "{3}{B}{B}",
+  "cmc": 5,
+  "typeLine": "Creature — Zombie",
+  "oracle": "When this creature enters, each opponent loses X life, where X is your devotion to black. You gain life equal to the life lost this way. (Each {B} in the mana costs of permanents you control counts toward your devotion to black.)",
+  "colors": [
+   "B"
+  ],
+  "power": "2",
+  "toughness": "4",
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/0/0/00d001d0-fd29-4b7c-9d0e-9131b995f910.jpg?1783909617",
+  "art": "https://cards.scryfall.io/art_crop/front/0/0/00d001d0-fd29-4b7c-9d0e-9131b995f910.jpg?1783909617"
+ },
+ "Night's Whisper": {
+  "name": "Night's Whisper",
+  "manaCost": "{1}{B}",
+  "cmc": 2,
+  "typeLine": "Sorcery",
+  "oracle": "You draw two cards and lose 2 life.",
+  "colors": [
+   "B"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/e/8/e8399c2e-ecc8-41c9-a690-a0eeafb27f77.jpg?1785497515",
+  "art": "https://cards.scryfall.io/art_crop/front/e/8/e8399c2e-ecc8-41c9-a690-a0eeafb27f77.jpg?1785497515"
+ },
+ "Pestilence": {
+  "name": "Pestilence",
+  "manaCost": "{2}{B}{B}",
+  "cmc": 4,
+  "typeLine": "Enchantment",
+  "oracle": "At the beginning of the end step, if no creatures are on the battlefield, sacrifice this enchantment.\n{B}: This enchantment deals 1 damage to each creature and each player.",
+  "colors": [
+   "B"
+  ],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/2/9/29d852c4-bd53-4a3b-b1e2-896917cbc27f.jpg?1783946180",
+  "art": "https://cards.scryfall.io/art_crop/front/2/9/29d852c4-bd53-4a3b-b1e2-896917cbc27f.jpg?1783946180"
+ },
+ "Tempting Witch": {
+  "name": "Tempting Witch",
+  "manaCost": "{2}{B}",
+  "cmc": 3,
+  "typeLine": "Creature — Human Warlock",
+  "oracle": "When this creature enters, create a Food token. (It's an artifact with \"{2}, {T}, Sacrifice this token: You gain 3 life.\")\n{2}, {T}, Sacrifice a Food: Target player loses 3 life.",
+  "colors": [
+   "B"
+  ],
+  "power": "1",
+  "toughness": "3",
+  "keywords": [
+   "Food"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/8/a/8adbd4a5-3171-495a-a540-0ecf280b77fc.jpg?1783930406",
+  "art": "https://cards.scryfall.io/art_crop/front/8/a/8adbd4a5-3171-495a-a540-0ecf280b77fc.jpg?1783930406"
+ },
+ "Unearth": {
+  "name": "Unearth",
+  "manaCost": "{B}",
+  "cmc": 1,
+  "typeLine": "Sorcery",
+  "oracle": "Return target creature card with mana value 3 or less from your graveyard to the battlefield.\nCycling {2} ({2}, Discard this card: Draw a card.)",
+  "colors": [
+   "B"
+  ],
+  "keywords": [
+   "Cycling"
+  ],
+  "image": "https://cards.scryfall.io/normal/front/b/1/b1f73271-b70f-40ae-be64-f8de7805923a.jpg?1783921900",
+  "art": "https://cards.scryfall.io/art_crop/front/b/1/b1f73271-b70f-40ae-be64-f8de7805923a.jpg?1783921900"
+ },
+ "Witch's Cottage": {
+  "name": "Witch's Cottage",
+  "manaCost": "",
+  "cmc": 0,
+  "typeLine": "Land — Swamp",
+  "oracle": "({T}: Add {B}.)\nThis land enters tapped unless you control three or more other Swamps.\nWhen this land enters untapped, you may put target creature card from your graveyard on top of your library.",
+  "colors": [],
+  "keywords": [],
+  "image": "https://cards.scryfall.io/normal/front/b/8/b87891cd-b457-4dff-8d18-a7eaf6748fc6.jpg?1783932575",
+  "art": "https://cards.scryfall.io/art_crop/front/b/8/b87891cd-b457-4dff-8d18-a7eaf6748fc6.jpg?1783932575"
  }
 }

@@ -17,6 +17,8 @@ interface Intent {
   mode?: number;
   discard?: number;
   sacrifice?: number;
+  /** X for an {X} ability (Crypt Rats) */
+  x?: number;
 }
 
 /**
@@ -59,6 +61,7 @@ export class AIController implements Controller {
       case 'yesno':
         return this.yesNo(g, req.purpose, req.source);
       case 'number':
+        if (req.purpose === 'x' && this.intent?.x !== undefined && this.intent.cardId === req.source?.id) return Math.min(req.max, this.intent.x);
         return req.max;
       case 'color':
         return this.pickColor(g, req.options, req.purpose);
@@ -371,7 +374,8 @@ export class AIController implements Controller {
           // ramp first: mana creatures early, Priest of Titania more so the more Elves we have
           const ramps = (c.def.activated ?? []).some((ab) => (ab.produces || ab.producesFn) && !ab.cost.mana && ab.cost.tap);
           const rampBonus = ramps && g.turn <= 8 ? 5 + (c.def.name === 'Priest of Titania' ? g.creatures().filter((e) => g.hasSubtype(e, 'Elf')).length : 0) : 0;
-          consider(a, 20 + this.value(g, c) + xBonus + rampBonus + (c.def.cmc === 1 ? 1 : 0));
+          const drain = c.def.name === 'Gray Merchant of Asphodel' ? (g.devotion(me, 'B') + 2) * 1.5 : 0;
+          consider(a, 20 + this.value(g, c) + xBonus + rampBonus + drain + (c.def.cmc === 1 ? 1 : 0));
           continue;
         }
         if (g.isAura(c)) {
@@ -382,6 +386,11 @@ export class AIController implements Controller {
         if (c.def.name === 'Grim Bauble') {
           const t = g.creatures(opp).filter((x) => g.canBeTargetedBy(x, me, c) && g.toughness(x) - x.damage <= 2).sort((x, y) => this.value(g, y) - this.value(g, x))[0];
           consider(a, t ? 22 + this.value(g, t) : 14, t ? { cardId: c.id, targets: [{ kind: 'card', id: t.id }] } : undefined);
+          continue;
+        }
+        if (c.def.name === 'Unearth' && a.method === 'normal') {
+          const dead = g.players[me].graveyard.filter((x) => g.isCreature(x) && x.def.cmc <= 3).sort((x, y) => this.value(g, y) - this.value(g, x))[0];
+          if (dead) consider(a, 18 + this.value(g, dead), { cardId: c.id, targets: [{ kind: 'card', id: dead.id }] });
           continue;
         }
         if (c.def.name === 'Tithing Blade') {
@@ -535,6 +544,19 @@ export class AIController implements Controller {
           case 'damage': {
             if (c.def.name === 'Makeshift Munitions') {
               if (g.players[opp].life <= 1) consider(a, 95, { cardId: c.id, targets: [{ kind: 'player', pid: opp }] });
+            } else if (c.def.name === 'Pestilence') {
+              const gain = this.pestilenceGain(g);
+              if (gain >= 3) consider(a, 10 + gain);
+            } else if (c.def.name === 'Crypt Rats') {
+              const plan = this.cryptRatsPlan(g);
+              if (plan) consider(a, 10 + plan.gain, { cardId: c.id, x: plan.x });
+            } else if (c.def.name === 'Cuombajj Witches') {
+              const t = this.witchesTarget(g, c, false);
+              if (t) consider(a, t.score, { cardId: c.id, targets: [t.target] });
+            } else if (c.def.name === 'Tempting Witch') {
+              if (g.players[opp].life <= 3) consider(a, 95, { cardId: c.id, targets: [{ kind: 'player', pid: opp }] });
+              else if (!main1 && this.availableMana(g) >= 2 && g.players[me].hand.every((x) => g.isLand(x) || !g.castOptions(me, x, true).length))
+                consider(a, 4, { cardId: c.id, targets: [{ kind: 'player', pid: opp }] });
             } else if (c.def.name === 'Krark-Clan Shaman') {
               const oppDie = g.creatures(opp).filter((x) => !g.hasKeyword(x, 'flying') && g.toughness(x) - x.damage <= 1);
               const myDie = g.creatures(me).filter((x) => !g.hasKeyword(x, 'flying') && g.toughness(x) - x.damage <= 1);
@@ -604,6 +626,57 @@ export class AIController implements Controller {
   }
 
   wantKick?: boolean;
+
+  /** What "n damage to each creature and each player" is worth to us (Pestilence, Crypt Rats) */
+  sweepGain(g: Game, n: number): number {
+    const me = this.me;
+    const opp = this.opp(g);
+    const myLife = g.players[me].life;
+    const oppLife = g.players[opp].life;
+    if (myLife - n <= 0) return -100;
+    if (oppLife - n <= 0) return 100;
+    const dies = (x: CardInstance) => g.toughness(x) - x.damage <= n && !g.hasKeyword(x, 'indestructible');
+    const sum = (xs: CardInstance[]) => xs.filter(dies).reduce((t, x) => t + this.value(g, x), 0);
+    let gain = sum(g.creatures(opp)) - sum(g.creatures(me));
+    if (myLife <= 6) gain -= n * 2;
+    else if (myLife < oppLife) gain -= n * 0.3;
+    if (oppLife <= 6) gain += n;
+    return gain;
+  }
+
+  /** best swing from pumping Pestilence (each activation is decided separately, damage accumulates) */
+  pestilenceGain(g: Game): number {
+    const avail = this.availableMana(g);
+    let best = -Infinity;
+    for (let k = 1; k <= Math.max(1, avail); k++) best = Math.max(best, this.sweepGain(g, k));
+    return best;
+  }
+
+  cryptRatsPlan(g: Game): { x: number; gain: number } | null {
+    const avail = this.availableMana(g);
+    let best: { x: number; gain: number } | null = null;
+    for (let x = 1; x <= avail; x++) {
+      const gain = this.sweepGain(g, x);
+      if (!best || gain > best.gain) best = { x, gain };
+    }
+    return best && best.gain >= 4 ? best : null;
+  }
+
+  /** Cuombajj Witches: kill an X/1 (the opponent will aim the other point at our worst-off creature or face) */
+  witchesTarget(g: Game, src: CardInstance, endOfTurn: boolean): { target: Target; score: number } | null {
+    const me = this.me;
+    const opp = this.opp(g);
+    if (g.players[opp].life <= 1) return { target: { kind: 'player', pid: opp }, score: 95 };
+    const x1 = g.creatures(opp)
+      .filter((x) => g.toughness(x) - x.damage <= 1 && g.canBeTargetedBy(x, me, src))
+      .sort((x, y) => this.value(g, y) - this.value(g, x))[0];
+    // their answer: our best creature that one damage kills
+    const exposed = g.creatures(me).filter((x) => x !== src && g.toughness(x) - x.damage <= 1);
+    const risk = exposed.length ? Math.max(...exposed.map((x) => this.value(g, x))) : 0;
+    if (x1 && this.value(g, x1) >= 2 && this.value(g, x1) >= risk) return { target: { kind: 'card', id: x1.id }, score: 12 + this.value(g, x1) - risk };
+    if (endOfTurn && risk < 2) return { target: { kind: 'player', pid: opp }, score: 3 };
+    return null;
+  }
 
   /** how good it is to return this permanent to hand with Glint Hawk / Kor Skyfisher */
   bounceScore(g: Game, c: CardInstance, source?: CardInstance): number {
@@ -885,6 +958,11 @@ export class AIController implements Controller {
       if (!cands[0]) return null;
       return { targets: [{ kind: 'card', id: cands[0].id }], score: this.value(g, cands[0]) };
     }
+    if (c.def.name === "Chainer's Edict") {
+      const crs = g.creatures(opp);
+      if (!crs.length) return null;
+      return { targets: [{ kind: 'player', pid: opp }], score: Math.min(...crs.map((x) => this.value(g, x))) + (crs.length === 1 ? 3 : 0) };
+    }
     if (c.def.name === 'Extract a Confession') {
       const crs = g.creatures(opp);
       if (!crs.length) return null;
@@ -986,6 +1064,25 @@ export class AIController implements Controller {
         const ab = c.def.activated![a.index];
         if (ab.ai === 'cycle' && this.wantsCycle(g, c, ab.label ?? '')) return a;
         if (ab.ai === 'draw' && !ab.cost.discard) return a;
+        if (g.active !== me && c.def.name === 'Tempting Witch') {
+          this.intent = { cardId: c.id, targets: [{ kind: 'player', pid: this.opp(g) }] };
+          return a;
+        }
+        if (g.active !== me && c.def.name === 'Cuombajj Witches') {
+          const t = this.witchesTarget(g, c, true);
+          if (t) {
+            this.intent = { cardId: c.id, targets: [t.target] };
+            return a;
+          }
+        }
+        if (c.def.name === 'Pestilence' && this.pestilenceGain(g) >= 3) return a;
+        if (c.def.name === 'Crypt Rats') {
+          const plan = this.cryptRatsPlan(g);
+          if (plan) {
+            this.intent = { cardId: c.id, x: plan.x };
+            return a;
+          }
+        }
         if (ab.label === 'Gain 2 life' && g.players[me].life < 20) return a;
         if (ab.label === 'Gain 3 life' && g.players[me].life < 15) return a;
         if (ab.label === 'Gain 5 life' && g.players[me].life < 12) return a;
@@ -1124,7 +1221,8 @@ export class AIController implements Controller {
     const scored = cands.map((t) => {
       let s = 0;
       // card-draw / self-mill spells (Thought Scour, Deep Analysis) target ourselves; harmful ones the opponent
-      if (t.kind === 'player') s = src.def.ai?.kind === 'draw' ? (t.pid === me ? 5 : -5) : t.pid === opp ? 5 : -5;
+      if (t.kind === 'player' && src.def.name === 'Cuombajj Witches') s = t.pid === opp ? 3 : -5;
+      else if (t.kind === 'player') s = src.def.ai?.kind === 'draw' ? (t.pid === me ? 5 : -5) : t.pid === opp ? 5 : -5;
       else if (t.kind === 'stack') {
         const it = g.stack.find((x) => x.id === t.id)!;
         s = it.controller === opp ? 10 + it.mv : -10;
@@ -1133,6 +1231,7 @@ export class AIController implements Controller {
         const mine = c.controller === me || (c.zone === 'graveyard' && c.owner === me);
         const v = this.value(g, c);
         if (c.zone === 'graveyard') s = mine ? (g.isCreature(c) ? v : -1) : v;
+        else if (src.def.name === 'Cuombajj Witches') s = mine ? -v : g.toughness(c) - c.damage <= 1 ? v : 0.1;
         else if (src.def.name === 'Cryogen Relic' || harmful) s = mine ? -v : v;
         else if (beneficial) s = mine ? v : -v;
         else if (spec.prompt.includes('you control')) s = mine ? v : -v;
@@ -1272,6 +1371,7 @@ export class AIController implements Controller {
   yesNo(g: Game, purpose: string, src?: CardInstance) {
     if (purpose === 'evidence') return g.creatures(this.opp(g)).length >= 2;
     if (purpose === 'exploreMill') return false;
+    if (purpose === 'cottage') return !!src && this.value(g, src) >= 4;
     if (purpose === 'kicker') return this.wantKick ?? true;
     if (purpose === 'surveil' && src) return this.scry(g, [src]).bottom.length > 0;
     if (purpose === 'ponderShuffle') {

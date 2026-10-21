@@ -214,6 +214,30 @@ export const PRESETS: Record<string, string> = {
 4 Hydroblast
 2 Nihil Spellbomb
 2 Tithing Blade`,
+  'Mono Black Devotion': `2 Bake into a Pie
+2 Cast Down
+3 Chainer's Edict
+4 Chittering Rats
+3 Crypt Rats
+4 Cuombajj Witches
+4 Gray Merchant of Asphodel
+2 Night's Whisper
+4 Pestilence
+2 Snuff Out
+21 Swamp
+3 Tempting Witch
+2 Thorn of the Black Rose
+2 Unearth
+2 Witch's Cottage
+
+2 Arms of Hadar
+1 Bojuka Bog
+2 Cut Down
+2 Extract a Confession
+2 Nihil Spellbomb
+2 Relic of Progenitus
+2 Suffocating Fumes
+2 Tithing Blade`,
   'Rakdos Madness': `4 Alms of the Vein
 4 Faithless Looting
 4 Fiery Temper

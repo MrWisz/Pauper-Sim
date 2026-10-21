@@ -407,5 +407,42 @@ for (const arts of [1, 3]) {
   check(arts >= 3 ? 'Dispatch exiles with metalcraft' : 'no Dispatch without metalcraft', arts >= 3 ? cast : !cast, `artifacts ${arts}, cast=${cast}`);
 }
 
+// 25. Pestilence wipes a board of X/1s while our 2/4 survives — but not when it only kills our own creatures
+for (const good of [true, false]) {
+  const { g, ai, put } = setup(20);
+  g.active = 1;
+  g.step = 'main2';
+  put(1, 'Swamp');
+  put(1, 'Swamp');
+  const pest = put(1, 'Pestilence');
+  if (good) {
+    put(1, 'Gray Merchant of Asphodel');
+    for (const n of ['Sneaky Snacker', 'Voldaren Epicure', 'Llanowar Elves']) put(0, n);
+  } else {
+    put(1, 'Voldaren Epicure');
+    put(1, 'Voldaren Epicure');
+    put(0, 'Myr Enforcer');
+  }
+  const act = ai.decidePriority(g);
+  const used = act.type === 'activate' && act.cardId === pest.id;
+  check(good ? 'Pestilence sweeps X/1s' : 'no Pestilence into our own board', good ? used : !used, `activated=${used}`);
+}
+
+// 26. Crypt Rats picks the X that kills their 2/2 and 1/3
+{
+  const { g, ai, put } = setup(20);
+  g.active = 1;
+  g.step = 'main2';
+  for (let i = 0; i < 4; i++) put(1, 'Swamp');
+  const rats = put(1, 'Crypt Rats');
+  put(1, 'Gray Merchant of Asphodel');
+  put(0, 'Chittering Rats');
+  put(0, 'Cuombajj Witches');
+  const act = ai.decidePriority(g);
+  const used = act.type === 'activate' && act.cardId === rats.id;
+  const x = used ? await ai.choose(g, { type: 'number', player: 1, prompt: '', min: 0, max: 4, source: rats, purpose: 'x' } as any) : -1;
+  check('Crypt Rats chooses X', used && x === 3, `activated=${used}, X=${x}`);
+}
+
 console.log(failures ? `${failures} failure(s)` : 'all passed');
 process.exit(failures ? 1 : 0);

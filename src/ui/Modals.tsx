@@ -300,7 +300,7 @@ export function Modals({
             Cancel
           </button>
           <button className="btn primary" onClick={() => respond(n)}>
-            {req.purpose === 'replicate' ? `Cast with ${n} extra cop${n === 1 ? 'y' : 'ies'}` : `Cast with X = ${n}`}
+            {req.purpose === 'replicate' ? `Cast with ${n} extra cop${n === 1 ? 'y' : 'ies'}` : `${req.source?.zone === 'battlefield' ? 'Activate' : 'Cast'} with X = ${n}`}
           </button>
         </>,
       );

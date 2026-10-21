@@ -1741,16 +1741,35 @@ export class Game {
       if (!ids) return false;
       bounced = this.card(ids[0]);
     }
-    if (cost.mana) {
+    // {X} abilities paid with one color only (Crypt Rats)
+    let xValue = 0;
+    if (a.xMana) {
       const exclude = cost.tap ? new Set([c.id]) : undefined;
-      const sol = solvePayment(parseCost(cost.mana), this.players[pid].pool, this.manaSources(pid, exclude));
+      let max = 0;
+      while (max < 20 && this.canPay(pid, parseCost((cost.mana ?? '') + `{${a.xMana}}`.repeat(max + 1)), exclude)) max++;
+      const x = await this.ask<number | null>(pid, {
+        type: 'number',
+        player: pid,
+        prompt: `${c.def.name}: choose X (paid with {${a.xMana}} only)`,
+        min: 0,
+        max,
+        source: c,
+        purpose: 'x',
+      });
+      if (x === null || x === undefined) return false;
+      xValue = Math.max(0, Math.min(max, x));
+    }
+    const manaStr = (cost.mana ?? '') + (a.xMana ? `{${a.xMana}}`.repeat(xValue) : '');
+    if (manaStr) {
+      const exclude = cost.tap ? new Set([c.id]) : undefined;
+      const sol = solvePayment(parseCost(manaStr), this.players[pid].pool, this.manaSources(pid, exclude));
       if (!sol) return false;
       for (const t of sol.taps) this.card(t.id)!.tapped = true;
       this.players[pid].pool = sol.poolAfter;
     }
     if (cost.tap) c.tapped = true;
     if (cost.life) this.loseLife(pid, cost.life);
-    const info: CastInfo = { method: 'normal' };
+    const info: CastInfo = { method: 'normal', x: xValue };
     for (const s of sacs) {
       info.sacrificed = { mv: s.def.cmc, name: s.def.name, wasCreature: this.isCreature(s) };
       this.sacrifice(s);
@@ -2102,6 +2121,13 @@ export class Game {
     this.log(`${this.players[pid].name} takes the initiative.`, pid);
     this.changed();
     await venture(this, pid, this.initiativeSource);
+  }
+
+  /** Devotion to a color: the colored mana symbols of that color among the mana costs of permanents you control */
+  devotion(pid: PlayerId, color: string): number {
+    let n = 0;
+    for (const c of this.permanents(pid)) for (const m of c.def.manaCost.matchAll(/{([^}]+)}/g)) if (m[1].split('/').includes(color)) n++;
+    return n;
   }
 
   becomeMonarch(pid: PlayerId) {

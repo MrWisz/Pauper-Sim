@@ -91,11 +91,12 @@ export function keepValue(d: CardDef, p: MatchupProfile): number {
   if (d.types.includes('Creature')) v += 1.5;
   // engines the deck is built around
   if (d.ai?.kind === 'draw' || d.madness) v += 1;
+  if (['Pestilence', 'Gray Merchant of Asphodel', 'Crypt Rats'].includes(d.name)) v += 3;
   if (d.ai?.kind === 'burn' && (d.ai.amount ?? 2) >= 3) v += 0.5;
   if (d.name === 'Fireblast') v -= 1.5; // situational finisher: first to go
   // removal is great against creature decks (unless they're hexproof)
   if ((d.ai?.kind === 'removal' || d.ai?.kind === 'burn') && p.creatures >= 6 && p.hexproof < 2) v += 1;
-  const targetedCreatureRemoval = d.ai?.kind === 'removal' && d.name !== 'Extract a Confession';
+  const targetedCreatureRemoval = d.ai?.kind === 'removal' && d.name !== 'Extract a Confession' && d.name !== "Chainer's Edict";
   // targeted removal is bad against hexproof creatures
   if (targetedCreatureRemoval && p.hexproof >= 2) v -= 3.5;
   // counters are weak against cheap aggressive decks with few spells worth countering

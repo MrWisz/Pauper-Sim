@@ -509,5 +509,104 @@ for (const arts of [0, 3]) {
   check('Consuming Sepulcher drains at upkeep', g.players[1].life === 19 && g.players[0].life === 21, `life ${g.players[0].life}–${g.players[1].life}`);
 }
 
+// Gray Merchant drains for devotion to black (its own {B}{B} included)
+{
+  const { g, put, inHand, resolveAll } = setup();
+  for (let i = 0; i < 5; i++) put(0, 'Swamp');
+  put(0, 'Cuombajj Witches');
+  const gary = inHand(0, 'Gray Merchant of Asphodel');
+  await g.castSpell(0, gary, 'normal');
+  await resolveAll();
+  check('Gray Merchant drains devotion', g.devotion(0, 'B') === 4 && g.players[1].life === 16 && g.players[0].life === 24, `devotion ${g.devotion(0, 'B')}, life ${g.players[0].life}–${g.players[1].life}`);
+}
+
+// Crypt Rats: X paid with black mana only, hits every creature and player
+{
+  const { g, put, resolveAll } = setup();
+  for (let i = 0; i < 3; i++) put(0, 'Swamp');
+  const rats = put(0, 'Crypt Rats');
+  const bear = put(1, 'Chittering Rats');
+  const witches = put(1, 'Cuombajj Witches');
+  (g.controllers[0] as any).choose = async (gg: Game, r: any) => (r.type === 'number' ? 2 : { type: 'pass' });
+  await g.activate(0, rats, 0);
+  await resolveAll();
+  const tapped = g.lands(0).filter((l) => l.tapped).length;
+  check(
+    'Crypt Rats X=2',
+    tapped === 2 && rats.zone === 'graveyard' && bear.zone === 'graveyard' && witches.zone === 'battlefield' && g.players[0].life === 18 && g.players[1].life === 18,
+    `tapped ${tapped}, rats ${rats.zone}, 2/2 ${bear.zone}, 1/3 ${witches.zone}, life ${g.players[0].life}–${g.players[1].life}`,
+  );
+}
+
+// Pestilence: {B} pings everything; sacrificed at the end step only when no creatures are left
+{
+  const { g, put, resolveAll } = setup();
+  put(0, 'Swamp');
+  const pest = put(0, 'Pestilence');
+  const x1 = put(1, 'Sneaky Snacker');
+  g.emit({ type: 'step', step: 'end', active: 0 });
+  await resolveAll();
+  const stayed = pest.zone === 'battlefield';
+  await g.activate(0, pest, pest.def.activated!.findIndex((a) => !a.produces));
+  await resolveAll();
+  g.emit({ type: 'step', step: 'end', active: 0 });
+  await resolveAll();
+  check('Pestilence', stayed && x1.zone === 'graveyard' && g.players[1].life === 19 && pest.zone === 'graveyard', `stayed=${stayed}, imp ${x1.zone}, opp life ${g.players[1].life}, pestilence ${pest.zone}`);
+}
+
+// Cuombajj Witches: we pick one target, the (AI) opponent picks the other — it kills our X/1
+{
+  const { g, put, resolveAll } = setup();
+  const witches = put(0, 'Cuombajj Witches');
+  const myRats = put(0, 'Crypt Rats');
+  const imp = put(1, 'Sneaky Snacker');
+  (g.controllers[0] as any).choose = async (gg: Game, r: any) => (r.type === 'targets' ? [{ kind: 'card', id: imp.id }] : { type: 'pass' });
+  await g.activate(0, witches, 0);
+  await resolveAll();
+  check('Cuombajj Witches pings twice', imp.zone === 'graveyard' && myRats.zone === 'graveyard', `their X/1 ${imp.zone}, our Crypt Rats ${myRats.zone}`);
+}
+
+// Witch's Cottage: untapped with three other Swamps, puts a creature card from the graveyard on top
+{
+  const { g, put, inHand, inGrave, resolveAll } = setup();
+  put(0, 'Swamp');
+  put(0, 'Swamp');
+  const c1 = inHand(0, "Witch's Cottage");
+  const gary = inGrave(0, 'Gray Merchant of Asphodel');
+  (g.controllers[0] as any).choose = async (gg: Game, r: any) => (r.type === 'targets' ? [{ kind: 'card', id: gary.id }] : r.type === 'yesno' ? true : { type: 'pass' });
+  await g.perform(0, { type: 'playLand', cardId: c1.id });
+  await resolveAll();
+  const firstTapped = c1.tapped && gary.zone === 'graveyard';
+  put(0, 'Swamp');
+  g.players[0].landsPlayedThisTurn = 0;
+  const c2 = inHand(0, "Witch's Cottage");
+  await g.perform(0, { type: 'playLand', cardId: c2.id });
+  await resolveAll();
+  check("Witch's Cottage", firstTapped && !c2.tapped && g.players[0].library[0] === gary, `first tapped=${c1.tapped}, second tapped=${c2.tapped}, top=${g.players[0].library[0]?.def.name}`);
+}
+
+// Chainer's Edict makes the target player sacrifice; Tempting Witch drains 3 by eating a Food
+{
+  const { g, put, inHand, resolveAll } = setup();
+  for (let i = 0; i < 5; i++) put(0, 'Swamp');
+  const victim = put(1, 'Kitchen Imp');
+  const edict = inHand(0, "Chainer's Edict");
+  const witch = inHand(0, 'Tempting Witch');
+  (g.controllers[0] as any).choose = async (gg: Game, r: any) =>
+    r.type === 'targets' ? [{ kind: 'player', pid: 1 }] : r.type === 'cards' ? r.cards.slice(0, r.min).map((c: any) => c.id) : { type: 'pass' };
+  await g.castSpell(0, edict, 'normal');
+  await resolveAll();
+  const edicted = victim.zone === 'graveyard';
+  for (const l of g.lands(0)) l.tapped = false;
+  await g.castSpell(0, witch, 'normal');
+  await resolveAll();
+  const food = g.permanents(0).find((x) => x.def.name === 'Food');
+  witch.enteredTick = -1;
+  witch.summoningSick = false;
+  await g.activate(0, witch, witch.def.activated!.findIndex((a) => a.label?.startsWith('Sac a Food')));
+  await resolveAll();
+  check("Chainer's Edict + Tempting Witch", edicted && !!food && food.zone !== 'battlefield' && g.players[1].life === 17, `edicted=${edicted}, food ${food?.zone}, opp life ${g.players[1].life}`);
+}
+
 console.log(failures ? `${failures} failure(s)` : 'all passed');
 process.exit(failures ? 1 : 0);
