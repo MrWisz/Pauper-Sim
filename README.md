@@ -51,6 +51,15 @@ npx tsx scripts/sideboard-check.ts  # what the AI sideboards in sample matchups
 npx tsx scripts/rules-test.ts   # rules checks (Delver transform, cost reduction, Phyrexian mana, Force Spike, escape)
 ```
 
+## Security
+
+The app runs entirely in the browser: no backend, accounts or secrets. Its only outside contact is Scryfall (`api.scryfall.com` for card lookups, `cards.scryfall.io` for images).
+
+- `public/_headers` sets the Netlify response headers: a Content Security Policy that only allows the app's own scripts and those two Scryfall hosts, plus clickjacking, MIME-sniffing, referrer and permissions protections. `npm run build && npm run preview` serves the build with the same headers (minus HSTS) for local checks.
+- Imported lists are capped (20,000 characters, 99 copies per line, 250 cards, 150 Scryfall lookups) so a pasted list can't freeze the page.
+- Card data from Scryfall and its local cache is type-checked, and images are only accepted from `https://cards.scryfall.io`.
+- `window.__game` (console debugging) only exists in `npm run dev`.
+
 ## Layout
 
 - `src/engine/game.ts`: rules engine (zones, turns, priority, stack, combat, costs, triggers, SBA)
@@ -58,3 +67,9 @@ npx tsx scripts/rules-test.ts   # rules checks (Delver transform, cost reduction
 - `src/engine/cards/`: card data (`cardData.json`), scripts, registry and Scryfall fallback
 - `src/engine/ai.ts`: heuristic computer opponent
 - `src/ui/`: React UI (board, modals, human controller with Arena-style auto-pass)
+
+## Legal
+
+Pauper Sim is unofficial Fan Content permitted under the Fan Content Policy. Not approved/endorsed by Wizards. Portions of the materials used are property of Wizards of the Coast. ©Wizards of the Coast LLC.
+
+Card data and images come from [Scryfall](https://scryfall.com); this project is not produced by or affiliated with Scryfall. The in-app **About & privacy** panel (link at the bottom of the setup screen) explains what the app stores and sends.

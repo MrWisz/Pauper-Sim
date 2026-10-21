@@ -203,17 +203,57 @@ export function knownLocally(name: string) {
 }
 
 const LS_KEY = 'pauper-sim-extra-cards-v1';
+/** most distinct unknown cards one import may look up on Scryfall */
+const MAX_LOOKUPS = 150;
+
+const str = (v: unknown, max = 2000) => (typeof v === 'string' ? v.slice(0, max) : undefined);
+const num = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? v : 0);
+/** only Scryfall's own image CDN, over https */
+const imageUrl = (v: unknown) => {
+  const s = str(v);
+  if (!s) return undefined;
+  try {
+    const u = new URL(s);
+    return u.protocol === 'https:' && u.hostname === 'cards.scryfall.io' ? u.href : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+/** Keep only well-formed fields from a Scryfall card (or a cached copy of one). */
+function cleanRaw(r: any): RawCard | null {
+  const name = str(r?.name, 150);
+  if (!name) return null;
+  return {
+    name,
+    manaCost: str(r.manaCost, 100) ?? '',
+    cmc: num(r.cmc),
+    typeLine: str(r.typeLine, 200) ?? '',
+    oracle: str(r.oracle) ?? '',
+    colors: Array.isArray(r.colors) ? r.colors.filter((c: unknown) => typeof c === 'string' && /^[WUBRG]$/.test(c)) : [],
+    power: str(r.power, 10),
+    toughness: str(r.toughness, 10),
+    keywords: Array.isArray(r.keywords) ? r.keywords.filter((k: unknown) => typeof k === 'string').map((k: string) => k.slice(0, 50)) : [],
+    image: imageUrl(r.image),
+    art: imageUrl(r.art),
+  } as RawCard;
+}
+
 try {
-  const saved = JSON.parse(localStorage.getItem(LS_KEY) ?? '{}') as Record<string, RawCard>;
-  for (const r of Object.values(saved)) extraRaw.set(normalizeName(r.name), r);
+  const saved = JSON.parse(localStorage.getItem(LS_KEY) ?? '{}');
+  for (const r of Object.values(saved && typeof saved === 'object' ? saved : {})) {
+    const clean = cleanRaw(r);
+    if (clean) extraRaw.set(normalizeName(clean.name), clean);
+  }
 } catch {
   /* storage unavailable */
 }
 
 /** Fetch cards we don't have bundled from Scryfall. Returns names that couldn't be found. */
 export async function fetchMissing(names: string[]): Promise<string[]> {
-  const missing = [...new Set(names.filter((n) => !knownLocally(n)))];
-  const notFound: string[] = [];
+  const all = [...new Set(names.filter((n) => !knownLocally(n)))];
+  const missing = all.slice(0, MAX_LOOKUPS);
+  const notFound: string[] = all.slice(MAX_LOOKUPS);
   for (let i = 0; i < missing.length; i += 70) {
     const chunk = missing.slice(i, i + 70);
     const res = await fetch('https://api.scryfall.com/cards/collection', {
@@ -225,8 +265,9 @@ export async function fetchMissing(names: string[]): Promise<string[]> {
     const json = await res.json();
     for (const nf of json.not_found ?? []) notFound.push(nf.name);
     for (const c of json.data ?? []) {
-      const face = c.card_faces ? c.card_faces[0] : c;
-      const raw: RawCard = {
+      const face = Array.isArray(c?.card_faces) ? c.card_faces[0] : c;
+      if (typeof c?.name !== 'string' || !face) continue;
+      const raw = cleanRaw({
         name: c.name.split(' // ')[0],
         manaCost: face.mana_cost ?? '',
         cmc: c.cmc,
@@ -238,8 +279,8 @@ export async function fetchMissing(names: string[]): Promise<string[]> {
         keywords: c.keywords ?? [],
         image: (c.image_uris ?? face.image_uris)?.normal,
         art: (c.image_uris ?? face.image_uris)?.art_crop,
-      };
-      extraRaw.set(normalizeName(raw.name), raw);
+      });
+      if (raw) extraRaw.set(normalizeName(raw.name), raw);
     }
   }
   try {

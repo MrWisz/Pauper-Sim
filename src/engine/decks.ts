@@ -11,12 +11,19 @@ export interface ParsedDeck {
   side: DeckEntry[];
 }
 
+// Limits on imported lists, so a pasted list can't freeze the page or flood Scryfall
+export const MAX_LIST_CHARS = 20000;
+export const MAX_COPIES = 99;
+export const MAX_DECK_CARDS = 250;
+export const MAX_NAME_LENGTH = 150;
+
 /** Accepts MTGO/MTGGoldfish/Arena/Moxfield style text lists. */
 export function parseDeckList(text: string): ParsedDeck {
   const main: DeckEntry[] = [];
   const side: DeckEntry[] = [];
   let inSide = false;
-  for (const raw of text.split(/\r?\n/)) {
+  let total = 0;
+  for (const raw of text.slice(0, MAX_LIST_CHARS).split(/\r?\n/)) {
     const line = raw.trim();
     if (!line) {
       if (main.length) inSide = true;
@@ -41,6 +48,10 @@ export function parseDeckList(text: string): ParsedDeck {
     }
     // strip set code / collector number e.g. "Lightning Bolt (M10) 146" or "*F*"
     name = name.replace(/\s+\([A-Z0-9]{2,6}\)(\s+[\w-]+)?\s*$/i, '').replace(/\s+\*[A-Z]+\*$/, '').trim();
+    if (!name || name.length > MAX_NAME_LENGTH) continue;
+    count = Math.min(count, MAX_COPIES, MAX_DECK_CARDS - total);
+    if (count <= 0) continue;
+    total += count;
     (inSide ? side : main).push({ count, name });
   }
   return { main, side };

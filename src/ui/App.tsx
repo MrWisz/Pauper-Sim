@@ -7,6 +7,7 @@ import type { CardDef, PlayerId } from '../engine/types';
 import { HumanController } from './human';
 import { Board, type MatchView } from './Board';
 import { SideboardScreen } from './Sideboard';
+import { AboutFooter } from './About';
 
 const LS = 'pauper-sim-setup-v1';
 
@@ -86,7 +87,7 @@ export function App() {
     setMatch(m);
     setSideboarding(false);
     setRunning({ id, g, human });
-    (window as any).__game = g; // handy for debugging from the console
+    if (import.meta.env.DEV) (window as any).__game = g; // handy for debugging from the console
     g.run()
       .then(() => recordResult(id, g))
       .catch((e) => setError(String(e?.stack ?? e)));
@@ -308,6 +309,7 @@ export function App() {
           </li>
         </ul>
       </div>
+      <AboutFooter />
     </div>
   );
 }
